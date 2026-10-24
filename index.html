@@ -2,6 +2,11 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
+<script>
+/* La lingua: quella scelta (salvata sul dispositivo), altrimenti quella del browser. */
+var LINGUA = (function () { try { var s = localStorage.getItem('caveau.lingua'); if (s === 'it' || s === 'en') return s; } catch (e) {} return ((navigator.language || 'it').toLowerCase().indexOf('en') === 0) ? 'en' : 'it'; })();
+window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
+</script>
 <title>Caveau</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Caveau. La tua cantina, ordinata e sotto controllo. E lo Speakeasy, quando sei dentro.">
@@ -72,6 +77,9 @@
   .attesa[hidden]{display:none}
   .attesa .stato{font-size:14px;line-height:1.6;color:var(--t1);border-left:2px solid var(--acc);padding:10px 14px;background:var(--sunk);border-radius:0 10px 10px 0;margin:0}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.lingua{display:flex;justify-content:flex-end;gap:4px;margin:0 0 12px}
+.lingua button{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--t3);border:1px solid var(--ed);border-radius:999px;padding:3px 9px;background:transparent;cursor:pointer}
+.lingua button.on{color:var(--acc);border-color:var(--acc)}
 </style>
 </head>
 <body>
@@ -85,6 +93,7 @@
     <p class="claim">Una porta sola: dentro c’è la tua cantina, ordinata e sotto controllo, e lo Speakeasy, la cantina aggregata del Club.</p>
 
     <div class="scheda">
+      <div class="lingua" role="group" aria-label="Lingua / Language"><button type="button" data-lingua="it">IT</button><button type="button" data-lingua="en">EN</button></div>
       <div class="tabs" role="tablist">
         <button type="button" id="t-entra" class="on" role="tab">Entra</button>
         <button type="button" id="t-iscr" role="tab">Iscriviti</button>
@@ -135,8 +144,7 @@
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script src="dati.js?v=17.1"></script>
-<script src="app.js?v=17.1"></script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=18.0"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=18.0"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -146,12 +154,80 @@
   var tE = document.getElementById('t-entra'), tI = document.getElementById('t-iscr');
   var recupero = false;
 
+  /* ---- la porta parla anche inglese: dizionario e traduzione dei testi ---- */
+  var T_EN = {
+  "Apro la cantina…": "Opening your cellar…",
+  "La tua cantina · lo Speakeasy": "Your cellar · the Speakeasy",
+  "Una porta sola: dentro c’è la tua cantina, ordinata e sotto controllo, e lo Speakeasy, la cantina aggregata del Club.": "One door: inside is your cellar, in order and under control, and the Speakeasy, the Club’s shared cellar.",
+  "Entra": "Sign in",
+  "Iscriviti": "Sign up",
+  "Email": "Email",
+  "Password": "Password",
+  "Ho dimenticato la password": "I forgot my password",
+  "Nome e cognome": "Full name",
+  "Scegli una password · almeno dieci caratteri": "Choose a password · at least ten characters",
+  "Una riga per il desk · facoltativa": "A line for the Desk · optional",
+  "Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.": "I have read the notice. My details are used only for access, for my cellar and for the Desk’s replies, and are never passed on.",
+  "Apri la mia cantina": "Open my cellar",
+  "L’accesso è personale: il desk legge la richiesta e apre la tua cantina. Lo Speakeasy è su ammissione e si chiede da dentro.": "Access is personal: the Desk reads your request and opens your cellar. The Speakeasy is by admission, requested from inside.",
+  "Ricontrolla": "Check again",
+  "Esci": "Sign out",
+  "La nuova password · almeno dieci caratteri": "Your new password · at least ten characters",
+  "Salva ed entra": "Save and sign in",
+  "Accesso privato ·": "Private access ·",
+  "nome@esempio.it": "name@example.com",
+  "Il tuo nome": "Your name",
+  "Chi sei, chi ti presenta, cosa cerchi": "Who you are, who introduces you, what you are looking for",
+  "Caveau. La tua cantina, ordinata e sotto controllo. E lo Speakeasy, quando sei dentro.": "Caveau. Your cellar, in order and under control. And the Speakeasy, once you are in.",
+  "Sessione non aperta: entra di nuovo.": "Session not open: sign in again.",
+  "Per ora il desk non ha potuto aprire il tuo accesso. La richiesta resta registrata: puoi scrivere al desk o riproporti più avanti.": "For now the Desk could not open your access. Your request stays on record: you can write to the Desk or apply again later.",
+  "Il tuo accesso è sospeso. Scrivi al desk per riattivarlo.": "Your access is suspended. Write to the Desk to reactivate it.",
+  "Il tuo accesso è approvato. Per aprire la cantina serve la quota annuale": "Your access is approved. To open your cellar the annual fee is due",
+  ": il desk ti scrive con le coordinate, e appena arriva la cantina si apre.": ": the Desk will write to you with the payment details, and as soon as it arrives your cellar opens.",
+  "Richiesta ricevuta. Il desk la legge e apre la tua cantina: ti scrive lui. Quando torni, entra con la tua email e la password.": "Request received. The Desk reads it and opens your cellar: they will write to you. When you come back, sign in with your email and password.",
+  "Non riesco ad aprire la cantina.": "I cannot open the cellar.",
+  "Serve un indirizzo email valido.": "A valid email address is needed.",
+  "Serve la password.": "The password is needed.",
+  "Non ha funzionato.": "That did not work.",
+  "Scrivi prima la tua email qui sopra, poi premi di nuovo.": "Type your email above first, then press again.",
+  "Un momento…": "One moment…",
+  "Se questo indirizzo ha un accesso, riceverai un messaggio con il link per scegliere una nuova password.": "If this address has an account, you will receive a message with a link to choose a new password.",
+  "La password deve avere almeno dieci caratteri.": "The password must be at least ten characters long.",
+  "Per iscriverti devi accettare l’informativa.": "To sign up you must accept the notice.",
+  "Preparo la tua cantina…": "Preparing your cellar…",
+  "Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.": "We have written to you: open the message and confirm your address, then sign in here.",
+  "Scegli la nuova password.": "Choose your new password.",
+  "Il link non è più valido: chiedine un altro.": "The link is no longer valid: request another one.",
+  "L’archivio non risponde. Riprova fra poco.": "The archive is not responding. Try again shortly."
+};
+  function tr(t) { return (LINGUA === 'en' && T_EN[t]) ? T_EN[t] : t; }
+  function traduciPorta() {
+    if (LINGUA !== 'en') return;
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), n, lista = [];
+    while ((n = w.nextNode())) lista.push(n);
+    lista.forEach(function (x) {
+      if (x.parentNode && /^(SCRIPT|STYLE)$/.test(x.parentNode.tagName)) return;
+      var k = x.nodeValue.trim(); if (T_EN[k]) x.nodeValue = x.nodeValue.replace(k, T_EN[k]);
+    });
+    ['placeholder', 'aria-label', 'title'].forEach(function (a) {
+      var tutti = document.querySelectorAll('[' + a + ']');
+      for (var i = 0; i < tutti.length; i++) { var v = tutti[i].getAttribute(a); if (T_EN[v]) tutti[i].setAttribute(a, T_EN[v]); }
+    });
+    var m = document.querySelector('meta[name=description]'); if (m && T_EN[m.getAttribute('content')]) m.setAttribute('content', T_EN[m.getAttribute('content')]);
+  }
+  traduciPorta();
+  var bl = document.querySelectorAll('[data-lingua]');
+  for (var bi = 0; bi < bl.length; bi++) (function (b) {
+    b.classList.toggle('on', b.getAttribute('data-lingua') === LINGUA);
+    b.addEventListener('click', function () { try { localStorage.setItem('caveau.lingua', b.getAttribute('data-lingua')); } catch (e) {} location.reload(); });
+  })(bl[bi]);
+
   function mostra(quale) {
     attesa.hidden = quale !== 'attesa';
     porta.hidden  = quale !== 'porta';
     document.getElementById('root').style.display = quale === 'app' ? '' : 'none';
   }
-  function dillo(testo, classe) { esito.textContent = testo || ''; esito.className = 'esito ' + (testo ? classe : ''); }
+  function dillo(testo, classe) { esito.textContent = tr(testo || ''); esito.className = 'esito ' + (testo ? classe : ''); }
   function scheda(q) {
     fE.hidden = q !== 'entra'; fI.hidden = q !== 'iscr'; fN.hidden = q !== 'nuova'; fA.hidden = q !== 'attesa';
     document.querySelector('.tabs').hidden = q === 'attesa';
@@ -163,7 +239,7 @@
 
   function dentro() {
     mostra('attesa');
-    attesa.textContent = 'Apro la cantina…';
+    attesa.textContent = tr('Apro la cantina…');
     var statoMio = null;
     CELL.sessione().then(function (u) {
       if (!u) throw new Error('Sessione non aperta: entra di nuovo.');
@@ -174,9 +250,9 @@
         var t;
         if (statoMio.stato_account === 'rifiutato') t = 'Per ora il desk non ha potuto aprire il tuo accesso. La richiesta resta registrata: puoi scrivere al desk o riproporti più avanti.';
         else if (statoMio.stato_account === 'sospeso') t = 'Il tuo accesso è sospeso. Scrivi al desk per riattivarlo.';
-        else if (statoMio.stato_account === 'approvato' && statoMio.pagamento_richiesto === 'si') t = 'Il tuo accesso è approvato. Per aprire la cantina serve la quota annuale' + (Number(statoMio.quota_private) > 0 ? ' di ' + statoMio.quota_private + ' €' : '') + ': il desk ti scrive con le coordinate, e appena arriva la cantina si apre.';
+        else if (statoMio.stato_account === 'approvato' && statoMio.pagamento_richiesto === 'si') t = tr('Il tuo accesso è approvato. Per aprire la cantina serve la quota annuale') + (Number(statoMio.quota_private) > 0 ? ' di ' + statoMio.quota_private + ' €' : '') + tr(': il desk ti scrive con le coordinate, e appena arriva la cantina si apre.');
         else t = 'Richiesta ricevuta. Il desk la legge e apre la tua cantina: ti scrive lui. Quando torni, entra con la tua email e la password.';
-        mostra('porta'); scheda('attesa'); document.getElementById('attesa-testo').textContent = t;
+        mostra('porta'); scheda('attesa'); document.getElementById('attesa-testo').textContent = tr(t);
         throw { silenzioso: true };
       }
       return Promise.all([CELL.carica(), CELL.profilo()]);

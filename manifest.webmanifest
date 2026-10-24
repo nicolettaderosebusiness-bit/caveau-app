@@ -1,7 +1,7 @@
 {
-  "name": "Caveau · la tua cantina",
+  "name": "Caveau",
   "short_name": "Caveau",
-  "description": "La tua cantina, ordinata e sotto controllo. E lo Speakeasy, quando sei dentro.",
+  "description": "La tua cantina, ordinata e sotto controllo · Your cellar, in order and under control.",
   "lang": "it",
   "dir": "ltr",
   "start_url": "./",

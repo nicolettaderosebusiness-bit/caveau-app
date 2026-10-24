@@ -1704,17 +1704,17 @@
   /* ---- la ricerca capisce le posizioni ----
      "cosa c'è sullo scaffale 8 della sezione 1", "sez 2 rip 3", "1/8", "1/8/2",
      "sezione frigo". Le parole di contorno (cosa, sullo, della…) vengono tolte. */
-  var STOP = ' c è cè l d cosa che ce sul sullo sulla sui sugli sulle su nel nello nella nei negli nelle in a al allo alla ai agli alle della del dello dei degli delle di da dal dallo dalla il lo la i gli le un uno una e ed o ho hai abbiamo mi ci si trova trovami cerca cercami mostra mostrami fammi vedere dimmi dammi elenca elencami bottiglie bottiglia vini vino dove sta stanno quali quale quante quanti tutto tutte tutti per con ';
+  var STOP = ' what is are on the of in at my a an which bottles bottle wine wines show find where there do i have whats s c è cè l d cosa che ce sul sullo sulla sui sugli sulle su nel nello nella nei negli nelle in a al allo alla ai agli alle della del dello dei degli delle di da dal dallo dalla il lo la i gli le un uno una e ed o ho hai abbiamo mi ci si trova trovami cerca cercami mostra mostrami fammi vedere dimmi dammi elenca elencami bottiglie bottiglia vini vino dove sta stanno quali quale quante quanti tutto tutte tutti per con ';
   var _pq = { q: null, r: null };
   function posQuery(q) {
     if (_pq.q === q) return _pq.r;
     var out = { sez: null, k: null, scaff: null, rip: null, parole: [], attiva: false };
     var s = ' ' + String(q).toLowerCase().replace(/[’èé']/g, function (c) { return c === '’' || c === "'" ? ' ' : c; }).replace(/[,;:!?()“”"]/g, ' ') + ' ';
     s = s.replace(/\s(\d{1,2})\/(\d{1,3})(?:\/(\d{1,2}))?\s/, function (_, a, b, c) { out.k = +a; out.scaff = +b; if (c) out.rip = +c; return ' '; });
-    s = s.replace(/\s(?:sezione|sezioni|sez\.?|settore|zona|parete|stanza|area|armadio)\s*(?:n\.?|n°|numero)?\s*(\d{1,3})\s/, function (_, n) { out.k = +n; return ' '; });
-    s = s.replace(/\s(?:scaffale|scaffali|scaff\.?|scaf\.?|sc\.?|mensola|colonna|rack)\s*(?:n\.?|n°|numero)?\s*(\d{1,3})\s/, function (_, n) { out.scaff = +n; return ' '; });
-    s = s.replace(/\s(?:ripiano|ripiani|rip\.?|piano|livello|fila|riga)\s*(?:n\.?|n°|numero)?\s*(\d{1,3})\s/, function (_, n) { out.rip = +n; return ' '; });
-    s = s.replace(/\s(?:sezione|sez\.?|zona|settore)\s+(\S+)\s/, function (m, w) { var sz = sezioneConNome(w); if (sz) { out.sez = sz; return ' '; } return m; });
+    s = s.replace(/\s(?:sezione|sezioni|sez\.?|settore|zona|parete|stanza|area|armadio|section|sections|sec\.?|zone|wall|cabinet|bay)\s*(?:n\.?|n°|numero|number|no\.?)?\s*(\d{1,3})\s/, function (_, n) { out.k = +n; return ' '; });
+    s = s.replace(/\s(?:scaffale|scaffali|scaff\.?|scaf\.?|sc\.?|mensola|colonna|rack|shelf|shelves|column|col\.?)\s*(?:n\.?|n°|numero|number|no\.?)?\s*(\d{1,3})\s/, function (_, n) { out.scaff = +n; return ' '; });
+    s = s.replace(/\s(?:ripiano|ripiani|rip\.?|piano|livello|fila|riga|level|levels|tier|row|slot)\s*(?:n\.?|n°|numero|number|no\.?)?\s*(\d{1,3})\s/, function (_, n) { out.rip = +n; return ' '; });
+    s = s.replace(/\s(?:sezione|sez\.?|zona|settore|section|zone)\s+(\S+)\s/, function (m, w) { var sz = sezioneConNome(w); if (sz) { out.sez = sz; return ' '; } return m; });
     if (out.k != null && !out.sez) out.sez = sezionePerNumero(out.k) || { nome: 'Sezione ' + out.k, virtuale: true, k: out.k };
     out.attiva = !!(out.sez || out.scaff != null || out.rip != null);
     var parole = s.split(/\s+/).filter(Boolean);
@@ -2109,6 +2109,7 @@
         return '<button type="button" class="nvb' + (z.k === 'club' ? ' club' : '') + (stanza === z.k ? ' on' : '') + '" data-stanza="' + z.k + '"' +
           (stanza === z.k ? ' aria-current="page"' : '') + '><span class="nvn tab">' + z.n + '</span>' + z.t + '</button>';
       }).join('') + '</div>' +
+      '<button type="button" class="nvb" data-lingua-switch title="Italiano / English">' + (window.CAVEAU_LINGUA === 'en' ? 'IT' : 'EN') + '</button>' +
       '<button type="button" class="nvb esci" id="esci" title="Chiudi la sessione">Esci</button>' +
       '</div></nav>';
   }
@@ -3174,6 +3175,7 @@
     root.querySelectorAll('[data-cfg-num]').forEach(function (e) { e.addEventListener('change', function () { CELL.deskConfigura(e.getAttribute('data-cfg-num'), String(Math.max(0, Math.round(Number(e.value) || 0)))).then(function () { DESK = null; render(); toast('Quota salvata'); }).catch(function (x) { toast((x && x.message) || 'Non salvato'); }); }); });
     on('desk-ricarica', 'click', function () { DESK = null; render(); });
     bindMappa(root, on);
+    root.querySelectorAll('[data-lingua-switch]').forEach(function (e) { e.addEventListener('click', function () { try { localStorage.setItem('caveau.lingua', window.CAVEAU_LINGUA === 'en' ? 'it' : 'en'); } catch (x) {} location.reload(); }); });
     on('a-save', 'click', submit);
     on('bform', 'submit', function (e) { e.preventDefault(); submit(); });
     on('a-del', 'click', function () { del(editingId); });
@@ -3355,7 +3357,7 @@
   window.CAVEAU = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '17.1'
+    versione: '18.0'
   };
 
 })();

@@ -6,13 +6,15 @@
    una cantina vecchia credendola aggiornata.
    Per pubblicare una versione nuova basta cambiare VERSIONE.
    ============================================================= */
-var VERSIONE = 'caveau-17.1';
+var VERSIONE = 'caveau-18.0';
 
 var INVOLUCRO = [
   './',
   './index.html',
   './app.js',
   './dati.js',
+  './app.en.js',
+  './dati.en.js',
   './supabase.js',
   './manifest.webmanifest',
   './icona-192.png',
