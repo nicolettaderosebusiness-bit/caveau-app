@@ -1,7 +1,7 @@
 (function () {
 
   /* ============================================================
-     CELLARIUM MAXIMI — direzione "Elettrico"
+     CAVEAU — direzione "Elettrico"
      Max fotografa (fronte/retro) → la bottiglia entra in CODA →
      Claude legge l'etichetta e compila ogni campo → CATALOGATA.
      Ciclo di vita: in coda · in cantina · bevuta · venduta.
@@ -731,7 +731,7 @@
 '.dk-sw b{display:block;font-weight:600;margin-bottom:3px}.dk-sw small{display:block;color:var(--t3);font-size:12px;line-height:1.45}',
 '.dk-num{width:110px;background:var(--sunk);border:1px solid var(--ed);border-radius:999px;color:var(--t1);padding:8px 12px;font-family:var(--mono)}',
 '.nvb.desk .nvn{color:var(--wine2)}',
-'/* ---------------- Cellarium Club ---------------- */',
+'/* ---------------- Caveau Club ---------------- */',
 '.kbox{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--ed);border-radius:3px;background:var(--glass);backdrop-filter:var(--blur);padding:14px 16px;margin-bottom:18px;font-size:13px;color:var(--t2)}',
 '.kbox .k{font-family:var(--mono);font-size:24px;font-weight:600;color:var(--bronze2);letter-spacing:-.03em;line-height:1;flex:0 0 auto}',
 '.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}',
@@ -2972,7 +2972,7 @@
       var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
       var u = URL.createObjectURL(blob);
       var link = document.createElement('a');
-      link.href = u; link.download = 'cellarium-' + today() + '.csv';
+      link.href = u; link.download = 'caveau-' + today() + '.csv';
       document.body.appendChild(link); link.click(); link.remove();
       setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
       toast('Archivio esportato');
@@ -2982,10 +2982,10 @@
   /* ======================= avvio =======================
      L'app non parte da sola: aspetta che qualcuno le porti la cantina.
      Chi la porta è index.html, dopo aver verificato chi sta entrando. */
-  window.CELLARIUM = {
+  window.CAVEAU = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '16.2'
+    versione: '16.3'
   };
 
 })();

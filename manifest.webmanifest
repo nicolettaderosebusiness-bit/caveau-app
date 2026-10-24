@@ -6,7 +6,7 @@
   "dir": "ltr",
   "start_url": "./",
   "scope": "./",
-  "id": "/cellarium/",
+  "id": "/caveau/",
   "display": "standalone",
   "display_override": [
     "standalone",

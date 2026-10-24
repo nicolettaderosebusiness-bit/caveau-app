@@ -1,5 +1,5 @@
 /* =============================================================
-   CELLARIUM — lo strato dati.
+   CAVEAU — lo strato dati.
    Tutto ciò che tocca il database sta qui dentro e da nessun'altra
    parte. L'interfaccia non sa che esiste un database: continua a
    maneggiare lo stesso oggetto di prima (meta + bottles), e questo
@@ -243,7 +243,7 @@
       return new Error('Email o password non corrispondono. Riprova, o chiedi una nuova password.');
     if (/email not confirmed/i.test(m))
       return new Error('Devi ancora confermare l’indirizzo: guarda nella posta.');
-    if (/not\s+fra\s+gli\s+invitati|invitati di Cellarium/i.test(m))
+    if (/not\s+fra\s+gli\s+invitati|invitati di Caveau/i.test(m))
       return new Error('Questo indirizzo non è fra gli invitati.');
     if (/Database error (saving|creating)/i.test(m))
       return new Error('Questo indirizzo non è fra gli invitati.');

@@ -135,8 +135,8 @@
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script src="dati.js?v=16.2"></script>
-<script src="app.js?v=16.2"></script>
+<script src="dati.js?v=16.3"></script>
+<script src="app.js?v=16.3"></script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -185,7 +185,7 @@
       profilo.piano = statoMio.piano || profilo.piano; profilo.ruolo = statoMio.ruolo || profilo.ruolo;
       profilo.stato_candidatura = statoMio.stato_candidatura || profilo.stato_candidatura; profilo.quota_club = statoMio.quota_club || profilo.quota_club;
       mostra('app');
-      window.CELLARIUM.avvia(r[0], profilo);
+      window.CAVEAU.avvia(r[0], profilo);
       registraServizio();
       CELL.registraAccesso();
     }).catch(function (err) {

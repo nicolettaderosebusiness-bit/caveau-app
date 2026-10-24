@@ -1,12 +1,12 @@
 /* =============================================================
-   CELLARIUM — il guardiano dell'involucro.
+   CAVEAU — il guardiano dell'involucro.
    Tiene in cache soltanto il vestito dell'app: pagina, codice,
    icone. Mai i dati, mai le foto, mai una chiamata al database:
    quelle devono sempre passare dalla rete, altrimenti si vedrebbe
    una cantina vecchia credendola aggiornata.
    Per pubblicare una versione nuova basta cambiare VERSIONE.
    ============================================================= */
-var VERSIONE = 'cellarium-16.2';
+var VERSIONE = 'caveau-16.3';
 
 var INVOLUCRO = [
   './',
@@ -60,7 +60,7 @@ self.addEventListener('fetch', function (e) {
         return risp;
       }).catch(function () {
         return caches.match('./index.html', { ignoreSearch: true }).then(function (c) {
-          return c || new Response('Cellarium non è raggiungibile.', {
+          return c || new Response('Caveau non è raggiungibile.', {
             status: 503, headers: { 'content-type': 'text/plain; charset=utf-8' } });
         });
       })

@@ -35,7 +35,7 @@ guscio vuoto: nessuna cantina, nessuna foto, nessuno storico.
 ## Pubblicare una versione nuova
 
 1. Sostituisci i file.
-2. Cambia `VERSIONE` in `sw.js` (es. `cellarium-16.1`).
+2. Cambia `VERSIONE` in `sw.js` (es. `caveau-16.1`).
 
 Senza il passo 2 chi ha già installato l'app continua a vedere la versione
 vecchia: il guardiano serve la copia che ha in cache finché il nome non cambia.
