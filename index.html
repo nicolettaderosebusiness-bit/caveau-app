@@ -115,11 +115,15 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
         <input type="email" id="p-email" autocomplete="email" inputmode="email" placeholder="nome@esempio.it" required>
         <label class="lbl" for="p-pw">Scegli una password · almeno dieci caratteri</label>
         <input type="password" id="p-pw" autocomplete="new-password" minlength="10" required>
+        <label class="lbl" for="p-garante">Chi ti presenta · il socio che ti ha parlato di Caveau</label>
+        <input type="text" id="p-garante" placeholder="Nome e cognome del socio" maxlength="160" required>
+        <label class="lbl" for="p-citta">La tua città · facoltativa</label>
+        <input type="text" id="p-citta" placeholder="es. Milano" maxlength="80">
         <label class="lbl" for="p-nota">Una riga per il desk · facoltativa</label>
         <input type="text" id="p-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
         <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
         <button class="vai" id="p-vai" type="submit">Apri la mia cantina</button>
-        <p class="nota">L’accesso è personale: il desk legge la richiesta e apre la tua cantina. Lo Speakeasy è su ammissione e si chiede da dentro.</p>
+        <p class="nota">Si entra solo presentati da un socio: il Desk legge la richiesta e apre la tua cantina. Dentro trovi la tua cantina, lo Speakeasy e i soci.</p>
       </form>
 
       <div id="f-attesa" class="attesa" hidden>
@@ -144,7 +148,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=18.0"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=18.0"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=19.0"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=19.0"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -194,6 +198,12 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   "Se questo indirizzo ha un accesso, riceverai un messaggio con il link per scegliere una nuova password.": "If this address has an account, you will receive a message with a link to choose a new password.",
   "La password deve avere almeno dieci caratteri.": "The password must be at least ten characters long.",
   "Per iscriverti devi accettare l’informativa.": "To sign up you must accept the notice.",
+  "Chi ti presenta · il socio che ti ha parlato di Caveau": "Who introduces you · the member who told you about Caveau",
+  "Nome e cognome del socio": "The member’s full name",
+  "La tua città · facoltativa": "Your city · optional",
+  "es. Milano": "e.g. Milan",
+  "Serve il nome del socio che ti presenta.": "The name of the member who introduces you is needed.",
+  "Si entra solo presentati da un socio: il Desk legge la richiesta e apre la tua cantina. Dentro trovi la tua cantina, lo Speakeasy e i soci.": "You join only when introduced by a member: the Desk reads the request and opens your cellar. Inside you find your cellar, the Speakeasy and the members.",
   "Preparo la tua cantina…": "Preparing your cellar…",
   "Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.": "We have written to you: open the message and confirm your address, then sign in here.",
   "Scegli la nuova password.": "Choose your new password.",
@@ -297,8 +307,9 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
     if (!document.getElementById('p-priv').checked) { dillo('Per iscriverti devi accettare l’informativa.', 'ko'); return; }
     var b = document.getElementById('p-vai'); b.disabled = true; dillo('Preparo la tua cantina…', 'ok');
-    var nota = document.getElementById('p-nota').value.trim();
-    CELL.iscriviti(nome, email, pw, nota).then(function (r) {
+    var nota = document.getElementById('p-nota').value.trim(), garante = document.getElementById('p-garante').value.trim(), citta = document.getElementById('p-citta').value.trim();
+    if (garante.length < 3) { dillo('Serve il nome del socio che ti presenta.', 'ko'); return; }
+    CELL.iscriviti(nome, email, pw, nota, garante, citta).then(function (r) {
       b.disabled = false;
       if (r && r.conferma) { scheda('entra'); dillo('Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.', 'ok'); return; }
       setTimeout(dentro, 0);

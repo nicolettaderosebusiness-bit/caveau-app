@@ -75,6 +75,7 @@
       regalata_a: t(b.regalata_a),
       esempio: !!b.esempio,
       club: uno(b.club, ['privata', 'segnalata', 'vendita']) || 'privata',
+      annuncio: uno(b.annuncio, ['vendita', 'scambio']) || null, prezzo_soci: n(b.prezzo_soci), anonimo: !!b.anonimo,
       aggiunta_il: d(b.aggiunta_il) || oggi()
     };
   }
@@ -105,6 +106,7 @@
       regalata_il: s(r.regalata_il), regalata_a: s(r.regalata_a),
       esempio: !!r.esempio,
       club: s(r.club) || 'privata',
+      annuncio: s(r.annuncio) || null, prezzo_soci: r.prezzo_soci == null ? null : Number(r.prezzo_soci), anonimo: !!r.anonimo, annunciata_il: s(r.annunciata_il),
       storico: storico || []
     };
   }
@@ -142,14 +144,15 @@
     password_corta: 'La password deve avere almeno dieci caratteri.',
     gia_registrato: 'Questo indirizzo ha già un accesso: entra, o chiedi una nuova password.',
     non_invitato: 'Le iscrizioni sono su invito: questo indirizzo non è in lista.',
+    serve_garante: 'Serve il nome del socio che ti presenta.',
     creazione_fallita: 'Non sono riuscito a creare l’accesso. Riprova fra poco.'
   };
-  function iscriviti(nome, email, password, nota) {
+  function iscriviti(nome, email, password, nota, garante, citta) {
     email = String(email || '').trim().toLowerCase();
     return fetch(URL_DB + '/functions/v1/iscriviti', {
       method: 'POST',
       headers: { 'content-type': 'application/json', apikey: CHIAVE, authorization: 'Bearer ' + CHIAVE },
-      body: JSON.stringify({ nome: nome, email: email, password: password, nota: nota || '' })
+      body: JSON.stringify({ nome: nome, email: email, password: password, nota: nota || '', garante: garante || '', citta: citta || '' })
     }).then(function (risp) {
       return risp.json().catch(function () { return {}; }).then(function (d) {
         if (!risp.ok || d.errore) throw new Error(SPIEGA_ISCR[d.errore] || d.messaggio || 'Iscrizione non riuscita.');
@@ -172,14 +175,14 @@
   /* il profilo: chi sono e che piano ho */
   function profilo() {
     return Promise.all([
-      sb.from('profili').select('nome,email,piano,club_fino_a,ruolo,stato_candidatura').eq('id', utente.id).maybeSingle(),
+      sb.from('profili').select('nome,email,piano,club_fino_a,ruolo,stato_candidatura,fondatore,citta').eq('id', utente.id).maybeSingle(),
       sb.from('configurazione').select('valore').eq('chiave', 'quota_club').maybeSingle()
     ]).then(function (r) {
       var p = (r[0] && r[0].data) || {};
       return {
         nome: s(p.nome), email: s(p.email || (utente && utente.email)),
         piano: p.piano || 'private', club_fino_a: s(p.club_fino_a), ruolo: p.ruolo || 'utente',
-        stato_candidatura: p.stato_candidatura || 'nessuna',
+        stato_candidatura: p.stato_candidatura || 'nessuna', fondatore: !!p.fondatore, citta: s(p.citta),
         quota_club: (r[1] && r[1].data && r[1].data.valore) || null
       };
     });
@@ -191,10 +194,15 @@
     var disp = (navigator.userAgent || '').replace(/\(KHTML, like Gecko\)/, '').slice(0, 160);
     return sb.rpc('registra_accesso', { dispositivo: disp }).then(function () { return avvisa('accesso', ''); }).catch(function () { return null; });
   }
-  function avvisa(tipo, dettaglio, email) { return chiama('avvisa', { tipo: tipo, dettaglio: dettaglio || '', email: email || '' }); }
+  function avvisa(tipo, dettaglio, email, bottigliaId) { return chiama('avvisa', { tipo: tipo, dettaglio: dettaglio || '', email: email || '', bottiglia_id: bottigliaId || '' }); }
+  /* lo Speakeasy e i soci: funzioni del database che decidono loro cosa mostrare a chi */
+  function bacheca() { return sb.rpc('speakeasy_bacheca').then(function (r) { if (r.error) throw tradurre(r.error); return r.data || []; }); }
+  function soci() { return sb.rpc('soci_elenco').then(function (r) { if (r.error) throw tradurre(r.error); return r.data || []; }); }
+  function aggiornaCitta(c) { return sb.rpc('mio_profilo_aggiorna', { nuova_citta: c || '' }).then(function (r) { if (r.error) throw tradurre(r.error); return true; }); }
+  function deskFondatore(email, valore) { return sb.rpc('desk_fondatore', { email_socio: email, valore: !!valore }).then(function (r) { if (r.error) throw tradurre(r.error); return true; }); }
   function desk() {
     return Promise.all([
-      sb.from('profili').select('id,email,nome,piano,ruolo,stato_account,stato_candidatura,pagato_fino_a,club_fino_a,ultimo_accesso,accessi,nota_desk,creato_il').order('creato_il', { ascending: false }),
+      sb.from('profili').select('id,email,nome,piano,ruolo,stato_account,stato_candidatura,pagato_fino_a,club_fino_a,ultimo_accesso,accessi,nota_desk,creato_il,fondatore,presentato_da,citta').order('creato_il', { ascending: false }),
       sb.from('richieste').select('id,tipo,testo,stato,creata_il,profilo_id').order('creata_il', { ascending: false }).limit(100),
       sb.from('accessi').select('quando,dispositivo,profilo_id').order('quando', { ascending: false }).limit(40),
       sb.from('notifiche').select('tipo,testo,inviata,errore,creata_il').order('creata_il', { ascending: false }).limit(40),
@@ -507,6 +515,7 @@
     carica: carica,
     salva: salva,
     cataloga: cataloga,
+    bacheca: bacheca, soci: soci, aggiornaCitta: aggiornaCitta, deskFondatore: deskFondatore,
     utente: function () { return utente; },
     cantina: function () { return cantina; }
   };
