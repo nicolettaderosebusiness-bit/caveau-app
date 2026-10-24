@@ -373,11 +373,15 @@
   /* La mappa della cantina (sezioni → scaffali → ripiani) viaggia come JSON
      nella colonna cantine.mappa: qui la si ripulisce in entrata e in uscita. */
   function mappaPulita(m) {
-    var sz = (m && Array.isArray(m.sezioni)) ? m.sezioni : [];
-    return { sezioni: sz.map(function (x, i) {
+    var sz = (m && Array.isArray(m.sezioni)) ? m.sezioni : [], CAT = ['rosso', 'bianco', 'rose', 'spumante', 'distillato', 'altro'];
+    var out = { sezioni: sz.map(function (x, i) {
       return { id: String(x.id || ('s' + (i + 1))), nome: String(x.nome || ('Sezione ' + (i + 1))).trim().slice(0, 60),
-        scaffali: Math.max(0, Math.min(200, parseInt(x.scaffali, 10) || 0)), ripiani: Math.max(0, Math.min(50, parseInt(x.ripiani, 10) || 0)) };
+        scaffali: Math.max(0, Math.min(200, parseInt(x.scaffali, 10) || 0)), ripiani: Math.max(0, Math.min(50, parseInt(x.ripiani, 10) || 0)),
+        categorie: (Array.isArray(x.categorie) ? x.categorie : []).filter(function (c) { return CAT.indexOf(c) !== -1; }) };
     }) };
+    if (m && m.standard) out.standard = true;
+    if (m && m.personalizzata) out.personalizzata = true;
+    return out;
   }
   function salva(stato) {
     if (!cantina) return Promise.reject(new Error('Cantina non aperta.'));
@@ -482,7 +486,7 @@
     });
   }
 
-  function cataloga(bottigliaId) { return chiama('cataloga', { bottiglia_id: bottigliaId }); }
+  function cataloga(bottigliaId) { return chiama('cataloga', { bottiglia_id: bottigliaId, lingua: window.CAVEAU_LINGUA || ((navigator.language || 'it').slice(0, 2) === 'en' ? 'en' : 'it') }); }
 
   /* ------------------------- fuori ------------------------- */
   window.CELL = {

@@ -6,7 +6,7 @@
    una cantina vecchia credendola aggiornata.
    Per pubblicare una versione nuova basta cambiare VERSIONE.
    ============================================================= */
-var VERSIONE = 'caveau-17.0';
+var VERSIONE = 'caveau-17.1';
 
 var INVOLUCRO = [
   './',
@@ -25,7 +25,7 @@ var INVOLUCRO = [
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(VERSIONE)
-      .then(function (c) { return c.addAll(INVOLUCRO); })
+      .then(function (c) { /* dalla rete, mai dalla cache HTTP: altrimenti una copia vecchia del codice entrerebbe nella versione nuova */ return Promise.all(INVOLUCRO.map(function (u) { return fetch(u, { cache: 'reload' }).then(function (r) { if (!r.ok) throw new Error(u); return c.put(u, r); }); })); })
       .then(function () { return self.skipWaiting(); })
   );
 });

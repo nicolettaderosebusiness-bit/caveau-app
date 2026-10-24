@@ -21,6 +21,7 @@
     if (!STATE.meta.titolo) STATE.meta.titolo = 'La mia cantina';
     if (!STATE.meta.valuta) STATE.meta.valuta = 'EUR';
     if (!STATE.meta.mappa || !Array.isArray(STATE.meta.mappa.sezioni)) STATE.meta.mappa = { sezioni: [] };
+    applicaStandard();
   }
 
   var isReadOnly = false, saving = false, attesa = null, firstPaint = true;
@@ -481,6 +482,10 @@
 '.mnum{font-family:var(--mono);font-size:11px;color:var(--t3);padding-bottom:11px}',
 '.mbt{font-family:var(--mono);font-size:10px;color:var(--t3);padding-bottom:11px;white-space:nowrap}',
 '.mrow .x{margin-bottom:4px}', '.mtools{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 8px}',
+'.mcat{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}', '.mcat .lbl{margin:0 6px 0 0}',
+'.mcat button{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);border:1px solid var(--ed2);border-radius:99px;padding:3px 9px;transition:color .13s,border-color .13s}',
+'.mcat button:hover{color:var(--t1);border-color:var(--t3)}', '.mcat button.on{color:var(--bronzo);border-color:var(--bronzo)}',
+'.posprop{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}', '.posprop .hint{margin:0}',
 '.posgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}', '.posgrid label{display:block;min-width:0}', '.posgrid .lbl{display:block;margin-bottom:4px}', '.posgrid input,.posgrid select{width:100%}',
 '@media(max-width:640px){.mrow{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 34px;row-gap:8px}.mrow label:nth-of-type(1){grid-column:2/span 2}.mrow label:nth-of-type(2){grid-column:2}.mrow label:nth-of-type(3){grid-column:3}.mrow .x{grid-column:4;grid-row:1}.mnum{grid-row:1}.mbt{display:none}.posgrid{grid-template-columns:1fr}}',
 '.zhd{display:flex;align-items:baseline;gap:12px;padding-bottom:9px;border-bottom:1px solid var(--ed2);margin-bottom:12px}',
@@ -1640,6 +1645,62 @@
   }
   function contaSezione(nome) { var n = 0; STATE.bottles.forEach(function (b) { if (normZ(b.zona) === normZ(nome)) n += qty(b); }); return n; }
 
+  /* ---- categorie: a ogni sezione si può dire "cosa ci va" ----
+     Servono alla mappa standard e alla posizione proposta. */
+  var CATEGORIE = [['rosso', 'Rossi'], ['bianco', 'Bianchi'], ['rose', 'Rosati'], ['spumante', 'Bollicine'], ['distillato', 'Distillati e liquori'], ['altro', 'Altro']];
+  function etichettaCategoria(k) { for (var i = 0; i < CATEGORIE.length; i++) if (CATEGORIE[i][0] === k) return CATEGORIE[i][1]; return k; }
+  function categoriaDi(b) {
+    var t = b && b.tipologia;
+    if (t === 'Spumante') return 'spumante';
+    if (t === 'Vino') return b.colore === 'Rosso' ? 'rosso' : b.colore === 'Bianco' ? 'bianco' : b.colore === 'Rosé' ? 'rose' : 'altro';
+    if (t && SPIRITI[t]) return 'distillato';
+    return 'altro';
+  }
+  /* La mappa standard: chi non ha mai ordinato la cantina parte da qui e la adatta. */
+  function mappaStandard() {
+    return { standard: true, sezioni: [
+      { id: 'std-rossi', nome: 'Rossi', scaffali: 8, ripiani: 3, categorie: ['rosso'] },
+      { id: 'std-bianchi', nome: 'Bianchi e rosati', scaffali: 6, ripiani: 3, categorie: ['bianco', 'rose'] },
+      { id: 'std-bollicine', nome: 'Bollicine', scaffali: 4, ripiani: 2, categorie: ['spumante'] },
+      { id: 'std-distillati', nome: 'Distillati e liquori', scaffali: 6, ripiani: 2, categorie: ['distillato', 'altro'] }
+    ] };
+  }
+  function applicaStandard() {
+    var m = STATE.meta.mappa;
+    if (m && Array.isArray(m.sezioni) && !m.sezioni.length && !m.personalizzata) STATE.meta.mappa = mappaStandard();
+  }
+  /* Dove la metterei: sezione per categoria; dentro la sezione lo scaffale con
+     bottiglie simili (stesso produttore, stessa categoria), altrimenti uno
+     vuoto, altrimenti il meno pieno; il ripiano meno carico. */
+  function proponiPosizione(b) {
+    var sz = sezioni(); if (!sz.length) return null;
+    var cat = categoriaDi(b || {});
+    var cand = sz.filter(function (s) { return (s.categorie || []).indexOf(cat) !== -1; });
+    if (!cand.length) cand = sz.filter(function (s) { return (s.categorie || []).indexOf('altro') !== -1; });
+    if (!cand.length) cand = sz.slice();
+    var best = null;
+    cand.forEach(function (s) {
+      var perSc = {}, k;
+      for (k = 1; k <= (s.scaffali | 0); k++) perSc[k] = { n: 0, simili: 0, rip: {} };
+      STATE.bottles.forEach(function (x) {
+        if ((b && x.id === b.id) || !inCantina(x) || !inSezione(x, s)) return;
+        var i = nInt(x.scaffale); if (i == null || !perSc[i]) return;
+        perSc[i].n += qty(x);
+        perSc[i].simili += (b && x.produttore && b.produttore && normZ(x.produttore) === normZ(b.produttore)) ? 2 : (categoriaDi(x) === cat ? 1 : 0);
+        var r = nInt(x.ripiano); if (r != null) perSc[i].rip[r] = (perSc[i].rip[r] || 0) + qty(x);
+      });
+      Object.keys(perSc).forEach(function (i) {
+        var c = perSc[i], punti = c.simili * 10 - c.n + (c.n === 0 ? 5 : 0);
+        if (!best || punti > best.punti) best = { sez: s, scaffale: +i, punti: punti, rip: c.rip };
+      });
+    });
+    if (!best) return null;
+    var ripiano = '';
+    if ((best.sez.ripiani | 0) > 0) { var min = null; for (var r = 1; r <= (best.sez.ripiani | 0); r++) { var n = best.rip[r] || 0; if (!min || n < min.n) min = { r: r, n: n }; } ripiano = String(min.r); }
+    var motivo = best.punti >= 10 ? 'vicino a bottiglie simili' : (best.punti >= 5 ? 'scaffale libero' : 'scaffale meno pieno');
+    return { zona: best.sez.nome, scaffale: String(best.scaffale), ripiano: ripiano, motivo: etichettaCategoria(cat) + ' · ' + motivo };
+  }
+
   /* ---- la ricerca capisce le posizioni ----
      "cosa c'è sullo scaffale 8 della sezione 1", "sez 2 rip 3", "1/8", "1/8/2",
      "sezione frigo". Le parole di contorno (cosa, sullo, della…) vengono tolte. */
@@ -1712,15 +1773,29 @@
       scCtl = '<input type="text" id="' + pfx + '-scaff" placeholder="es. 8 oppure A1" value="' + escHtml(b.scaffale || '') + '">';
       ripCtl = '<input type="text" id="' + pfx + '-rip" placeholder="es. 3" value="' + escHtml(b.ripiano || '') + '">';
     }
-    return '<label><span class="lbl">' + (libere ? 'Zona' : 'Sezione') + '</span>' + zonaCtl + '</label>' +
+    var proposta = (b.id && incerto(b, 'posizione')) ? '<span class="fl">posizione proposta dalla lettura · confermala o cambiala</span>' : '';
+    return '<label' + (proposta ? ' class="warned"' : '') + '><span class="lbl">' + (libere ? 'Zona' : 'Sezione') + proposta + '</span>' + zonaCtl + '</label>' +
       '<label><span class="lbl">Scaffale</span>' + scCtl + '</label>' +
-      '<label><span class="lbl">Ripiano</span>' + ripCtl + '</label>';
+      '<label><span class="lbl">Ripiano</span>' + ripCtl + '</label>' +
+      (libere ? '' : '<div class="posprop"><button type="button" class="btn sm gho" data-proponi="' + pfx + '">Proponi un posto</button><span class="hint">In base alla mappa e a quello che c’è già.</span></div>');
   }
   function posDaForm(pfx) {
     var g = function (id) { var e = document.getElementById(id); return e ? String(e.value || '').trim() : ''; };
     return { zona: g(pfx + '-zona'), scaffale: g(pfx + '-scaff'), ripiano: g(pfx + '-rip') };
   }
   function bindPos(root) {
+    root.querySelectorAll('[data-proponi]').forEach(function (e) {
+      e.addEventListener('click', function (ev) {
+        ev.preventDefault(); ev.stopPropagation();
+        var pfx = e.getAttribute('data-proponi'), w = document.getElementById('pos-' + pfx); if (!w) return;
+        var g = function (id) { var x = document.getElementById(id); return x ? x.value : ''; };
+        var base = pfx === 'i' ? { id: editingId, tipologia: g('i-tipo'), colore: g('i-col'), produttore: g('i-prod') } : {};
+        var p = proponiPosizione(base);
+        if (!p) { toast('Prima disegna la mappa della cantina'); return; }
+        w.innerHTML = campiPosizione({ zona: p.zona, scaffale: p.scaffale, ripiano: p.ripiano }, pfx); bindPos(w);
+        toast('Proposta: ' + p.zona + ' · scaffale ' + p.scaffale + (p.ripiano ? ' · ripiano ' + p.ripiano : '') + ' (' + p.motivo + ')');
+      });
+    });
     root.querySelectorAll('select[data-pos]').forEach(function (e) {
       e.addEventListener('change', function () {
         var pfx = e.getAttribute('data-pos'), w = document.getElementById('pos-' + pfx); if (!w) return;
@@ -1763,6 +1838,7 @@
     var sz = sezioni();
     if (!sz.length) return ctaMappa() + posizioneViewLibera(l);
     var tuttaLaCantina = !filters.q && !filters.zona && !filters.scaffale;
+    var avvisoStd = (mappa().standard && tuttaLaCantina) ? '<div class="mcta"><strong>Questa è la mappa standard di Caveau.</strong><p class="hint">Rossi, Bianchi e rosati, Bollicine, Distillati e liquori: un ordine già pronto per chi parte da zero. Adattala alla tua cantina: rinomina le sezioni, cambia scaffali e ripiani, aggiungine altre.</p>' + (isReadOnly ? '' : '<button type="button" class="btn pri sm" data-mappa-open>Adatta la mappa</button>') + '</div>' : '';
     var fuori = [], perSez = sz.map(function () { return []; });
     l.forEach(function (b) { var i = sz.indexOf(sezioneDi(b)); if (i < 0) fuori.push(b); else perSez[i].push(b); });
     var html = sz.map(function (s, i) {
@@ -1780,7 +1856,7 @@
         corpo + '</section>';
     }).join('');
     if (fuori.length) html += '<section class="zsec"><header class="zhd"><h3>Fuori mappa</h3><span class="zmeta tab">' + fuori.length + ' da riposizionare</span></header>' + posizioneViewLibera(fuori) + '</section>';
-    return html + (isReadOnly ? '' : '<p class="hint" style="margin-top:6px"><button type="button" class="lnk" data-mappa-open>Modifica la mappa della cantina</button></p>');
+    return avvisoStd + html + (isReadOnly ? '' : '<p class="hint" style="margin-top:6px"><button type="button" class="lnk" data-mappa-open>Modifica la mappa della cantina</button></p>');
   }
 
   /* ---- l'editor della mappa ---- */
@@ -1802,13 +1878,14 @@
         '<label><span class="lbl">Scaffali</span><input type="number" min="0" max="200" id="ms-sc-' + i + '" value="' + escHtml(String(s.scaffali == null ? '' : s.scaffali)) + '"></label>' +
         '<label><span class="lbl">Ripiani per scaffale</span><input type="number" min="0" max="50" id="ms-rip-' + i + '" value="' + escHtml(String(s.ripiani == null ? '' : s.ripiani)) + '" placeholder="0 = nessuno"></label>' +
         '<span class="mbt tab">' + (bt ? bt + ' bt' : '') + '</span>' +
-        '<button type="button" class="x" data-ms-del="' + i + '" aria-label="Elimina sezione" title="Elimina sezione">✕</button></div>';
+        '<button type="button" class="x" data-ms-del="' + i + '" aria-label="Elimina sezione" title="Elimina sezione">✕</button>' +
+        '<div class="mcat"><span class="lbl">Cosa ci va</span>' + CATEGORIE.map(function (c) { return '<button type="button" class="' + ((s.categorie || []).indexOf(c[0]) !== -1 ? 'on' : '') + '" data-ms-cat="' + i + '|' + c[0] + '">' + c[1] + '</button>'; }).join('') + '</div></div>';
     }).join('');
     return '<div class="ov" data-ov><div class="sheet wide">' +
       head('Mappa della cantina', 'Dividi la cantina in sezioni (una parete, un armadio, il frigo), ogni sezione in scaffali numerati e, se vuoi, ogni scaffale in ripiani. Poi ogni bottiglia prende il suo posto.') +
       '<div class="shb">' + (righe || '<p class="hint">Nessuna sezione ancora. Parti da un modello o aggiungine una.</p>') +
       '<div class="mtools"><button type="button" class="btn sm" data-ms-add>+ Aggiungi sezione</button>' +
-      (d.length ? '' : '<button type="button" class="btn sm gho" data-ms-modello="4|8|3">Modello: 4 sezioni × 8 scaffali × 3 ripiani</button><button type="button" class="btn sm gho" data-ms-modello="2|6|0">Modello: 2 sezioni × 6 scaffali</button>') + '</div>' +
+      (d.length ? '' : '<button type="button" class="btn sm gho" data-ms-modello="std">Modello Caveau: Rossi, Bianchi e rosati, Bollicine, Distillati</button><button type="button" class="btn sm gho" data-ms-modello="4|8|3">Modello: 4 sezioni × 8 scaffali × 3 ripiani</button><button type="button" class="btn sm gho" data-ms-modello="2|6|0">Modello: 2 sezioni × 6 scaffali</button>') + '</div>' +
       '<p class="hint">Rinominare una sezione porta con sé le sue bottiglie. Eliminarla non le cancella: restano “fuori mappa” finché non le riposizioni. Nella ricerca potrai scrivere “sezione 1 scaffale 8”, “sez 2 rip 3” oppure “1/8”.</p></div>' +
       '<div class="shf"><button type="button" class="btn gho" data-shutsheet>Annulla</button><button type="button" class="btn pri" id="ms-save">Salva la mappa</button></div></div></div>';
   }
@@ -1822,19 +1899,27 @@
       var sc = Math.max(0, Math.min(200, parseInt(s.scaffali, 10) || 0)), rp = Math.max(0, Math.min(50, parseInt(s.ripiani, 10) || 0));
       var orig = origDi(s);
       if (orig && normZ(orig.nome) !== normZ(nome)) rinomina.push([orig.nome, nome]);
-      nuove.push({ id: String(s.id || uid()), nome: nome.slice(0, 60), scaffali: sc, ripiani: rp });
+      nuove.push({ id: String(s.id || uid()), nome: nome.slice(0, 60), scaffali: sc, ripiani: rp, categorie: (s.categorie || []).slice() });
     }
     mappaOpen = false; mappaDraft = null;
     commit(function (ns) {
-      ns.meta.mappa = { sezioni: nuove };
+      ns.meta.mappa = { sezioni: nuove, personalizzata: true };
       if (rinomina.length) ns.bottles.forEach(function (b) { rinomina.forEach(function (p) { if (normZ(b.zona) === normZ(p[0])) b.zona = p[1]; }); });
     }, false);
     toast('Mappa salvata · ' + nuove.length + (nuove.length === 1 ? ' sezione' : ' sezioni'));
   }
   function bindMappa(root, on) {
     root.querySelectorAll('[data-mappa-open]').forEach(function (e) { e.addEventListener('click', function (ev) { ev.stopPropagation(); apriMappa(); }); });
-    root.querySelectorAll('[data-ms-add]').forEach(function (e) { e.addEventListener('click', function () { leggiDraft(); mappaDraft.push({ id: uid(), nome: 'Sezione ' + (mappaDraft.length + 1), scaffali: 8, ripiani: 0 }); render(); }); });
-    root.querySelectorAll('[data-ms-modello]').forEach(function (e) { e.addEventListener('click', function () { var p = e.getAttribute('data-ms-modello').split('|'); mappaDraft = []; for (var i = 1; i <= +p[0]; i++) mappaDraft.push({ id: uid(), nome: 'Sezione ' + i, scaffali: +p[1], ripiani: +p[2] }); render(); }); });
+    root.querySelectorAll('[data-ms-add]').forEach(function (e) { e.addEventListener('click', function () { leggiDraft(); mappaDraft.push({ id: uid(), nome: 'Sezione ' + (mappaDraft.length + 1), scaffali: 8, ripiani: 0, categorie: [] }); render(); }); });
+    root.querySelectorAll('[data-ms-cat]').forEach(function (e) {
+      e.addEventListener('click', function () {
+        leggiDraft(); var p = e.getAttribute('data-ms-cat').split('|'), s = mappaDraft[+p[0]]; if (!s) return;
+        s.categorie = s.categorie || []; var i = s.categorie.indexOf(p[1]);
+        if (i === -1) s.categorie.push(p[1]); else s.categorie.splice(i, 1);
+        render();
+      });
+    });
+    root.querySelectorAll('[data-ms-modello]').forEach(function (e) { e.addEventListener('click', function () { var m = e.getAttribute('data-ms-modello'); if (m === 'std') { mappaDraft = mappaStandard().sezioni; render(); return; } var p = m.split('|'); mappaDraft = []; for (var i = 1; i <= +p[0]; i++) mappaDraft.push({ id: uid(), nome: 'Sezione ' + i, scaffali: +p[1], ripiani: +p[2], categorie: [] }); render(); }); });
     root.querySelectorAll('[data-ms-del]').forEach(function (e) {
       e.addEventListener('click', function () {
         leggiDraft();
@@ -3182,7 +3267,7 @@
           var p = ns.bottles[i], era = p.stato === 'da_analizzare';
           Object.assign(p, data);
           p.campi_incerti = (p.campi_incerti || []).filter(function (c) {
-            var v = data[c];
+            var v = c === 'posizione' ? (data.zona || data.scaffale) : data[c];
             return !(Array.isArray(v) ? v.length : v);
           });
           if (era && data.nome) { p.stato = 'catalogata'; p.note_analisi = 'Scheda compilata a mano.'; }
@@ -3270,7 +3355,7 @@
   window.CAVEAU = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '17.0'
+    versione: '17.1'
   };
 
 })();
