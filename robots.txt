@@ -1,0 +1,3 @@
+Cellarium — accesso privato su invito.
+User-agent: *
+Disallow: /

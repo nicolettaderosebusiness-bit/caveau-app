@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Cellarium Private · Caveau</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="La tua cantina, ordinata e sotto controllo. Cellarium Private di Caveau.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1C1815">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cellarium">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icona-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icona-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* La porta di casa: stessa livrea Market delle stanze che sta davanti. */
+  :root{
+    --bg:#1C1815; --pan:rgba(44,37,32,.62); --sunk:#120F0D;
+    --ed:rgba(241,235,224,.14); --ed2:rgba(241,235,224,.27);
+    --t1:#F1EBE0; --t2:#B3A695; --t3:#807469;
+    --vino:#71192D; --acc:#C9A06A; --acc2:#DDB784; --neg:#E0556A;
+    --glass:rgba(44,37,32,.58); --blur:blur(16px) saturate(1.3);
+    --sans:Figtree,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,"Courier New",monospace;
+    color-scheme:dark;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{margin:0;padding:0;color:var(--t1);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+    background:radial-gradient(130% 70% at 50% 0%,rgba(74,17,30,.42),transparent 62%),
+      radial-gradient(1100px 640px at 6% -8%,rgba(201,160,106,.17),transparent 62%),
+      radial-gradient(900px 620px at 104% 14%,rgba(142,34,56,.22),transparent 60%),var(--bg);background-attachment:fixed}
+  button{font:inherit;cursor:pointer;background:none;border:0;color:inherit}
+  #porta{min-height:100dvh;display:grid;place-items:center;padding:28px 20px}
+  #porta[hidden]{display:none}
+  .porta-in{width:100%;max-width:420px}
+  .marchio{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 8px;color:var(--t1);font-weight:700;font-size:22px;letter-spacing:-.03em}
+  .marchio svg{height:26px;width:auto;color:var(--acc)}
+  .porta h1{font-size:11px;font-family:var(--mono);font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--acc);text-align:center;margin:0 0 10px}
+  .porta .claim{text-align:center;color:var(--t2);font-size:14.5px;line-height:1.55;margin:0 0 26px}
+  .scheda{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--ed);border-radius:16px;padding:22px}
+  .tabs{display:flex;border:1px solid var(--ed);border-radius:999px;padding:3px;margin-bottom:20px;background:var(--sunk)}
+  .tabs button{flex:1;padding:9px 12px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+  .tabs button.on{background:var(--acc);color:#1C1815}
+  .lbl{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin:14px 0 8px}
+  .lbl:first-child{margin-top:0}
+  input[type=email],input[type=password],input[type=text]{width:100%;background:var(--sunk);border:1px solid var(--ed);border-radius:999px;
+    padding:12px 17px;color:var(--t1);font-family:var(--mono);font-size:14px;outline:none}
+  input:focus{border-color:var(--acc)}
+  .chk{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.5;color:var(--t2);margin-top:14px}
+  .chk input{margin-top:3px;accent-color:var(--acc)}
+  .vai{width:100%;margin-top:16px;background:var(--acc);border:1px solid var(--acc);color:#1C1815;
+    border-radius:999px;padding:12px 18px;font-weight:600;font-size:14.5px;transition:opacity .15s}
+  .vai:hover{background:var(--acc2);border-color:var(--acc2)}
+  .vai:disabled{opacity:.45;cursor:default}
+  .lnk{display:block;margin:14px auto 0;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--t3);text-decoration:underline;text-underline-offset:3px}
+  .lnk:hover{color:var(--t1)}
+  .nota{margin:16px 2px 0;font-size:12.5px;line-height:1.6;color:var(--t3)}
+  .esito{margin-top:16px;border-radius:12px;padding:13px 15px;font-size:13.5px;line-height:1.55;display:none}
+  .esito.ok{display:block;background:rgba(201,160,106,.14);border:1px solid rgba(201,160,106,.4);color:var(--acc2)}
+  .esito.ko{display:block;background:rgba(224,85,106,.12);border:1px solid rgba(224,85,106,.42);color:#F0A3AE}
+  .firma{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5E564C}
+  .firma a{color:inherit}
+  #attesa{min-height:100dvh;display:grid;place-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3)}
+  #attesa[hidden]{display:none}
+  form[hidden]{display:none}
+  .attesa[hidden]{display:none}
+  .attesa .stato{font-size:14px;line-height:1.6;color:var(--t1);border-left:2px solid var(--acc);padding:10px 14px;background:var(--sunk);border-radius:0 10px 10px 0;margin:0}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="attesa">Apro la cantina…</div>
+
+<div id="porta" class="porta" hidden>
+  <div class="porta-in">
+    <div class="marchio"><svg viewBox="0 0 10 22" aria-hidden="true"><path d="M3.6 1h2.8v5.3c1.5.7 2.4 2.1 2.4 3.9V19a2 2 0 0 1-2 2H2.8a2 2 0 0 1-2-2v-8.8c0-1.8.9-3.2 2.8-3.9V1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>CAVEAU</div>
+    <h1>Cellarium Private</h1>
+    <p class="claim">La tua cantina, ordinata e sotto controllo. Una porta sola per la cantina e per lo Speakeasy.</p>
+
+    <div class="scheda">
+      <div class="tabs" role="tablist">
+        <button type="button" id="t-entra" class="on" role="tab">Entra</button>
+        <button type="button" id="t-iscr" role="tab">Iscriviti</button>
+      </div>
+
+      <form id="f-entra" novalidate>
+        <label class="lbl" for="e-email">Email</label>
+        <input type="email" id="e-email" autocomplete="email" inputmode="email" placeholder="nome@esempio.it" required>
+        <label class="lbl" for="e-pw">Password</label>
+        <input type="password" id="e-pw" autocomplete="current-password" required>
+        <button class="vai" id="e-vai" type="submit">Entra</button>
+        <button class="lnk" id="e-dim" type="button">Ho dimenticato la password</button>
+      </form>
+
+      <form id="f-iscr" novalidate hidden>
+        <label class="lbl" for="i-nome">Nome e cognome</label>
+        <input type="text" id="i-nome" autocomplete="name" placeholder="Il tuo nome" maxlength="120">
+        <label class="lbl" for="i-email">Email</label>
+        <input type="email" id="i-email" autocomplete="email" inputmode="email" placeholder="nome@esempio.it" required>
+        <label class="lbl" for="i-pw">Scegli una password · almeno dieci caratteri</label>
+        <input type="password" id="i-pw" autocomplete="new-password" minlength="10" required>
+        <label class="lbl" for="i-nota">Una riga per il desk · facoltativa</label>
+        <input type="text" id="i-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
+        <label class="chk"><input type="checkbox" id="i-priv"> <span>Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
+        <button class="vai" id="i-vai" type="submit">Apri la mia cantina</button>
+        <p class="nota">L’accesso è personale: il desk legge la richiesta e apre la cantina. Lo Speakeasy, la cantina aggregata del Club, è su ammissione e si chiede da dentro.</p>
+      </form>
+
+      <div id="f-attesa" class="attesa" hidden>
+        <p class="stato" id="attesa-testo"></p>
+        <button class="vai" id="attesa-ricontrolla" type="button">Ricontrolla</button>
+        <button class="lnk" id="attesa-esci" type="button">Esci</button>
+      </div>
+
+      <form id="f-nuova" novalidate hidden>
+        <label class="lbl" for="n-pw">La nuova password · almeno dieci caratteri</label>
+        <input type="password" id="n-pw" autocomplete="new-password" minlength="10" required>
+        <button class="vai" id="n-vai" type="submit">Salva ed entra</button>
+      </form>
+
+      <div class="esito" id="esito" role="status" aria-live="polite"></div>
+    </div>
+
+    <p class="firma">Accesso privato · <a href="https://caveau-private-exchange.drnicoletta.chatgpt.site/editorial-edition">caveau</a></p>
+  </div>
+</div>
+
+<div id="root"></div>
+
+<script src="supabase.js"></script>
+<script src="dati.js?v=16.1"></script>
+<script src="app.js?v=16.1"></script>
+<script>
+(function () {
+  var attesa = document.getElementById('attesa');
+  var porta  = document.getElementById('porta');
+  var esito  = document.getElementById('esito');
+  var fE = document.getElementById('f-entra'), fI = document.getElementById('f-iscr'), fN = document.getElementById('f-nuova'), fA = document.getElementById('f-attesa');
+  var tE = document.getElementById('t-entra'), tI = document.getElementById('t-iscr');
+  var recupero = false;
+
+  function mostra(quale) {
+    attesa.hidden = quale !== 'attesa';
+    porta.hidden  = quale !== 'porta';
+    document.getElementById('root').style.display = quale === 'app' ? '' : 'none';
+  }
+  function dillo(testo, classe) { esito.textContent = testo || ''; esito.className = 'esito ' + (testo ? classe : ''); }
+  function scheda(q) {
+    fE.hidden = q !== 'entra'; fI.hidden = q !== 'iscr'; fN.hidden = q !== 'nuova'; fA.hidden = q !== 'attesa';
+    document.querySelector('.tabs').hidden = q === 'attesa';
+    tE.classList.toggle('on', q === 'entra'); tI.classList.toggle('on', q === 'iscr');
+    dillo('');
+  }
+  tE.addEventListener('click', function () { scheda('entra'); });
+  tI.addEventListener('click', function () { scheda('iscr'); });
+
+  function dentro() {
+    mostra('attesa');
+    attesa.textContent = 'Apro la cantina…';
+    var statoMio = null;
+    CELL.sessione().then(function (u) {
+      if (!u) throw new Error('Sessione non aperta: entra di nuovo.');
+      return CELL.mioStato();
+    }).then(function (st) {
+      statoMio = st || {};
+      if (!statoMio.puo_entrare) {
+        var t;
+        if (statoMio.stato_account === 'rifiutato') t = 'Per ora il desk non ha potuto aprire il tuo accesso. La richiesta resta registrata: puoi scrivere al desk o riproporti più avanti.';
+        else if (statoMio.stato_account === 'sospeso') t = 'Il tuo accesso è sospeso. Scrivi al desk per riattivarlo.';
+        else if (statoMio.stato_account === 'approvato' && statoMio.pagamento_richiesto === 'si') t = 'Il tuo accesso è approvato. Per aprire la cantina serve la quota annuale' + (Number(statoMio.quota_private) > 0 ? ' di ' + statoMio.quota_private + ' €' : '') + ': il desk ti scrive con le coordinate, e appena arriva la cantina si apre.';
+        else t = 'Richiesta ricevuta. Il desk la legge e apre la tua cantina: ti scrive lui. Quando torni, entra con la tua email e la password.';
+        mostra('porta'); scheda('attesa'); document.getElementById('attesa-testo').textContent = t;
+        throw { silenzioso: true };
+      }
+      return Promise.all([CELL.carica(), CELL.profilo()]);
+    }).then(function (r) {
+      var profilo = r[1] || {};
+      profilo.piano = statoMio.piano || profilo.piano; profilo.ruolo = statoMio.ruolo || profilo.ruolo;
+      profilo.stato_candidatura = statoMio.stato_candidatura || profilo.stato_candidatura; profilo.quota_club = statoMio.quota_club || profilo.quota_club;
+      mostra('app');
+      window.CELLARIUM.avvia(r[0], profilo);
+      registraServizio();
+      CELL.registraAccesso();
+    }).catch(function (err) {
+      if (err && err.silenzioso) return;
+      mostra('porta'); scheda('entra');
+      dillo((err && err.message) || 'Non riesco ad aprire la cantina.', 'ko');
+    });
+  }
+
+  fE.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('e-email').value.trim(), pw = document.getElementById('e-pw').value;
+    if (!email || email.indexOf('@') < 1) { dillo('Serve un indirizzo email valido.', 'ko'); return; }
+    if (!pw) { dillo('Serve la password.', 'ko'); return; }
+    var b = document.getElementById('e-vai'); b.disabled = true; dillo('Entro…', 'ok');
+    CELL.entra(email, pw).then(function () { b.disabled = false; setTimeout(dentro, 0); })
+      .catch(function (err) { b.disabled = false; dillo((err && err.message) || 'Non ha funzionato.', 'ko'); });
+  });
+
+  document.getElementById('e-dim').addEventListener('click', function () {
+    var email = document.getElementById('e-email').value.trim();
+    if (!email || email.indexOf('@') < 1) { dillo('Scrivi prima la tua email qui sopra, poi premi di nuovo.', 'ko'); return; }
+    dillo('Un momento…', 'ok');
+    CELL.recupera(email).then(function () {
+      dillo('Se questo indirizzo ha un accesso, riceverai un messaggio con il link per scegliere una nuova password.', 'ok');
+    }).catch(function (err) { dillo((err && err.message) || 'Non ha funzionato.', 'ko'); });
+  });
+
+  fI.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nome = document.getElementById('i-nome').value.trim(), email = document.getElementById('i-email').value.trim(), pw = document.getElementById('i-pw').value;
+    if (!email || email.indexOf('@') < 1) { dillo('Serve un indirizzo email valido.', 'ko'); return; }
+    if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
+    if (!document.getElementById('i-priv').checked) { dillo('Per iscriverti devi accettare l’informativa.', 'ko'); return; }
+    var b = document.getElementById('i-vai'); b.disabled = true; dillo('Preparo la tua cantina…', 'ok');
+    var nota = document.getElementById('i-nota').value.trim();
+    CELL.iscriviti(nome, email, pw, nota).then(function (r) {
+      b.disabled = false;
+      if (r && r.conferma) { scheda('entra'); dillo('Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.', 'ok'); return; }
+      setTimeout(dentro, 0);
+    }).catch(function (err) { b.disabled = false; dillo((err && err.message) || 'Non ha funzionato.', 'ko'); });
+  });
+
+  fN.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = document.getElementById('n-pw').value;
+    if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
+    var b = document.getElementById('n-vai'); b.disabled = true;
+    CELL.nuovaPassword(pw).then(function () { recupero = false; history.replaceState(null, '', location.pathname); setTimeout(dentro, 0); })
+      .catch(function (err) { b.disabled = false; dillo((err && err.message) || 'Non ha funzionato.', 'ko'); });
+  });
+
+  document.getElementById('attesa-ricontrolla').addEventListener('click', function () { dentro(); });
+  document.getElementById('attesa-esci').addEventListener('click', function () { CELL.esci(); });
+
+  function registraServizio() {
+    if (!('serviceWorker' in navigator)) return;
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost') return;
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+
+  CELL.sb.auth.onAuthStateChange(function (evento) {
+    if (evento === 'PASSWORD_RECOVERY') { recupero = true; mostra('porta'); scheda('nuova'); dillo('Scegli la nuova password.', 'ok'); }
+  });
+
+  CELL.sessione().then(function (u) {
+    if (/type=recovery/.test(location.hash) || recupero) { recupero = true; mostra('porta'); scheda('nuova'); return; }
+    if (u) { dentro(); return; }
+    mostra('porta'); scheda('entra');
+    registraServizio();
+    if (/[?&]error/.test(location.search) || /error/.test(location.hash))
+      dillo('Il link non è più valido: chiedine un altro.', 'ko');
+  }).catch(function () {
+    mostra('porta'); scheda('entra');
+    dillo('L’archivio non risponde. Riprova fra poco.', 'ko');
+  });
+})();
+</script>
+</body>
+</html>
