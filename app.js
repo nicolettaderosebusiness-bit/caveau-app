@@ -20,6 +20,7 @@
     if (!STATE.bottles) STATE.bottles = [];
     if (!STATE.meta.titolo) STATE.meta.titolo = 'La mia cantina';
     if (!STATE.meta.valuta) STATE.meta.valuta = 'EUR';
+    if (!STATE.meta.mappa || !Array.isArray(STATE.meta.mappa.sezioni)) STATE.meta.mappa = { sezioni: [] };
   }
 
   var isReadOnly = false, saving = false, attesa = null, firstPaint = true;
@@ -471,6 +472,17 @@
 
 /* ---------------- vista per posizione ---------------- */
 '.zsec{margin-bottom:26px}',
+'.scf.vuoto{opacity:.5}', '.scf.vuoto .scf-h{border-bottom:none}',
+'.zhd .zsub{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}',
+'.mcta{border:1px dashed var(--acc-s);border-radius:12px;padding:16px 18px;margin-bottom:18px;background:var(--pan)}',
+'.mcta strong{display:block;font-size:16px;letter-spacing:-.02em;margin-bottom:4px}', '.mcta .btn{margin-top:10px}',
+'.mrow{display:grid;grid-template-columns:26px minmax(0,1.6fr) 92px 150px 52px 34px;gap:10px;align-items:end;padding:10px 0;border-bottom:1px solid var(--ed)}',
+'.mrow label{display:block;min-width:0}', '.mrow .lbl{display:block;margin-bottom:4px}', '.mrow input{width:100%}',
+'.mnum{font-family:var(--mono);font-size:11px;color:var(--t3);padding-bottom:11px}',
+'.mbt{font-family:var(--mono);font-size:10px;color:var(--t3);padding-bottom:11px;white-space:nowrap}',
+'.mrow .x{margin-bottom:4px}', '.mtools{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 8px}',
+'.posgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}', '.posgrid label{display:block;min-width:0}', '.posgrid .lbl{display:block;margin-bottom:4px}', '.posgrid input,.posgrid select{width:100%}',
+'@media(max-width:640px){.mrow{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 34px;row-gap:8px}.mrow label:nth-of-type(1){grid-column:2/span 2}.mrow label:nth-of-type(2){grid-column:2}.mrow label:nth-of-type(3){grid-column:3}.mrow .x{grid-column:4;grid-row:1}.mnum{grid-row:1}.mbt{display:none}.posgrid{grid-template-columns:1fr}}',
 '.zhd{display:flex;align-items:baseline;gap:12px;padding-bottom:9px;border-bottom:1px solid var(--ed2);margin-bottom:12px}',
 '.zhd h3{font-weight:700;font-size:19px;letter-spacing:-.03em}',
 '.zmeta{font-family:var(--mono);font-size:10.5px;color:var(--t3);margin-left:auto;white-space:nowrap}',
@@ -884,7 +896,8 @@
   /* Dove sta fisicamente. Con centinaia di bottiglie è la differenza fra
      sapere che ce l'hai e riuscire ad andartela a prendere. */
   function posizione(b) {
-    var p = [b.zona, b.scaffale, b.ripiano ? 'rip. ' + b.ripiano : ''].filter(Boolean);
+    var k = nInt(b.scaffale);
+    var p = [b.zona, b.scaffale ? (k != null ? 'scaff. ' + k : b.scaffale) : '', b.ripiano ? 'rip. ' + b.ripiano : ''].filter(Boolean);
     return p.length ? p.join(' · ') : '';
   }
   function zonaDi(b) { return (b.zona || '').trim() || 'Senza posizione'; }
@@ -1570,6 +1583,271 @@
     }).catch(function (e) { toast((e && e.message) || 'Non riuscito'); });
   }
 
+  /* ======================= MAPPA DELLA CANTINA =======================
+     Sezioni → scaffali → ripiani. La mappa vive in meta.mappa (colonna
+     cantine.mappa). Le bottiglie continuano a portare zona / scaffale /
+     ripiano come testo: zona = nome della sezione, scaffale e ripiano =
+     numeri. Così CSV, schede e ricerca libera funzionano come prima, e una
+     bottiglia la cui zona non è in mappa resta semplicemente "fuori mappa". */
+  var mappaOpen = false, mappaDraft = null, ultimaPos = null;
+  function mappa() {
+    var m = STATE.meta.mappa;
+    if (!m || !Array.isArray(m.sezioni)) { m = { sezioni: [] }; STATE.meta.mappa = m; }
+    return m;
+  }
+  function sezioni() { return mappa().sezioni; }
+  function normZ(s) { return String(s == null ? '' : s).trim().toLowerCase().replace(/\s+/g, ' '); }
+  function nInt(v) { var m = String(v == null ? '' : v).trim().match(/^0*(\d+)$/); return m ? +m[1] : null; }
+  function sezioneConNome(nome) {
+    var n = normZ(nome); if (!n) return null;
+    var sz = sezioni();
+    for (var i = 0; i < sz.length; i++) if (normZ(sz[i].nome) === n) return sz[i];
+    return null;
+  }
+  /* "sezione 3": prima una sezione che si chiama davvero così, poi la terza della lista */
+  function sezionePerNumero(k) {
+    var sz = sezioni(), i;
+    for (i = 0; i < sz.length; i++) { var m = normZ(sz[i].nome).match(/^(?:sezione|sez\.?|settore|zona|parete|armadio)\s*(\d+)$/); if (m && +m[1] === k) return sz[i]; }
+    return sz[k - 1] || null;
+  }
+  function sezioneDi(b) { return sezioneConNome(b.zona); }
+  function numeroSezione(sz) { var i = sezioni().indexOf(sz); return i < 0 ? 0 : i + 1; }
+  function nomeDefault(sz) { return /^sezione\s*\d+$/i.test(String(sz.nome || '').trim()); }
+  function etichettaSez(sz) { var k = numeroSezione(sz); return (!k || nomeDefault(sz)) ? sz.nome : 'Sezione ' + k + ' · ' + sz.nome; }
+  function stessoNumero(v, k) { var n = nInt(v); return n != null ? n === k : normZ(v) === String(k); }
+  function stessoScaffale(b, sc) { var k = nInt(sc); return k != null ? stessoNumero(b.scaffale, k) : scaffaleDi(b).toLowerCase() === String(sc).toLowerCase(); }
+  function inSezione(b, sz) {
+    if (!sz) return false;
+    if (normZ(b.zona) === normZ(sz.nome)) return true;
+    if (sz.virtuale) { var k = nInt(b.zona); return k != null && k === sz.k; }
+    return false;
+  }
+  function sezioneTesto(b) { var sz = sezioneDi(b); if (!sz) return ''; var k = numeroSezione(sz); return k ? 'sezione ' + k + ' sez ' + k : ''; }
+  function zoneTutte() {   // le sezioni della mappa prima, poi le zone libere trovate sulle bottiglie
+    var out = sezioni().map(function (s) { return s.nome; }), viste = {};
+    out.forEach(function (z) { viste[normZ(z)] = 1; });
+    zoneEsistenti().forEach(function (z) { if (!viste[normZ(z)]) { viste[normZ(z)] = 1; out.push(z); } });
+    return out;
+  }
+  function scaffaliDiZona(zona) {
+    var sz = sezioneConNome(zona);
+    if (!sz) return scaffaliEsistenti(zona);
+    var conta = {};
+    STATE.bottles.forEach(function (b) { if (!inSezione(b, sz)) return; var k = nInt(b.scaffale); if (k != null) conta[k] = (conta[k] || 0) + qty(b); });
+    var out = [];
+    for (var i = 1; i <= (sz.scaffali | 0); i++) out.push({ sc: String(i), n: conta[i] || 0, zone: [sz.nome] });
+    return out;
+  }
+  function contaSezione(nome) { var n = 0; STATE.bottles.forEach(function (b) { if (normZ(b.zona) === normZ(nome)) n += qty(b); }); return n; }
+
+  /* ---- la ricerca capisce le posizioni ----
+     "cosa c'è sullo scaffale 8 della sezione 1", "sez 2 rip 3", "1/8", "1/8/2",
+     "sezione frigo". Le parole di contorno (cosa, sullo, della…) vengono tolte. */
+  var STOP = ' c è cè l d cosa che ce sul sullo sulla sui sugli sulle su nel nello nella nei negli nelle in a al allo alla ai agli alle della del dello dei degli delle di da dal dallo dalla il lo la i gli le un uno una e ed o ho hai abbiamo mi ci si trova trovami cerca cercami mostra mostrami fammi vedere dimmi dammi elenca elencami bottiglie bottiglia vini vino dove sta stanno quali quale quante quanti tutto tutte tutti per con ';
+  var _pq = { q: null, r: null };
+  function posQuery(q) {
+    if (_pq.q === q) return _pq.r;
+    var out = { sez: null, k: null, scaff: null, rip: null, parole: [], attiva: false };
+    var s = ' ' + String(q).toLowerCase().replace(/[’èé']/g, function (c) { return c === '’' || c === "'" ? ' ' : c; }).replace(/[,;:!?()“”"]/g, ' ') + ' ';
+    s = s.replace(/\s(\d{1,2})\/(\d{1,3})(?:\/(\d{1,2}))?\s/, function (_, a, b, c) { out.k = +a; out.scaff = +b; if (c) out.rip = +c; return ' '; });
+    s = s.replace(/\s(?:sezione|sezioni|sez\.?|settore|zona|parete|stanza|area|armadio)\s*(?:n\.?|n°|numero)?\s*(\d{1,3})\s/, function (_, n) { out.k = +n; return ' '; });
+    s = s.replace(/\s(?:scaffale|scaffali|scaff\.?|scaf\.?|sc\.?|mensola|colonna|rack)\s*(?:n\.?|n°|numero)?\s*(\d{1,3})\s/, function (_, n) { out.scaff = +n; return ' '; });
+    s = s.replace(/\s(?:ripiano|ripiani|rip\.?|piano|livello|fila|riga)\s*(?:n\.?|n°|numero)?\s*(\d{1,3})\s/, function (_, n) { out.rip = +n; return ' '; });
+    s = s.replace(/\s(?:sezione|sez\.?|zona|settore)\s+(\S+)\s/, function (m, w) { var sz = sezioneConNome(w); if (sz) { out.sez = sz; return ' '; } return m; });
+    if (out.k != null && !out.sez) out.sez = sezionePerNumero(out.k) || { nome: 'Sezione ' + out.k, virtuale: true, k: out.k };
+    out.attiva = !!(out.sez || out.scaff != null || out.rip != null);
+    var parole = s.split(/\s+/).filter(Boolean);
+    var utili = parole.filter(function (w) { return STOP.indexOf(' ' + w + ' ') === -1; });
+    if (out.attiva) utili = utili.filter(function (w) { return w.length > 1; });
+    out.parole = (utili.length || out.attiva) ? utili : parole;
+    _pq = { q: q, r: out };
+    return out;
+  }
+  function descrPos(pq) {
+    var p = [];
+    if (pq.sez) p.push(pq.sez.virtuale ? 'Sezione ' + pq.sez.k : etichettaSez(pq.sez));
+    if (pq.scaff != null) p.push('scaffale ' + pq.scaff);
+    if (pq.rip != null) p.push('ripiano ' + pq.rip);
+    return p.join(' · ');
+  }
+  function notaPosQuery(l) {
+    if (!filters.q) return '';
+    var pq = posQuery(filters.q); if (!pq.attiva) return '';
+    var pezzi = l.reduce(function (n, b) { return n + qty(b); }, 0), avviso = '';
+    if (pq.sez && !pq.sez.virtuale && pq.scaff != null && pq.scaff > (pq.sez.scaffali | 0)) avviso = ' · attenzione: questa sezione ha solo ' + pq.sez.scaffali + ' scaffali';
+    else if (pq.sez && pq.sez.virtuale && sezioni().length) avviso = ' · nessuna sezione con questo numero nella mappa';
+    return '<p class="qres pos">Posizione letta dalla ricerca: <strong>' + escHtml(descrPos(pq)) + '</strong> — <strong>' + pezzi + '</strong> ' +
+      (pezzi === 1 ? 'bottiglia' : 'bottiglie') + (pezzi ? '' : ' · vuoto') + escHtml(avviso) +
+      (pq.parole.length ? ' · filtrate per “' + escHtml(pq.parole.join(' ')) + '”' : '') +
+      ' <button type="button" class="lnk" id="q-off3">mostra tutta la cantina</button></p>';
+  }
+
+  /* ---- i campi "dove sta": select guidate dalla mappa, testo libero se non c'è mappa ---- */
+  function opt(v, et, sel) { return '<option value="' + escHtml(v) + '"' + (sel ? ' selected' : '') + '>' + escHtml(et) + '</option>'; }
+  function campiPosizione(b, pfx) {
+    b = b || {};
+    var sz = sezioneConNome(b.zona), libere = sezioni().length === 0, zonaCtl, scCtl, ripCtl, i;
+    if (libere) {
+      zonaCtl = '<input type="text" id="' + pfx + '-zona" list="dl-zona" placeholder="es. Cantina bassa" value="' + escHtml(b.zona || '') + '"><datalist id="dl-zona">' + zoneEsistenti().map(function (z) { return '<option value="' + escHtml(z) + '">'; }).join('') + '</datalist>';
+    } else {
+      var zl = zoneTutte();
+      zonaCtl = '<select id="' + pfx + '-zona" data-pos="' + pfx + '">' + opt('', 'Senza posizione', !b.zona) +
+        sezioni().map(function (s) { return opt(s.nome, etichettaSez(s), normZ(b.zona) === normZ(s.nome)); }).join('') +
+        zl.filter(function (z) { return !sezioneConNome(z); }).map(function (z) { return opt(z, z + ' · fuori mappa', normZ(b.zona) === normZ(z)); }).join('') +
+        ((b.zona && !sz && zl.indexOf(b.zona) === -1) ? opt(b.zona, b.zona + ' · fuori mappa', true) : '') + '</select>';
+    }
+    if (sz) {
+      var ks = nInt(b.scaffale), kr = nInt(b.ripiano);
+      scCtl = '<select id="' + pfx + '-scaff">' + opt('', '—', !b.scaffale);
+      for (i = 1; i <= (sz.scaffali | 0); i++) scCtl += opt(String(i), 'Scaffale ' + i, ks === i);
+      if (b.scaffale && (ks == null || ks < 1 || ks > (sz.scaffali | 0))) scCtl += opt(b.scaffale, b.scaffale + ' · fuori numerazione', true);
+      scCtl += '</select>';
+      if ((sz.ripiani | 0) > 0) {
+        ripCtl = '<select id="' + pfx + '-rip">' + opt('', '—', !b.ripiano);
+        for (i = 1; i <= (sz.ripiani | 0); i++) ripCtl += opt(String(i), 'Ripiano ' + i, kr === i);
+        if (b.ripiano && (kr == null || kr < 1 || kr > (sz.ripiani | 0))) ripCtl += opt(b.ripiano, b.ripiano + ' · fuori numerazione', true);
+        ripCtl += '</select>';
+      } else ripCtl = '<input type="text" id="' + pfx + '-rip" placeholder="es. 3" value="' + escHtml(b.ripiano || '') + '">';
+    } else {
+      scCtl = '<input type="text" id="' + pfx + '-scaff" placeholder="es. 8 oppure A1" value="' + escHtml(b.scaffale || '') + '">';
+      ripCtl = '<input type="text" id="' + pfx + '-rip" placeholder="es. 3" value="' + escHtml(b.ripiano || '') + '">';
+    }
+    return '<label><span class="lbl">' + (libere ? 'Zona' : 'Sezione') + '</span>' + zonaCtl + '</label>' +
+      '<label><span class="lbl">Scaffale</span>' + scCtl + '</label>' +
+      '<label><span class="lbl">Ripiano</span>' + ripCtl + '</label>';
+  }
+  function posDaForm(pfx) {
+    var g = function (id) { var e = document.getElementById(id); return e ? String(e.value || '').trim() : ''; };
+    return { zona: g(pfx + '-zona'), scaffale: g(pfx + '-scaff'), ripiano: g(pfx + '-rip') };
+  }
+  function bindPos(root) {
+    root.querySelectorAll('select[data-pos]').forEach(function (e) {
+      e.addEventListener('change', function () {
+        var pfx = e.getAttribute('data-pos'), w = document.getElementById('pos-' + pfx); if (!w) return;
+        var cur = posDaForm(pfx); cur.scaffale = ''; cur.ripiano = '';
+        w.innerHTML = campiPosizione(cur, pfx); bindPos(w);
+        var s = document.getElementById(pfx + '-scaff'); if (s && cur.zona) s.focus();
+      });
+    });
+  }
+
+  /* ---- la vista Posizione guidata dalla mappa: anche gli scaffali vuoti si vedono ---- */
+  function rigaPos(b) {
+    return '<button type="button" class="prow" data-open="' + b.id + '" style="' + blkVars(b) + '">' +
+      '<span class="prip tab">' + (b.ripiano ? 'rip. ' + escHtml(b.ripiano) : '—') + '</span>' +
+      '<span class="pnm">' + escHtml(inCoda(b) ? 'Da catalogare' : (b.nome || 'Senza nome')) + '</span>' +
+      '<span class="pmk">' + escHtml(b.produttore || b.cantina || '') + (etaTesto(b) ? ' · ' + etaTesto(b) : '') + '</span>' +
+      (qty(b) > 1 ? '<span class="pq tab">' + qty(b) + ' bt</span>' : '') +
+      '<span class="pv tab">' + fmtM(vetrina(b)) + '</span></button>';
+  }
+  function scaffaleBox(sc, etich, bs, zonaNome) {
+    var solo = sc && filters.scaffale && stessoNumero(filters.scaffale, nInt(sc)) && normZ(filters.zona) === normZ(zonaNome);
+    if (!bs.length) return '<div class="scf vuoto"><div class="scf-h"><span class="scf-n">' + escHtml(etich) + '</span><span class="scf-c tab">vuoto</span></div></div>';
+    var ord = bs.slice().sort(function (a, b) {
+      var ra = nInt(a.ripiano), rb = nInt(b.ripiano);
+      if (ra != null && rb != null && ra !== rb) return ra - rb;
+      return String(a.ripiano || '').localeCompare(String(b.ripiano || ''), 'it') || (a.nome || '').localeCompare(b.nome || '', 'it');
+    });
+    var pezzi = ord.reduce(function (n, b) { return n + qty(b); }, 0);
+    return '<div class="scf"><div class="scf-h"><span class="scf-n">' + escHtml(etich) + '</span>' +
+      (sc ? '<button type="button" class="scf-b' + (solo ? ' on' : '') + '" data-scaff="' + escHtml(sc) + '" data-zona="' + escHtml(zonaNome) + '">' + (solo ? 'mostra tutto' : 'solo questo scaffale') + '</button>' : '') +
+      '<span class="scf-c tab">' + pezzi + (pezzi === 1 ? ' bt' : ' bt') + '</span></div>' +
+      '<div class="scf-l">' + ord.map(rigaPos).join('') + '</div></div>';
+  }
+  function ctaMappa() {
+    return '<div class="mcta"><strong>Disegna la mappa della tua cantina.</strong>' +
+      '<p class="hint">Sezioni (una parete, un armadio, il frigo), scaffali numerati e, se vuoi, ripiani. Ogni bottiglia avrà un posto preciso e alla ricerca potrai chiedere “cosa c’è sullo scaffale 8 della sezione 1”.</p>' +
+      (isReadOnly ? '' : '<button type="button" class="btn pri sm" data-mappa-open>Crea la mappa</button>') + '</div>';
+  }
+  function posizioneView(l) {
+    var sz = sezioni();
+    if (!sz.length) return ctaMappa() + posizioneViewLibera(l);
+    var tuttaLaCantina = !filters.q && !filters.zona && !filters.scaffale;
+    var fuori = [], perSez = sz.map(function () { return []; });
+    l.forEach(function (b) { var i = sz.indexOf(sezioneDi(b)); if (i < 0) fuori.push(b); else perSez[i].push(b); });
+    var html = sz.map(function (s, i) {
+      var bs = perSez[i];
+      if (!bs.length && !tuttaLaCantina) return '';
+      var pezzi = bs.reduce(function (n, b) { return n + qty(b); }, 0);
+      var val = bs.reduce(function (n, b) { return n + (vetrina(b) || 0) * qty(b); }, 0);
+      var perSc = {}, altri = [], corpo = '', k;
+      bs.forEach(function (b) { var n = nInt(b.scaffale); if (n != null && n >= 1 && n <= (s.scaffali | 0)) (perSc[n] = perSc[n] || []).push(b); else altri.push(b); });
+      for (k = 1; k <= (s.scaffali | 0); k++) { if (!perSc[k] && !tuttaLaCantina) continue; corpo += scaffaleBox(String(k), 'Scaffale ' + k, perSc[k] || [], s.nome); }
+      if (altri.length) corpo += scaffaleBox('', 'Senza scaffale o fuori numerazione', altri, s.nome);
+      return '<section class="zsec"><header class="zhd"><h3>' + escHtml(s.nome) + '</h3>' +
+        (nomeDefault(s) ? '' : '<span class="zsub">Sezione ' + (i + 1) + '</span>') +
+        '<span class="zmeta tab">' + (s.scaffali | 0) + ' scaffali' + ((s.ripiani | 0) ? ' · ' + s.ripiani + ' ripiani' : '') + ' · ' + pezzi + ' bt' + (val ? ' · ' + fmtM(val) : '') + '</span></header>' +
+        corpo + '</section>';
+    }).join('');
+    if (fuori.length) html += '<section class="zsec"><header class="zhd"><h3>Fuori mappa</h3><span class="zmeta tab">' + fuori.length + ' da riposizionare</span></header>' + posizioneViewLibera(fuori) + '</section>';
+    return html + (isReadOnly ? '' : '<p class="hint" style="margin-top:6px"><button type="button" class="lnk" data-mappa-open>Modifica la mappa della cantina</button></p>');
+  }
+
+  /* ---- l'editor della mappa ---- */
+  function apriMappa() { mappaDraft = JSON.parse(JSON.stringify(sezioni())); mappaOpen = true; render(); }
+  function leggiDraft() {   // raccoglie i valori digitati prima di ridisegnare
+    if (!mappaDraft) return;
+    mappaDraft.forEach(function (s, i) {
+      var n = document.getElementById('ms-nome-' + i), a = document.getElementById('ms-sc-' + i), r = document.getElementById('ms-rip-' + i);
+      if (n) s.nome = n.value; if (a) s.scaffali = a.value; if (r) s.ripiani = r.value;
+    });
+  }
+  function origDi(s) { return sezioni().filter(function (x) { return x.id === s.id; })[0]; }
+  function mappaSheet() {
+    var d = mappaDraft || [];
+    var righe = d.map(function (s, i) {
+      var orig = origDi(s), bt = orig ? contaSezione(orig.nome) : 0;
+      return '<div class="mrow"><span class="mnum tab">' + (i + 1) + '</span>' +
+        '<label><span class="lbl">Nome</span><input type="text" id="ms-nome-' + i + '" value="' + escHtml(String(s.nome || '')) + '" placeholder="Sezione ' + (i + 1) + '"></label>' +
+        '<label><span class="lbl">Scaffali</span><input type="number" min="0" max="200" id="ms-sc-' + i + '" value="' + escHtml(String(s.scaffali == null ? '' : s.scaffali)) + '"></label>' +
+        '<label><span class="lbl">Ripiani per scaffale</span><input type="number" min="0" max="50" id="ms-rip-' + i + '" value="' + escHtml(String(s.ripiani == null ? '' : s.ripiani)) + '" placeholder="0 = nessuno"></label>' +
+        '<span class="mbt tab">' + (bt ? bt + ' bt' : '') + '</span>' +
+        '<button type="button" class="x" data-ms-del="' + i + '" aria-label="Elimina sezione" title="Elimina sezione">✕</button></div>';
+    }).join('');
+    return '<div class="ov" data-ov><div class="sheet wide">' +
+      head('Mappa della cantina', 'Dividi la cantina in sezioni (una parete, un armadio, il frigo), ogni sezione in scaffali numerati e, se vuoi, ogni scaffale in ripiani. Poi ogni bottiglia prende il suo posto.') +
+      '<div class="shb">' + (righe || '<p class="hint">Nessuna sezione ancora. Parti da un modello o aggiungine una.</p>') +
+      '<div class="mtools"><button type="button" class="btn sm" data-ms-add>+ Aggiungi sezione</button>' +
+      (d.length ? '' : '<button type="button" class="btn sm gho" data-ms-modello="4|8|3">Modello: 4 sezioni × 8 scaffali × 3 ripiani</button><button type="button" class="btn sm gho" data-ms-modello="2|6|0">Modello: 2 sezioni × 6 scaffali</button>') + '</div>' +
+      '<p class="hint">Rinominare una sezione porta con sé le sue bottiglie. Eliminarla non le cancella: restano “fuori mappa” finché non le riposizioni. Nella ricerca potrai scrivere “sezione 1 scaffale 8”, “sez 2 rip 3” oppure “1/8”.</p></div>' +
+      '<div class="shf"><button type="button" class="btn gho" data-shutsheet>Annulla</button><button type="button" class="btn pri" id="ms-save">Salva la mappa</button></div></div></div>';
+  }
+  function salvaMappa() {
+    leggiDraft();
+    var vecchie = sezioni(), nuove = [], visti = {}, rinomina = [];
+    for (var i = 0; i < mappaDraft.length; i++) {
+      var s = mappaDraft[i], nome = String(s.nome || '').trim() || ('Sezione ' + (i + 1));
+      if (visti[normZ(nome)]) { toast('Due sezioni si chiamano “' + nome + '”: dai loro nomi diversi'); return; }
+      visti[normZ(nome)] = 1;
+      var sc = Math.max(0, Math.min(200, parseInt(s.scaffali, 10) || 0)), rp = Math.max(0, Math.min(50, parseInt(s.ripiani, 10) || 0));
+      var orig = origDi(s);
+      if (orig && normZ(orig.nome) !== normZ(nome)) rinomina.push([orig.nome, nome]);
+      nuove.push({ id: String(s.id || uid()), nome: nome.slice(0, 60), scaffali: sc, ripiani: rp });
+    }
+    mappaOpen = false; mappaDraft = null;
+    commit(function (ns) {
+      ns.meta.mappa = { sezioni: nuove };
+      if (rinomina.length) ns.bottles.forEach(function (b) { rinomina.forEach(function (p) { if (normZ(b.zona) === normZ(p[0])) b.zona = p[1]; }); });
+    }, false);
+    toast('Mappa salvata · ' + nuove.length + (nuove.length === 1 ? ' sezione' : ' sezioni'));
+  }
+  function bindMappa(root, on) {
+    root.querySelectorAll('[data-mappa-open]').forEach(function (e) { e.addEventListener('click', function (ev) { ev.stopPropagation(); apriMappa(); }); });
+    root.querySelectorAll('[data-ms-add]').forEach(function (e) { e.addEventListener('click', function () { leggiDraft(); mappaDraft.push({ id: uid(), nome: 'Sezione ' + (mappaDraft.length + 1), scaffali: 8, ripiani: 0 }); render(); }); });
+    root.querySelectorAll('[data-ms-modello]').forEach(function (e) { e.addEventListener('click', function () { var p = e.getAttribute('data-ms-modello').split('|'); mappaDraft = []; for (var i = 1; i <= +p[0]; i++) mappaDraft.push({ id: uid(), nome: 'Sezione ' + i, scaffali: +p[1], ripiani: +p[2] }); render(); }); });
+    root.querySelectorAll('[data-ms-del]').forEach(function (e) {
+      e.addEventListener('click', function () {
+        leggiDraft();
+        var i = +e.getAttribute('data-ms-del'), s = mappaDraft[i], orig = origDi(s), bt = orig ? contaSezione(orig.nome) : 0;
+        if (bt && !confirm('La sezione “' + (s.nome || '') + '” contiene ' + bt + ' bottiglie: resteranno fuori mappa finché non le riposizioni. Eliminare la sezione?')) return;
+        mappaDraft.splice(i, 1); render();
+      });
+    });
+    on('ms-save', 'click', salvaMappa);
+    on('q-off3', 'click', function () { filters.q = ''; render(); });
+    bindPos(root);
+  }
+
   /* ======================= persistenza =======================
      Una volta questa pagina si ripubblicava da sola: salvare voleva dire
      riscrivere l'intero documento. Ora il salvataggio è una scrittura
@@ -1636,7 +1914,7 @@
     if (filters.ambito === 'venduta' && b.stato !== 'venduta') return false;
     if (filters.ambito === 'regalata' && b.stato !== 'regalata') return false;
     if (filters.zona && zonaDi(b) !== filters.zona) return false;
-    if (filters.scaffale && scaffaleDi(b).toLowerCase() !== filters.scaffale.toLowerCase()) return false;
+    if (filters.scaffale && !stessoScaffale(b, filters.scaffale)) return false;
     if (filters.segnale && segnale(b) !== filters.segnale) return false;
     if (filters.tipi.length && filters.tipi.indexOf(b.tipologia) === -1) return false;
     if (filters.colori.length && filters.colori.indexOf(b.colore) === -1) return false;
@@ -1655,9 +1933,14 @@
     if (filters.vitigno && !(b.vitigni || []).some(function (v) { return v.toLowerCase().indexOf(filters.vitigno.toLowerCase()) !== -1; })) return false;
     if (filters.soloPlus) { var d = delta(b); if (d == null || d <= 0) return false; }
     if (filters.q) {
+      // la ricerca capisce le posizioni: "scaffale 8 della sezione 1", "sez 2 rip 3", "1/8"
+      var pq = posQuery(filters.q);
+      if (pq.sez && !inSezione(b, pq.sez)) return false;
+      if (pq.scaff != null && !stessoNumero(b.scaffale, pq.scaff)) return false;
+      if (pq.rip != null && !stessoNumero(b.ripiano, pq.rip)) return false;
       var hay = testoRicerca(b);
-      // più parole = tutte devono comparire, in qualsiasi campo
-      var parole = filters.q.toLowerCase().split(/\s+/).filter(Boolean);
+      // più parole = tutte devono comparire, in qualsiasi campo (tolte quelle di contorno)
+      var parole = pq.parole;
       for (var i = 0; i < parole.length; i++) if (hay.indexOf(parole[i]) === -1) return false;
     }
     return true;
@@ -1674,7 +1957,7 @@
       b.gradazione, b.provenienza, (b.vitigni || []).join(' '), b.formato,
       b.note, b.note_analisi, b.valore_fonte, fonteQuot(b),
       b.zona, b.scaffale, b.ripiano, b.regalata_a,
-      b.scaffale ? 'scaffale ' + b.scaffale : '', b.zona ? 'zona ' + b.zona : '', b.ripiano ? 'ripiano ' + b.ripiano : '',
+      b.scaffale ? 'scaffale ' + b.scaffale : '', b.zona ? 'zona ' + b.zona : '', b.ripiano ? 'ripiano ' + b.ripiano : '', sezioneTesto(b),
       STATI[b.stato] || '', sg ? SEGNALI[sg].et : '', rinforza(b) ? 'rinforza' : '',
       b.esempio ? 'esempio' : '', haFoto(b) ? 'foto' : '',
       (b.campi_incerti || []).length ? 'da verificare' : '',
@@ -1757,7 +2040,7 @@
   /* Con i filtri chiusi (sul telefono lo sono quasi sempre) bisogna vedere
      a colpo d'occhio che si sta guardando un solo scaffale. */
   function notaPosizione(l) {
-    if (!filters.scaffale && !filters.zona) return '';
+    if (!filters.scaffale && !filters.zona) return notaPosQuery(l);
     var pezzi = l.reduce(function (n, b) { return n + qty(b); }, 0);
     var et = [filters.scaffale ? 'Scaffale <strong>' + escHtml(filters.scaffale) + '</strong>' : '',
               filters.zona ? escHtml(filters.zona) : ''].filter(Boolean).join(' · ');
@@ -1884,20 +2167,20 @@
         var p = o.split('|');
         return '<option value="' + p[0] + '"' + (filters.ambito === p[0] ? ' selected' : '') + '>' + p[1] + '</option>';
       }).join('') + '</select></div>' +
-      '<div class="rsec"><span class="flab">Zona della cantina</span><select id="f-zona">' +
-      '<option value="">Tutte le zone</option>' +
-      zoneEsistenti().map(function (z) { return '<option value="' + escHtml(z) + '"' + (filters.zona === z ? ' selected' : '') + '>' + escHtml(z) + '</option>'; }).join('') +
+      '<div class="rsec"><span class="flab">' + (sezioni().length ? 'Sezione della cantina' : 'Zona della cantina') + '</span><select id="f-zona">' +
+      '<option value="">' + (sezioni().length ? 'Tutte le sezioni' : 'Tutte le zone') + '</option>' +
+      zoneTutte().map(function (z) { var sz = sezioneConNome(z); return '<option value="' + escHtml(z) + '"' + (filters.zona === z ? ' selected' : '') + '>' + escHtml(sz ? etichettaSez(sz) : (sezioni().length ? z + ' \u00b7 fuori mappa' : z)) + '</option>'; }).join('') +
       '</select></div>' +
       (function () {
-        var sc = scaffaliEsistenti(filters.zona);
+        var sz = sezioneConNome(filters.zona), sc = scaffaliDiZona(filters.zona);
         if (!sc.length) return '';
         return '<div class="rsec"><span class="flab">Scaffale</span><select id="f-scaff">' +
           '<option value="">Tutti gli scaffali</option>' +
           sc.map(function (x) {
-            var et = x.sc + (!filters.zona && x.zone.length === 1 ? ' \u00b7 ' + x.zone[0] : '') + ' (' + x.n + ')';
+            var et = (sz ? 'Scaffale ' + x.sc : x.sc + (!filters.zona && x.zone.length === 1 ? ' \u00b7 ' + x.zone[0] : '')) + (x.n ? ' (' + x.n + ')' : (sz ? ' \u00b7 vuoto' : ''));
             return '<option value="' + escHtml(x.sc) + '"' + (filters.scaffale.toLowerCase() === x.sc.toLowerCase() ? ' selected' : '') + '>' + escHtml(et) + '</option>';
           }).join('') + '</select>' +
-          '<p class="hint">Cerchi uno scaffale preciso? Scegli il codice qui, oppure scrivilo nella ricerca in alto.</p></div>';
+          '<p class="hint">' + (sezioni().length ? 'Oppure scrivilo nella ricerca in alto: \u201csezione 1 scaffale 8\u201d.' : 'Cerchi uno scaffale preciso? Scegli il codice qui, oppure scrivilo nella ricerca in alto.') + '</p></div>';
       })() +
       '<div class="rsec"><span class="flab">Tipologia</span>' + chips('tipi', TIPI) + '</div>' +
       '<div class="rsec"><span class="flab">Colore · vino e spumante</span>' + chips('colori', COLORI) + '</div>' +
@@ -1935,7 +2218,7 @@
         return '<button type="button" data-view="' + v[0] + '" class="' + (filters.view === v[0] ? 'on' : '') + '">' + v[1] + '</button>';
       }).join('') + '</div>' +
       '<button class="btn gho sm" id="export" type="button">CSV</button>' +
-      (isReadOnly ? '' : '<button class="btn gho sm" id="manual" type="button">Manuale</button>') +
+      (isReadOnly ? '' : '<button class="btn gho sm" id="manual" type="button">Manuale</button><button class="btn gho sm" type="button" data-mappa-open title="Sezioni, scaffali e ripiani della tua cantina">Mappa</button>') +
       '</div>';
   }
 
@@ -2098,7 +2381,7 @@
 
   /* ============ vista PER POSIZIONE ============
      Come si guarda una cantina vera: zona per zona, scaffale per scaffale. */
-  function posizioneView(l) {
+  function posizioneViewLibera(l) {
     var zone = {};
     l.forEach(function (b) {
       var z = zonaDi(b), sc = scaffaleDi(b);
@@ -2481,6 +2764,7 @@
 
   /* ======================= schede modali ======================= */
   function sheets() {
+    if (mappaOpen) return mappaSheet();
     if (viewing) return fotoSheet();
     if (shooting) return shootSheet();
     if (bulk) return bulkSheet();
@@ -2506,6 +2790,7 @@
       head('Fotografa la bottiglia', 'Fronte e retro, anche di fretta. Nome, cantina, annata, vitigni, gradazione, colore e provenienza vengono letti dall’etichetta.') +
       '<div class="shb"><div class="slots">' + slot('fronte', 'Fronte', 'l’etichetta principale') + slot('retro', 'Retro', 'gradazione, lotto, imbottigliatore') + '</div>' +
       '<p class="hint">Il retro è facoltativo ma conta: gradazione e vitigni spesso stanno solo lì.</p>' +
+      '<p class="hint" style="margin-top:14px">Dove la metti? Se lo indichi adesso, la bottiglia nasce gi\u00e0 al suo posto (resta impostato per la prossima).</p><div class="posgrid" id="pos-sh">' + campiPosizione(ultimaPos, 'sh') + '</div>' +
       '<label style="display:block;margin-top:16px"><span class="lbl">Prezzo pagato (€) — facoltativo</span><input type="number" step="0.01" id="sh-prezzo" placeholder="se lo sai, scrivilo adesso"></label></div>' +
       '<div class="shf"><button type="button" class="btn gho" data-shutsheet>Annulla</button>' +
       '<div class="grp"><button type="button" class="btn" id="save-again">Salva e fotografa un’altra</button><button type="button" class="btn pri" id="save-shot">Salva in coda</button></div></div>' +
@@ -2517,6 +2802,7 @@
       head('Carica più foto insieme', 'Per mettere in ordine un intero scaffale in una sessione sola.') +
       '<div class="shb"><div class="drop"><strong>Scegli le foto</strong><p class="hint">Dal telefono o dal computer, anche decine in una volta</p><input type="file" accept="image/*" multiple id="bulkin" aria-label="Scegli le foto"></div>' +
       '<label class="chk"><input type="checkbox" id="paired"' + (bulkPaired ? ' checked' : '') + '> Le foto sono in coppia fronte/retro, nell’ordine in cui sono state scattate</label>' +
+      '<p class="hint" style="margin-top:14px">Stesso posto per tutte le foto di questa sessione: indica la posizione una volta sola.</p><div class="posgrid" id="pos-bk">' + campiPosizione(ultimaPos, 'bk') + '</div>' +
       (bulkPhotos.length ? '<div class="bg2">' + bulkPhotos.map(function (p, i) {
         return '<figure><img src="' + p + '" alt=""><figcaption>' + (bulkPaired ? (Math.floor(i / 2) + 1) + (i % 2 ? ' R' : ' F') : '#' + (i + 1)) + '</figcaption></figure>';
       }).join('') + '</div><p class="hint">' + bulkPhotos.length + ' foto · ' + n + (n === 1 ? ' bottiglia' : ' bottiglie') + '</p>' : '') +
@@ -2573,9 +2859,7 @@
       '<label' + wc('provenienza') + '><span class="lbl">Provenienza' + fl('provenienza') + '</span><input type="text" id="i-prv" placeholder="es. Bolgheri · Islay" value="' + escHtml(b.provenienza) + '"></label>' +
       '<label class="full"' + wc('vitigni') + '><span class="lbl">Vitigni · separati da virgola' + fl('vitigni') + '</span><input type="text" id="i-vit" value="' + escHtml((b.vitigni || []).join(', ')) + '"></label>' +
       '<label><span class="lbl">Formato</span><input type="text" id="i-fmt" placeholder="es. 0,75 L · Magnum" value="' + escHtml(b.formato) + '"></label>' +
-      '<label><span class="lbl">Zona</span><input type="text" id="i-zona" list="dl-zona" placeholder="es. Cantina bassa" value="' + escHtml(b.zona) + '"><datalist id="dl-zona">' + zoneEsistenti().map(function (z) { return '<option value="' + escHtml(z) + '">'; }).join('') + '</datalist></label>' +
-      '<label><span class="lbl">Scaffale</span><input type="text" id="i-scaff" placeholder="es. A1" value="' + escHtml(b.scaffale) + '"></label>' +
-      '<label><span class="lbl">Ripiano</span><input type="text" id="i-rip" placeholder="es. 3" value="' + escHtml(b.ripiano) + '"></label>' +
+      '<div id="pos-i" style="display:contents">' + campiPosizione(b, 'i') + '</div>' +
       '<label><span class="lbl">Quantità</span><input type="number" min="1" id="i-qta" value="' + qty(b) + '"></label>' +
       '<label><span class="lbl">Prezzo pagato €</span><input type="number" step="0.01" id="i-pacq" value="' + (b.prezzo_acquisto != null ? b.prezzo_acquisto : '') + '"></label>' +
       '<label><span class="lbl">Valore di mercato €</span><input type="number" step="0.01" id="i-val" value="' + (b.valore_attuale != null ? b.valore_attuale : '') + '"></label>' +
@@ -2729,7 +3013,7 @@
     on('f-zona', 'change', function (e) {
       filters.zona = e.target.value;
       // lo scaffale scelto potrebbe non esistere nella nuova zona
-      if (filters.scaffale && !scaffaliEsistenti(filters.zona).some(function (x) { return x.sc.toLowerCase() === filters.scaffale.toLowerCase(); })) filters.scaffale = '';
+      if (filters.scaffale && !scaffaliDiZona(filters.zona).some(function (x) { return x.sc.toLowerCase() === filters.scaffale.toLowerCase(); })) filters.scaffale = '';
       render();
     });
     on('f-scaff', 'change', function (e) { filters.scaffale = e.target.value; render(); });
@@ -2804,6 +3088,7 @@
     root.querySelectorAll('[data-cfg]').forEach(function (e) { e.addEventListener('click', function () { CELL.deskConfigura(e.getAttribute('data-cfg'), e.getAttribute('data-val')).then(function () { DESK = null; render(); toast('Impostazione salvata'); }).catch(function (x) { toast((x && x.message) || 'Non salvato'); }); }); });
     root.querySelectorAll('[data-cfg-num]').forEach(function (e) { e.addEventListener('change', function () { CELL.deskConfigura(e.getAttribute('data-cfg-num'), String(Math.max(0, Math.round(Number(e.value) || 0)))).then(function () { DESK = null; render(); toast('Quota salvata'); }).catch(function (x) { toast((x && x.message) || 'Non salvato'); }); }); });
     on('desk-ricarica', 'click', function () { DESK = null; render(); });
+    bindMappa(root, on);
     on('a-save', 'click', submit);
     on('bform', 'submit', function (e) { e.preventDefault(); submit(); });
     on('a-del', 'click', function () { del(editingId); });
@@ -2818,7 +3103,7 @@
     if (viewing) { ev.preventDefault(); viewing = null; render(); return; }   // la foto si chiude per prima
     if (editingId || shooting || bulk) { ev.preventDefault(); shut(); }
   }
-  function shut() { editingId = null; shooting = false; bulk = false; viewing = null; formPhotos = { fronte: '', retro: '' }; bulkPhotos = []; render(); }
+  function shut() { editingId = null; shooting = false; bulk = false; viewing = null; mappaOpen = false; mappaDraft = null; formPhotos = { fronte: '', retro: '' }; bulkPhotos = []; render(); }
   function openShoot() { formPhotos = { fronte: '', retro: '' }; shooting = true; render(); }
   function valOf(id) { var e = document.getElementById(id); return e ? e.value : ''; }
   function setVal(id, v) { var e = document.getElementById(id); if (e) e.value = v; }
@@ -2836,26 +3121,26 @@
     render();
   }
 
-  function nuova(f, r, p) {
+  function nuova(f, r, p, pos) {
     return { id: uid(), stato: 'da_analizzare', aggiunta_il: today(), foto_fronte: f || '', foto_retro: r || '',
       nome: '', tipologia: '', colore: '', produttore: '', cantina: '', annata: '', annata_migliore: '',
       gradazione: '', provenienza: '', vitigni: [], formato: '', quantita: 1,
-      zona: '', scaffale: '', ripiano: '',
+      zona: (pos && pos.zona) || '', scaffale: (pos && pos.scaffale) || '', ripiano: (pos && pos.ripiano) || '',
       club: 'privata',
       prezzo_acquisto: p != null ? p : null, valore_attuale: null, valore_data: '', valore_fonte: '', note: '', campi_incerti: [] };
   }
   function saveShot(again) {
     if (!formPhotos.fronte && !formPhotos.retro) { toast('Serve almeno una foto'); return; }
-    var p = num(valOf('sh-prezzo')), f = formPhotos.fronte, r = formPhotos.retro;
+    var p = num(valOf('sh-prezzo')), f = formPhotos.fronte, r = formPhotos.retro, pos = posDaForm('sh'); ultimaPos = pos;
     formPhotos = { fronte: '', retro: '' }; shooting = !!again;
-    commit(function (ns) { ns.bottles.unshift(nuova(f, r, p)); }, false);
+    commit(function (ns) { ns.bottles.unshift(nuova(f, r, p, pos)); }, false);
     toast(again ? 'In coda · fotografa la prossima' : 'Bottiglia messa in coda');
   }
   function saveBulk() {
     if (!bulkPhotos.length) return;
-    var ph = bulkPhotos.slice(), out = [];
-    if (bulkPaired) { for (var i = 0; i < ph.length; i += 2) out.push(nuova(ph[i], ph[i + 1] || '', null)); }
-    else ph.forEach(function (p) { out.push(nuova(p, '', null)); });
+    var ph = bulkPhotos.slice(), out = [], pos = posDaForm('bk'); ultimaPos = pos;
+    if (bulkPaired) { for (var i = 0; i < ph.length; i += 2) out.push(nuova(ph[i], ph[i + 1] || '', null, pos)); }
+    else ph.forEach(function (p) { out.push(nuova(p, '', null, pos)); });
     bulkPhotos = []; bulk = false;
     commit(function (ns) { ns.bottles = out.concat(ns.bottles); }, false);
     toast(out.length + (out.length === 1 ? ' bottiglia in coda' : ' bottiglie in coda'));
@@ -2985,7 +3270,7 @@
   window.CAVEAU = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '16.4'
+    versione: '17.0'
   };
 
 })();

@@ -100,16 +100,16 @@
       </form>
 
       <form id="f-iscr" novalidate hidden>
-        <label class="lbl" for="i-nome">Nome e cognome</label>
-        <input type="text" id="i-nome" autocomplete="name" placeholder="Il tuo nome" maxlength="120">
-        <label class="lbl" for="i-email">Email</label>
-        <input type="email" id="i-email" autocomplete="email" inputmode="email" placeholder="nome@esempio.it" required>
-        <label class="lbl" for="i-pw">Scegli una password · almeno dieci caratteri</label>
-        <input type="password" id="i-pw" autocomplete="new-password" minlength="10" required>
-        <label class="lbl" for="i-nota">Una riga per il desk · facoltativa</label>
-        <input type="text" id="i-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
-        <label class="chk"><input type="checkbox" id="i-priv"> <span>Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
-        <button class="vai" id="i-vai" type="submit">Apri la mia cantina</button>
+        <label class="lbl" for="p-nome">Nome e cognome</label>
+        <input type="text" id="p-nome" autocomplete="name" placeholder="Il tuo nome" maxlength="120">
+        <label class="lbl" for="p-email">Email</label>
+        <input type="email" id="p-email" autocomplete="email" inputmode="email" placeholder="nome@esempio.it" required>
+        <label class="lbl" for="p-pw">Scegli una password · almeno dieci caratteri</label>
+        <input type="password" id="p-pw" autocomplete="new-password" minlength="10" required>
+        <label class="lbl" for="p-nota">Una riga per il desk · facoltativa</label>
+        <input type="text" id="p-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
+        <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
+        <button class="vai" id="p-vai" type="submit">Apri la mia cantina</button>
         <p class="nota">L’accesso è personale: il desk legge la richiesta e apre la tua cantina. Lo Speakeasy è su ammissione e si chiede da dentro.</p>
       </form>
 
@@ -135,8 +135,8 @@
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script src="dati.js?v=16.4"></script>
-<script src="app.js?v=16.4"></script>
+<script src="dati.js?v=17.0"></script>
+<script src="app.js?v=17.0"></script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -216,12 +216,12 @@
 
   fI.addEventListener('submit', function (e) {
     e.preventDefault();
-    var nome = document.getElementById('i-nome').value.trim(), email = document.getElementById('i-email').value.trim(), pw = document.getElementById('i-pw').value;
+    var nome = document.getElementById('p-nome').value.trim(), email = document.getElementById('p-email').value.trim(), pw = document.getElementById('p-pw').value;
     if (!email || email.indexOf('@') < 1) { dillo('Serve un indirizzo email valido.', 'ko'); return; }
     if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
-    if (!document.getElementById('i-priv').checked) { dillo('Per iscriverti devi accettare l’informativa.', 'ko'); return; }
-    var b = document.getElementById('i-vai'); b.disabled = true; dillo('Preparo la tua cantina…', 'ok');
-    var nota = document.getElementById('i-nota').value.trim();
+    if (!document.getElementById('p-priv').checked) { dillo('Per iscriverti devi accettare l’informativa.', 'ko'); return; }
+    var b = document.getElementById('p-vai'); b.disabled = true; dillo('Preparo la tua cantina…', 'ok');
+    var nota = document.getElementById('p-nota').value.trim();
     CELL.iscriviti(nome, email, pw, nota).then(function (r) {
       b.disabled = false;
       if (r && r.conferma) { scheda('entra'); dillo('Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.', 'ok'); return; }

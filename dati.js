@@ -319,7 +319,7 @@
           sottotitolo: cantina.sottotitolo || '',
           valuta: cantina.valuta || 'EUR',
           resa_privata: n(cantina.resa_privata), resa_asta: n(cantina.resa_asta),
-          soglia_vendita: n(cantina.soglia_vendita)
+          soglia_vendita: n(cantina.soglia_vendita), mappa: mappaPulita(cantina.mappa)
         });
         return {
           meta: {
@@ -328,6 +328,7 @@
             valuta: cantina.valuta || 'EUR',
             resa_privata: Number(cantina.resa_privata), resa_asta: Number(cantina.resa_asta),
             soglia_vendita: Number(cantina.soglia_vendita),
+            mappa: mappaPulita(cantina.mappa),
             ultimoAggQuotazioni: s(ultima)
           },
           bottles: bottles
@@ -369,6 +370,15 @@
       });
   }
 
+  /* La mappa della cantina (sezioni → scaffali → ripiani) viaggia come JSON
+     nella colonna cantine.mappa: qui la si ripulisce in entrata e in uscita. */
+  function mappaPulita(m) {
+    var sz = (m && Array.isArray(m.sezioni)) ? m.sezioni : [];
+    return { sezioni: sz.map(function (x, i) {
+      return { id: String(x.id || ('s' + (i + 1))), nome: String(x.nome || ('Sezione ' + (i + 1))).trim().slice(0, 60),
+        scaffali: Math.max(0, Math.min(200, parseInt(x.scaffali, 10) || 0)), ripiani: Math.max(0, Math.min(50, parseInt(x.ripiani, 10) || 0)) };
+    }) };
+  }
   function salva(stato) {
     if (!cantina) return Promise.reject(new Error('Cantina non aperta.'));
     var lavori = [];
@@ -379,7 +389,7 @@
       titolo: m.titolo || 'La mia cantina',
       sottotitolo: m.sottotitolo || '',
       valuta: m.valuta || 'EUR',
-      resa_privata: n(m.resa_privata), resa_asta: n(m.resa_asta), soglia_vendita: n(m.soglia_vendita)
+      resa_privata: n(m.resa_privata), resa_asta: n(m.resa_asta), soglia_vendita: n(m.soglia_vendita), mappa: mappaPulita(m.mappa)
     };
     var chiaveMeta = JSON.stringify(nuovaMeta);
     if (chiaveMeta !== ombra.__meta) {
