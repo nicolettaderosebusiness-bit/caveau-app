@@ -315,7 +315,7 @@
         });
         var ultima = quot.length ? quot[quot.length - 1].rilevata_il : '';
         ombra.__meta = JSON.stringify({
-          titolo: cantina.titolo || 'Cellarium',
+          titolo: cantina.titolo || 'La mia cantina',
           sottotitolo: cantina.sottotitolo || '',
           valuta: cantina.valuta || 'EUR',
           resa_privata: n(cantina.resa_privata), resa_asta: n(cantina.resa_asta),
@@ -323,7 +323,7 @@
         });
         return {
           meta: {
-            titolo: cantina.titolo || 'Cellarium',
+            titolo: cantina.titolo || 'La mia cantina',
             sottotitolo: cantina.sottotitolo || 'La tua cantina, ordinata e sotto controllo.',
             valuta: cantina.valuta || 'EUR',
             resa_privata: Number(cantina.resa_privata), resa_asta: Number(cantina.resa_asta),
@@ -376,7 +376,7 @@
     /* 1 — le impostazioni della cantina */
     var m = stato.meta || {};
     var nuovaMeta = {
-      titolo: m.titolo || 'Cellarium',
+      titolo: m.titolo || 'La mia cantina',
       sottotitolo: m.sottotitolo || '',
       valuta: m.valuta || 'EUR',
       resa_privata: n(m.resa_privata), resa_asta: n(m.resa_asta), soglia_vendita: n(m.soglia_vendita)

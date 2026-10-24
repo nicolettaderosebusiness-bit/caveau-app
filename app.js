@@ -18,7 +18,7 @@
     STATE = s && typeof s === 'object' ? s : { meta: {}, bottles: [] };
     if (!STATE.meta) STATE.meta = {};
     if (!STATE.bottles) STATE.bottles = [];
-    if (!STATE.meta.titolo) STATE.meta.titolo = 'Cellarium';
+    if (!STATE.meta.titolo) STATE.meta.titolo = 'La mia cantina';
     if (!STATE.meta.valuta) STATE.meta.valuta = 'EUR';
   }
 
@@ -1380,7 +1380,7 @@
   }
 
 
-  /* ======================= CELLARIUM CLUB =======================
+  /* ======================= SPEAKEASY =======================
      La cantina di tutti, senza il nome di nessuno. Ogni bottiglia ha uno
      stato di visibilita' che decide il proprietario: Privata (default),
      Segnalata (il Club la vede in forma anonima, senza prezzo ne' nome),
@@ -1736,7 +1736,7 @@
   ];
   function topbar() {
     return '<nav class="nav"><div class="nav-in">' +
-      '<span class="nav-br">' + MARCHIO + '<b>CAVEAU</b><span class="piano' + (clubAttivo() ? ' club' : '') + '">' + (clubAttivo() ? 'Club' : 'Cellarium Private') + '</span></span>' +
+      '<span class="nav-br">' + MARCHIO + '<b>CAVEAU</b><span class="piano' + (clubAttivo() ? ' club' : '') + '">' + (clubAttivo() ? 'Club' : 'Cantina') + '</span></span>' +
       '<div class="nav-l">' + stanzeVisibili().map(function (z) {
         return '<button type="button" class="nvb' + (z.k === 'club' ? ' club' : '') + (stanza === z.k ? ' on' : '') + '" data-stanza="' + z.k + '"' +
           (stanza === z.k ? ' aria-current="page"' : '') + '><span class="nvn tab">' + z.n + '</span>' + z.t + '</button>';
@@ -1810,7 +1810,7 @@
     }
     return '<header class="mast"><div class="mast-in">' +
       '<button class="rtog btn sm gho" id="rtog" type="button" style="margin-bottom:12px">☰ Filtri</button>' +
-      '<div class="eb">Cellarium Private · la tua cantina · solo tu</div>' +
+      '<div class="eb">Caveau · la tua cantina · solo tu</div>' +
       '<div class="brand">' + MARCHIO + '<h1>' + escHtml(STATE.meta.titolo) + '</h1></div>' +
       '<p class="sub">' + escHtml(STATE.meta.sottotitolo || '') + '</p>' +
       '<div class="cerca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>' +
@@ -2953,7 +2953,7 @@
   function rename() {
     var t = prompt('Nome dell’archivio:', STATE.meta.titolo); if (t == null) return;
     var s = prompt('Sottotitolo:', STATE.meta.sottotitolo || '');
-    commit(function (ns) { ns.meta.titolo = t.trim() || 'Cellarium'; ns.meta.sottotitolo = (s || '').trim(); }, false);
+    commit(function (ns) { ns.meta.titolo = t.trim() || 'La mia cantina'; ns.meta.sottotitolo = (s || '').trim(); }, false);
   }
   function exportCSV() {
     var cols = ['stato', 'nome', 'produttore', 'cantina', 'tipologia', 'colore', 'annata', 'annata_migliore', 'gradazione', 'provenienza', 'vitigni', 'formato', 'zona', 'scaffale', 'ripiano', 'quantita', 'prezzo_acquisto', 'valore_attuale', 'valore_data', 'valore_fonte', 'prezzo_vendita', 'venduta_il', 'bevuta_il', 'regalata_il', 'regalata_a', 'esempio', 'note'];
@@ -2985,7 +2985,7 @@
   window.CELLARIUM = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '16.1'
+    versione: '16.2'
   };
 
 })();

@@ -1,6 +1,6 @@
-# Cellarium — interfaccia
+# Caveau — l'interfaccia dell'app
 
-Questo repository contiene **solo il vestito** di Cellarium: la pagina, il
+Questo repository contiene **solo il vestito** di Caveau: la pagina, il
 foglio di stile, il codice che disegna le schede. È pubblico perché lo è
 comunque: qualunque app web consegna al browser il proprio HTML e il proprio
 JavaScript, e chi apre gli strumenti da sviluppatore li legge. Nasconderlo

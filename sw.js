@@ -6,7 +6,7 @@
    una cantina vecchia credendola aggiornata.
    Per pubblicare una versione nuova basta cambiare VERSIONE.
    ============================================================= */
-var VERSIONE = 'cellarium-16.1';
+var VERSIONE = 'cellarium-16.2';
 
 var INVOLUCRO = [
   './',

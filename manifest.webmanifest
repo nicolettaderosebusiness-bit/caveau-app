@@ -1,7 +1,7 @@
 {
-  "name": "Cellarium Private · Caveau",
-  "short_name": "Cellarium",
-  "description": "La tua cantina, ordinata e sotto controllo.",
+  "name": "Caveau · la tua cantina",
+  "short_name": "Caveau",
+  "description": "La tua cantina, ordinata e sotto controllo. E lo Speakeasy, quando sei dentro.",
   "lang": "it",
   "dir": "ltr",
   "start_url": "./",
