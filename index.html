@@ -121,7 +121,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
         <input type="text" id="p-citta" placeholder="es. Milano" maxlength="80">
         <label class="lbl" for="p-nota">Una riga per il desk · facoltativa</label>
         <input type="text" id="p-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
-        <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
+        <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener" id="p-link-priv">informativa sulla privacy</a>. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
         <button class="vai" id="p-vai" type="submit">Apri la mia cantina</button>
         <p class="nota">Si entra solo presentati da un socio: il Desk legge la richiesta e apre la tua cantina. Dentro trovi la tua cantina, lo Speakeasy e i soci.</p>
       </form>
@@ -133,6 +133,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
       </div>
 
       <form id="f-nuova" novalidate hidden>
+        <p class="nota" id="n-chi" style="margin:0 0 10px"></p>
         <label class="lbl" for="n-pw">La nuova password · almeno dieci caratteri</label>
         <input type="password" id="n-pw" autocomplete="new-password" minlength="10" required>
         <button class="vai" id="n-vai" type="submit">Salva ed entra</button>
@@ -148,7 +149,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=19.0"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=19.0"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=19.1"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=19.1"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -171,7 +172,13 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   "Nome e cognome": "Full name",
   "Scegli una password · almeno dieci caratteri": "Choose a password · at least ten characters",
   "Una riga per il desk · facoltativa": "A line for the Desk · optional",
-  "Ho letto l’informativa. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.": "I have read the notice. My details are used only for access, for my cellar and for the Desk’s replies, and are never passed on.",
+  "Ho letto l’": "I have read the ",
+  "informativa sulla privacy": "privacy notice",
+  ". I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.": ". My details are used only for access, for my cellar and for the Desk’s replies, and are never passed on.",
+  "Verifico il link…": "Checking the link…",
+  "Il link non è più valido o è già stato usato. Chiedi un nuovo link con “Ho dimenticato la password”: arriva in pochi secondi e funziona da qualsiasi dispositivo.": "The link is no longer valid or has already been used. Request a new one with “I forgot my password”: it arrives in seconds and works on any device.",
+  "Scegli la nuova password per ": "Choose a new password for ",
+  "Password salvata. Entro…": "Password saved. Signing in…",
   "Apri la mia cantina": "Open my cellar",
   "L’accesso è personale: il desk legge la richiesta e apre la tua cantina. Lo Speakeasy è su ammissione e si chiede da dentro.": "Access is personal: the Desk reads your request and opens your cellar. The Speakeasy is by admission, requested from inside.",
   "Ricontrolla": "Check again",
@@ -295,7 +302,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     var email = document.getElementById('e-email').value.trim();
     if (!email || email.indexOf('@') < 1) { dillo('Scrivi prima la tua email qui sopra, poi premi di nuovo.', 'ko'); return; }
     dillo('Un momento…', 'ok');
-    CELL.recupera(email).then(function () {
+    CELL.recupera(email, LINGUA).then(function () {
       dillo('Se questo indirizzo ha un accesso, riceverai un messaggio con il link per scegliere una nuova password.', 'ok');
     }).catch(function (err) { dillo((err && err.message) || 'Non ha funzionato.', 'ko'); });
   });
@@ -321,7 +328,8 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     var pw = document.getElementById('n-pw').value;
     if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
     var b = document.getElementById('n-vai'); b.disabled = true;
-    CELL.nuovaPassword(pw).then(function () { recupero = false; history.replaceState(null, '', location.pathname); setTimeout(dentro, 0); })
+    dillo('Password salvata. Entro…', 'ok');
+    CELL.nuovaPassword(pw).then(function () { recupero = false; pulisciIndirizzo(); setTimeout(dentro, 0); })
       .catch(function (err) { b.disabled = false; dillo((err && err.message) || 'Non ha funzionato.', 'ko'); });
   });
 
@@ -334,21 +342,66 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     navigator.serviceWorker.register('sw.js').catch(function () {});
   }
 
+  /* ---- l'arrivo: cosa c'è nell'indirizzo decide cosa mostrare ----
+     token_hash + type   link di recupero generato dal nostro server (funziona ovunque)
+     code                link con flusso PKCE (vale solo nel browser che l'ha chiesto)
+     #access_token       link nel flusso implicito
+     error               link scaduto o già usato
+     niente              sessione aperta → cantina; altrimenti la porta        */
+  function parametri() {
+    var q = new URLSearchParams(location.search), h = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+    return {
+      token_hash: q.get('token_hash') || h.get('token_hash'), type: q.get('type') || h.get('type'),
+      code: q.get('code'), access_token: h.get('access_token'),
+      error: q.get('error') || h.get('error') || q.get('error_code') || h.get('error_code')
+    };
+  }
+  function pulisciIndirizzo() { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+  var ERR_LINK = 'Il link non è più valido o è già stato usato. Chiedi un nuovo link con “Ho dimenticato la password”: arriva in pochi secondi e funziona da qualsiasi dispositivo.';
+  function apriNuovaPassword() {
+    recupero = true; mostra('porta'); scheda('nuova');
+    CELL.sessione().then(function (u) {
+      var e = document.getElementById('n-chi'); if (e) e.textContent = u && u.email ? tr('Scegli la nuova password per ') + u.email : '';
+    });
+    dillo('Scegli la nuova password.', 'ok');
+    var pw = document.getElementById('n-pw'); if (pw) pw.focus();
+  }
+  function mostraPorta(messaggio) { pulisciIndirizzo(); mostra('porta'); scheda('entra'); registraServizio(); if (messaggio) dillo(messaggio, 'ko'); }
+  function dopoVerifica(tipo) { pulisciIndirizzo(); if (tipo === 'recovery') apriNuovaPassword(); else dentro(); }
+
   CELL.sb.auth.onAuthStateChange(function (evento) {
-    if (evento === 'PASSWORD_RECOVERY') { recupero = true; mostra('porta'); scheda('nuova'); dillo('Scegli la nuova password.', 'ok'); }
+    if (evento === 'PASSWORD_RECOVERY' && !recupero) apriNuovaPassword();
   });
 
-  CELL.sessione().then(function (u) {
-    if (/type=recovery/.test(location.hash) || recupero) { recupero = true; mostra('porta'); scheda('nuova'); return; }
-    if (u) { dentro(); return; }
-    mostra('porta'); scheda('entra');
-    registraServizio();
-    if (/[?&]error/.test(location.search) || /error/.test(location.hash))
-      dillo('Il link non è più valido: chiedine un altro.', 'ko');
-  }).catch(function () {
-    mostra('porta'); scheda('entra');
-    dillo('L’archivio non risponde. Riprova fra poco.', 'ko');
-  });
+  function avvio() {
+    var p = parametri();
+    if (p.error) { mostraPorta(ERR_LINK); return; }
+    if (p.token_hash && p.type) {
+      mostra('attesa'); attesa.textContent = tr('Verifico il link…');
+      CELL.verificaLink(p.token_hash, p.type).then(function () { dopoVerifica(p.type); })
+        .catch(function () { mostraPorta(ERR_LINK); });
+      return;
+    }
+    if (p.code) {
+      mostra('attesa'); attesa.textContent = tr('Verifico il link…');
+      CELL.scambiaCodice(p.code).then(function () { dopoVerifica(p.type || 'recovery'); })
+        .catch(function () { mostraPorta(ERR_LINK); });
+      return;
+    }
+    if (p.access_token && p.type === 'recovery') {
+      CELL.sessione().then(function () { pulisciIndirizzo(); apriNuovaPassword(); }).catch(function () { mostraPorta(ERR_LINK); });
+      return;
+    }
+    CELL.sessione().then(function (u) {
+      if (recupero) return;
+      if (u) { dentro(); return; }
+      mostraPorta('');
+    }).catch(function () {
+      mostra('porta'); scheda('entra');
+      dillo('L’archivio non risponde. Riprova fra poco.', 'ko');
+    });
+  }
+  avvio();
 })();
 </script>
 </body>

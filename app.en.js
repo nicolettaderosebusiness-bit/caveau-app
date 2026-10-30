@@ -3418,7 +3418,7 @@
   window.CAVEAU = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '19.0'
+    versione: '19.1'
   };
 
 })();

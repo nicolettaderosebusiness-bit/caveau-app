@@ -163,10 +163,26 @@
       return entra(email, password).then(function () { return { conferma: false, in_attesa: !!d.in_attesa }; });
     });
   }
-  function recupera(email) {
-    return sb.auth.resetPasswordForEmail(String(email || '').trim().toLowerCase(), {
-      redirectTo: location.origin + location.pathname
-    }).then(function (r) { if (r.error) throw tradurre(r.error); return true; });
+  /* La password dimenticata: il link lo genera e lo manda il nostro server
+     (funzione "recupera"), cosi' funziona da qualsiasi dispositivo. La porta
+     lo verifica con verificaLink. scambiaCodice resta per i link vecchi. */
+  function recupera(email, lingua) {
+    return fetch(URL_DB + '/functions/v1/recupera', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', apikey: CHIAVE, authorization: 'Bearer ' + CHIAVE },
+      body: JSON.stringify({ email: String(email || '').trim().toLowerCase(), lingua: lingua || 'it' })
+    }).then(function (risp) {
+      if (!risp.ok) throw new Error('Non sono riuscito a mandare il link. Riprova fra poco.');
+      return true;
+    });
+  }
+  function verificaLink(tokenHash, tipo) {
+    return sb.auth.verifyOtp({ token_hash: tokenHash, type: tipo || 'recovery' })
+      .then(function (r) { if (r.error) throw tradurre(r.error); utente = (r.data && r.data.user) || null; return true; });
+  }
+  function scambiaCodice(codice) {
+    return sb.auth.exchangeCodeForSession(codice)
+      .then(function (r) { if (r.error) throw tradurre(r.error); utente = (r.data && r.data.user) || null; return true; });
   }
   function nuovaPassword(password) {
     return sb.auth.updateUser({ password: String(password || '') })
@@ -515,6 +531,7 @@
     carica: carica,
     salva: salva,
     cataloga: cataloga,
+    verificaLink: verificaLink, scambiaCodice: scambiaCodice,
     bacheca: bacheca, soci: soci, aggiornaCitta: aggiornaCitta, deskFondatore: deskFondatore,
     utente: function () { return utente; },
     cantina: function () { return cantina; }
