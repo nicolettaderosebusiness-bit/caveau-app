@@ -45,7 +45,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   #porta[hidden]{display:none}
   .porta-in{width:100%;max-width:420px}
   .marchio{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 8px;color:var(--t1);font-weight:700;font-size:22px;letter-spacing:-.03em}
-  .marchio svg{height:26px;width:auto;color:var(--acc)}
+  .marchio img{height:36px;width:auto;display:block}
   .porta h1{font-size:11px;font-family:var(--mono);font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--acc);text-align:center;margin:0 0 10px}
   .porta .claim{text-align:center;color:var(--t2);font-size:14.5px;line-height:1.55;margin:0 0 26px}
   .scheda{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--ed);border-radius:16px;padding:22px}
@@ -88,7 +88,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 
 <div id="porta" class="porta" hidden>
   <div class="porta-in">
-    <div class="marchio"><svg viewBox="0 0 10 22" aria-hidden="true"><path d="M3.6 1h2.8v5.3c1.5.7 2.4 2.1 2.4 3.9V19a2 2 0 0 1-2 2H2.8a2 2 0 0 1-2-2v-8.8c0-1.8.9-3.2 2.8-3.9V1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>CAVEAU</div>
+    <div class="marchio"><img src="marchio-caveau.svg" alt="Caveau" width="863" height="172"></div>
     <h1>La tua cantina · lo Speakeasy</h1>
     <p class="claim">Una porta sola: dentro c’è la tua cantina, ordinata e sotto controllo, e lo Speakeasy, la cantina aggregata del Club.</p>
 
@@ -149,7 +149,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.0"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.0"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.1"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.1"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');

@@ -715,6 +715,7 @@
 '.brand .mk{height:clamp(44px,7vw,80px)}',
 '.nav-br{display:flex;align-items:center;gap:10px;color:var(--t2)}',
 '.nav-br .mk{height:20px;color:var(--bronzo)}',
+'.nav-logo{height:32px;width:auto;display:block}',
 '.nav-br b{font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:11px}',
 /* le striscioline: piu larghe e con cinque tinte separate a colpo d'occhio */
 '.lc::after{width:3px;opacity:1}',
@@ -2695,7 +2696,7 @@
   ];
   function topbar() {
     return '<nav class="nav"><div class="nav-in">' +
-      '<span class="nav-br">' + MARCHIO + '<b>CAVEAU</b><span class="piano' + (clubAttivo() ? ' club' : '') + '">' + (clubAttivo() ? 'Club' : 'Cantina') + '</span></span>' +
+      '<span class="nav-br"><img class="nav-logo" src="marchio-caveau.svg" alt="Caveau" width="863" height="172"><span class="piano' + (clubAttivo() ? ' club' : '') + '">' + (clubAttivo() ? 'Club' : 'Cantina') + '</span></span>' +
       '<div class="nav-l">' + stanzeVisibili().map(function (z) {
         return '<button type="button" class="nvb' + (z.k === 'club' ? ' club' : '') + (stanza === z.k ? ' on' : '') + '" data-stanza="' + z.k + '"' +
           (stanza === z.k ? ' aria-current="page"' : '') + '><span class="nvn tab">' + z.n + '</span>' + z.t + '</button>';
@@ -2746,10 +2747,7 @@
 
   /* Il marchio: la stessa bottiglietta di Caveau, disegnata come SVG
      cosi resta nitida a ogni dimensione e prende il colore dal contesto. */
-  var MARCHIO = '<svg class="mk" viewBox="0 0 30 62" fill="none" aria-hidden="true">' +
-    '<path d="M12 2.2h6v10.6c0 2.5 5 4.7 5 9.8v32.2a5.2 5.2 0 0 1-5.2 5.2h-5.6A5.2 5.2 0 0 1 7 54.8V22.6c0-5.1 5-7.3 5-9.8V2.2Z" ' +
-    'stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/>' +
-    '<circle cx="15" cy="31.5" r="3.5" stroke="currentColor" stroke-width="2.1"/></svg>';
+  var MARCHIO = '<img class="mk" src="simbolo-caveau.svg" alt="" width="160" height="300">';
 
   function mast() {
     var inC = STATE.bottles.filter(inCantina);

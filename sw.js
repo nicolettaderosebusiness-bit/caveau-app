@@ -6,7 +6,7 @@
    una cantina vecchia credendola aggiornata.
    Per pubblicare una versione nuova basta cambiare VERSIONE.
    ============================================================= */
-var VERSIONE = 'caveau-20.0';
+var VERSIONE = 'caveau-20.1';
 
 var INVOLUCRO = [
   './',
@@ -21,7 +21,9 @@ var INVOLUCRO = [
   './icona-512.png',
   './icona-maskable-512.png',
   './icona-180.png',
-  './favicon-32.png'
+  './favicon-32.png',
+  './marchio-caveau.svg',
+  './simbolo-caveau.svg'
 ];
 
 self.addEventListener('install', function (e) {
