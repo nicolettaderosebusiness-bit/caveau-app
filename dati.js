@@ -26,7 +26,7 @@
   var STATO_APP = { in_coda: 'da_analizzare', catalogata: 'catalogata', bevuta: 'bevuta', venduta: 'venduta', regalata: 'regalata' };
   var STATO_DB  = { da_analizzare: 'in_coda', catalogata: 'catalogata', bevuta: 'bevuta', venduta: 'venduta', regalata: 'regalata' };
 
-  var TIPI   = ['Vino', 'Spumante', 'Whisky', 'Rum', 'Gin', 'Grappa', 'Liquore', 'Altro'];
+  var TIPI   = ['Vino', 'Spumante', 'Whisky', 'Rum', 'Gin', 'Cognac', 'Armagnac', 'Grappa', 'Liquore', 'Altro'];
   var COLORI = ['Rosso', 'Bianco', 'Rosé'];
 
   /* ------------------------- convertitori ------------------------- */
@@ -105,6 +105,8 @@
       regalata_il: s(r.regalata_il), regalata_a: s(r.regalata_a),
       esempio: !!r.esempio,
       club: s(r.club) || 'privata',
+      versione: r.versione == null ? null : Number(r.versione),
+      origine_id: s(r.origine_id),
       storico: storico || []
     };
   }
@@ -116,6 +118,10 @@
 
   /* ------------------------- accesso ------------------------- */
   var utente = null, cantina = null;
+  /* Vero quando il database ha la colonna «versione» (migrazione uscite-con-versione): da lì in poi ogni
+     riga cambiata porta in versione_attesa la versione letta e le uscite parziali passano dalla funzione server.
+     versioni: id → ultima versione nota di ogni riga (aggiornata dopo ogni scrittura riuscita). */
+  var haVersione = false, versioni = {};
   var ombra = {};        // id bottiglia → ultima riga scritta, serializzata
   var percorsi = {};     // id bottiglia → { fronte: percorso, retro: percorso }
 
@@ -232,7 +238,71 @@
   function spChiudiInteresse(id) { return rpc('interesse_chiudi', { p_interesse: id }); }
   function spContatti(id) { return rpc('contatti_accordo', { p_interesse: id }); }
   function spEsito(id, esito, nota) { return rpc('esito_dichiara', { p_interesse: id, p_esito: esito, p_nota: nota || '' }); }
-  function spUscita(id, bottigliaId, quantita) { return rpc('conferma_uscita', { p_interesse: id, p_bottiglia: bottigliaId || null, p_quantita: quantita || null }); }
+  /* Uscita dalla cantina con quantità: solo il database decrementa, con blocco di riga e chiave idempotente.
+     Le righe restituite aggiornano l'ombra: il prossimo salva() non le rimanda. */
+  var ERR_CANTINA = {"versione_superata": "Questa scheda è stata modificata da un altro dispositivo o da un’altra finestra: ricarica i dati salvati prima di continuare.", "uscita_non_disponibile": "L’uscita di una parte del lotto richiede un aggiornamento del server non ancora attivo.", "uscita_quantita_non_valida": "Quantità non valida per questa scheda.", "uscita_oltre_bacheca": "Una parte di queste bottiglie è in bacheca nello Speakeasy: ritira o modifica prima l’annuncio.", "bottiglia_gia_uscita": "Questa scheda è già uscita dalla cantina.", "bottiglia_non_tua": "Questa bottiglia non è nella tua cantina.", "rientro_non_previsto": "Questa scheda non è uscita: niente da rimettere.", "non_autorizzato": "Sessione scaduta: esci e rientra.", "precondizione_mancante": "Questa versione dell’app non può più cambiare quantità o stato: ricarica la pagina per avere quella aggiornata.", "chiave_riusata": "Richiesta già registrata con dati diversi: ricarica i dati salvati.", "quantita_non_disponibile": "Questa scheda non ha bottiglie disponibili.", "uscita_importo_non_valido": "Il prezzo deve essere un numero non negativo.", "chiave_mancante": "Richiesta senza codice: ricarica la pagina e riprova.", "origine_incoerente": "Scheda d’origine non valida.", "origine_non_modificabile": "La scheda d’origine non si può cambiare a mano.", "client_non_aggiornato": "Questa versione dell’app non conosce la tipologia di questa bottiglia: ricarica la pagina per avere quella aggiornata."};
+  function errCantina(r) {
+    var m = String((r && r.message) || r || '');
+    if (/PGRST202|Could not find the function|function public\.cantina_/i.test(m)) return new Error(ERR_CANTINA.uscita_non_disponibile);
+    var cod = (m.match(/\b(versione_superata|precondizione_mancante|chiave_riusata|chiave_mancante|quantita_non_disponibile|uscita_[a-z_]+|bottiglia_gia_uscita|bottiglia_non_tua|rientro_non_previsto|non_autorizzato|origine_incoerente|origine_non_modificabile|client_non_aggiornato)\b/) || [])[0];
+    return cod && ERR_CANTINA[cod] ? new Error(ERR_CANTINA[cod]) : tradurre(r);
+  }
+  function allineaOmbra(row) { if (!row || !row.id || !cantina) return null; var b = bottiglia(row, [], null); ombra[row.id] = JSON.stringify(riga(b, cantina.id)); if (row.versione != null) versioni[row.id] = Number(row.versione); return b; }
+  /* Dopo un'operazione del server lo stato delle righe si RILEGGE: la risposta può essere la fotografia di un'operazione
+     precedente (replay) e il server non la marca in ogni caso (cantina_rientro v7 non restituisce gia_registrata).
+     riallineata = true solo se la rilettura è riuscita; assenti = id richiesti che non esistono più sul server (riuniti o
+     eliminati altrove): la loro ombra viene dimenticata e la pagina li rimuove. Rilettura fallita: nessuna riga storica
+     viene conservata (genitore/figlia null), chi chiama ricarica i dati salvati. */
+  function riletturaFallita(esito) { esito.riallineata = false; esito.genitore = null; esito.figlia = null; esito.residuo = null; esito.assenti = []; return esito; }
+  function statoAttuale(esito, ids) {
+    ids = ids.filter(function (x, i, a) { return !!x && a.indexOf(x) === i; });
+    esito.assenti = [];
+    if (!ids.length) { esito.riallineata = true; return Promise.resolve(esito); }
+    return sb.from('bottiglie').select('*').in('id', ids).then(function (r) {
+      if (r.error) return riletturaFallita(esito);
+      var sul = {}; (r.data || []).forEach(function (x) { sul[x.id] = x; });
+      ids.forEach(function (id) { if (!sul[id]) { esito.assenti.push(id); delete ombra[id]; delete versioni[id]; } });
+      esito.genitore = esito.genitore && sul[esito.genitore.id] ? allineaOmbra(sul[esito.genitore.id]) : null;
+      esito.figlia = esito.figlia && sul[esito.figlia.id] ? allineaOmbra(sul[esito.figlia.id]) : null;
+      esito.residuo = esito.genitore ? esito.genitore.quantita : null; esito.riallineata = true; return esito;
+    }, function () { return riletturaFallita(esito); });
+  }
+  function uscita(p) {
+    if (!p.chiave) return Promise.reject(new Error(ERR_CANTINA.chiave_mancante));
+    return sb.rpc('cantina_uscita', { p_bottiglia: p.bottiglia, p_tipo: p.tipo, p_quantita: p.quantita, p_data: p.data, p_importo: p.importo == null ? null : p.importo, p_destinatario: p.destinatario || null, p_chiave: p.chiave })
+      .then(function (r) {
+        if (r.error) { var e = errCantina(r.error); e.incerto = incertoRete(r.error); throw e; }
+        var d = r.data || {};
+        var esito = { gia: !!d.gia_registrata, residuo: d.residuo, genitore: d.genitore || null, figlia: d.figlia || null, riallineata: true, assenti: [] };
+        /* prima chiamata: le righe sono appena state scritte nella stessa transazione; replay: si rilegge lo stato corrente */
+        if (esito.gia) return statoAttuale(esito, [d.genitore && d.genitore.id, d.figlia && d.figlia.id]);
+        esito.genitore = allineaOmbra(d.genitore); esito.figlia = allineaOmbra(d.figlia); return esito;
+      }, function (e) { var x = errCantina(e); x.incerto = incertoRete(e); throw x; });
+  }
+  function rientro(id, chiave) {
+    if (!chiave) return Promise.reject(new Error(ERR_CANTINA.chiave_mancante));
+    return sb.rpc('cantina_rientro', { p_figlia: id, p_chiave: chiave })
+      .then(function (r) {
+        if (r.error) { var e = errCantina(r.error); e.incerto = incertoRete(r.error); throw e; }
+        var d = r.data || {};
+        /* la v7 non marca i replay del rientro: la risposta può essere la fotografia della PRIMA operazione. Si rilegge SEMPRE
+           lo stato corrente di origine e figlia; la figlia riunita (o eliminata altrove) compare in `assenti` */
+        var esito = { unita: !!d.unita, gia: !!d.gia_registrata, genitore: d.genitore || null, figlia: d.figlia || null, richiesta: d.richiesta_figlia_id || id, riallineata: true, assenti: [] };
+        return statoAttuale(esito, [d.genitore && d.genitore.id, id, d.figlia && d.figlia.id]);
+      }, function (e) { var x = errCantina(e); x.incerto = incertoRete(e); throw x; });
+  }
+  function spUscita(id, bottigliaId, quantita) {
+    return rpc('conferma_uscita', { p_interesse: id, p_bottiglia: bottigliaId || null, p_quantita: quantita || null }).then(function (r) {
+      var bid = r && r.bottiglia_id; r = r || {};
+      if (!bid || r.gia_confermata) return r;
+      /* la riga è cambiata sul server (quantità o stato, versione cresciuta): si rilegge e si allinea l'ombra,
+         così il prossimo salva() non la rimanda con una precondizione vecchia */
+      return sb.from('bottiglie').select('*').eq('id', bid).limit(1).then(function (x) {
+        var row = x && !x.error && x.data && x.data[0];
+        r.bottiglia = row ? allineaOmbra(row) : null; r.riallineata = !!row; return r;
+      }, function () { r.bottiglia = null; r.riallineata = false; return r; });
+    });
+  }
   function spSegnala(annuncioId, interesseId, motivo) { return rpc('segnala', { p_annuncio: annuncioId || null, p_interesse: interesseId || null, p_motivo: motivo }); }
   function spFotoCarica(blob) {
     var percorso = utente.id + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) + '.jpg';
@@ -328,6 +398,10 @@
       return new Error('Indirizzo email non valido.');
     if (/Failed to fetch|NetworkError/i.test(m))
       return new Error('Nessuna connessione: l’archivio non risponde.');
+    if (/versione_superata/.test(m)) return new Error(ERR_CANTINA.versione_superata);
+    if (/client_non_aggiornato/.test(m)) return new Error(ERR_CANTINA.client_non_aggiornato);
+    if (/uscita_oltre_bacheca/.test(m)) return new Error(ERR_CANTINA.uscita_oltre_bacheca);
+    if (/precondizione_mancante/.test(m)) return new Error(ERR_CANTINA.precondizione_mancante);
     if (/row-level security|violates/i.test(m))
       return new Error('Il database ha rifiutato la scrittura: non è la tua cantina.');
     return new Error(m || 'Qualcosa non ha funzionato.');
@@ -361,11 +435,15 @@
       return Promise.all([
         sb.from('bottiglie').select('*').eq('cantina_id', c.id).order('aggiunta_il', { ascending: false }),
         sb.from('quotazioni').select('bottiglia_id,vetrina,fonte,rilevata_il').eq('cantina_id', c.id).order('rilevata_il', { ascending: true }),
-        sb.from('foto').select('bottiglia_id,lato,percorso').eq('cantina_id', c.id)
+        sb.from('foto').select('bottiglia_id,lato,percorso').eq('cantina_id', c.id),
+        /* sonda: la colonna «versione» esiste? (errore 42703 se manca). Non dipende dall'inventario: vale anche a cantina vuota */
+        sb.from('bottiglie').select('versione').eq('cantina_id', c.id).limit(1)
       ]);
     }).then(function (res) {
-      res.forEach(function (r) { if (r.error) throw tradurre(r.error); });
+      res.slice(0, 3).forEach(function (r) { if (r.error) throw tradurre(r.error); });
       var righe = res[0].data || [], quot = res[1].data || [], fot = res[2].data || [];
+      haVersione = !(res[3] && res[3].error);
+      versioni = {}; righe.forEach(function (r) { if (r.versione != null) versioni[r.id] = Number(r.versione); });
 
       var perBott = {};
       quot.forEach(function (q) {
@@ -458,9 +536,31 @@
     if (m && m.personalizzata) out.personalizzata = true;
     return out;
   }
+  /* Salvataggio: parte tutto ciò che va scritto, si ATTENDE OGNI richiesta (una coda successiva non può partire
+     mentre una scrittura è ancora in volo) e solo alla fine si classifica l'esito:
+       ok                    → risolve con l'elenco delle fasi ('foto' se sono state caricate foto)
+       errore                → rigetta con err.parziale (qualche fase è arrivata), err.fasi (fasi riuscite), err.fallite
+                               (fasi fallite), err.incerto (una richiesta è finita senza risposta leggibile: il server
+                               potrebbe averla applicata; nessuna delle fasi incerte viene marcata come riuscita)
+     Un nuovo tentativo rimanda solo ciò che manca (l'ombra registra solo le fasi riuscite); se il server rifiuta per
+     versione_superata, le righe vengono rilette: quelle già identiche a ciò che si voleva scrivere (richiesta applicata,
+     risposta persa) si allineano senza riscriverle; quelle cambiate da altri restano un conflitto dichiarato. */
+  function incertoRete(e) {
+    var g = (e && e.grezzo) || e; var m = String((g && g.message) || g || '');
+    var cod = g && g.code != null ? String(g.code) : '';
+    return cod === '' && /failed to fetch|networkerror|network request failed|load failed|timed? ?out|aborted|socket|ECONN/i.test(m);
+  }
+  function attendiTutte(ps) {
+    return new Promise(function (res) {
+      var n = ps.length, out = []; if (!n) return res(out);
+      ps.forEach(function (p, i) { Promise.resolve(p).then(function (v) { out[i] = { ok: true, v: v }; }, function (e) { out[i] = { ok: false, e: e }; }).then(function () { if (--n === 0) res(out); }); });
+    });
+  }
+  function lancia(err) { var e = tradurre(err); e.grezzo = err; return e; }
   function salva(stato) {
     if (!cantina) return Promise.reject(new Error('Cantina non aperta.'));
-    var lavori = [];
+    var lavori = [], fatto = {}, fallite = {}, incerto = false;
+    function fase(nome, p) { return p.then(function (v) { fatto[nome] = true; return v; }, function (e) { fallite[nome] = true; if (incertoRete(e)) incerto = true; throw e; }); }
 
     /* 1 — le impostazioni della cantina */
     var m = stato.meta || {};
@@ -472,10 +572,10 @@
     };
     var chiaveMeta = JSON.stringify(nuovaMeta);
     if (chiaveMeta !== ombra.__meta) {
-      lavori.push(sb.from('cantine').update(nuovaMeta).eq('id', cantina.id).then(function (r) {
-        if (r.error) throw tradurre(r.error);
+      lavori.push(fase('impostazioni', sb.from('cantine').update(nuovaMeta).eq('id', cantina.id).then(function (r) {
+        if (r.error) throw lancia(r.error);
         ombra.__meta = chiaveMeta;
-      }));
+      })));
     }
 
     /* 2 — le bottiglie: solo quelle cambiate, e solo quelle sparite */
@@ -485,12 +585,7 @@
     var sparite = Object.keys(ombra).filter(function (k) { return k !== '__meta' && !vive[k]; });
 
     var scrittura = Promise.resolve();
-    if (cambiate.length) {
-      scrittura = sb.from('bottiglie').upsert(cambiate).then(function (r) {
-        if (r.error) throw tradurre(r.error);
-        cambiate.forEach(function (x) { ombra[x.id] = JSON.stringify(x); });
-      });
-    }
+    if (cambiate.length) scrittura = fase('bottiglie', inviaBottiglie(cambiate, 0));
 
     if (sparite.length) {
       var files = [];
@@ -501,30 +596,93 @@
         delete percorsi[id];
       });
       scrittura = scrittura
-        .then(function () { return files.length ? sb.storage.from(BUCKET).remove(files) : null; })
-        .then(function () { return sb.from('bottiglie').delete().in('id', sparite); })
-        .then(function (r) {
-          if (r && r.error) throw tradurre(r.error);
-          sparite.forEach(function (id) { delete ombra[id]; });
-        });
+        .then(function () { return files.length ? fase('file_rimossi', sb.storage.from(BUCKET).remove(files).then(function (r) { if (r && r.error) throw lancia(r.error); })) : null; })
+        .then(function () { return fase('cancellazioni', eliminaRighe(sparite).then(function (r) {
+          if (r && r.error) throw lancia(r.error);
+          sparite.forEach(function (id) { delete ombra[id]; delete versioni[id]; });
+        })); });
     }
+    lavori.push(scrittura);
 
     /* 3 — le foto arrivate come blocco base64 vanno nello spazio privato.
            Dopo le righe, mai prima: una foto senza la sua bottiglia il
-           database non la accetta. */
+           database non la accetta. Se le righe non sono passate, le foto non partono (nessun doppio errore). */
     lavori.push(scrittura.then(function () {
       var conFoto = (stato.bottles || []).filter(function (b) {
         return (b.foto_fronte && b.foto_fronte.slice(0, 5) === 'data:') ||
                (b.foto_retro && b.foto_retro.slice(0, 5) === 'data:');
       });
       if (!conFoto.length) return null;
-      return conFoto.reduce(function (c, b) {
-        return c.then(function () { return mandaFoto(b, 'fronte'); })
-                .then(function () { return mandaFoto(b, 'retro'); });
-      }, Promise.resolve()).then(function () { return 'foto'; });
-    }));
+      var caricate = 0;
+      return fase('foto', conFoto.reduce(function (c, b) {
+        return c.then(function () { return mandaFoto(b, 'fronte'); }).then(function (p) { if (p) caricate++; })
+                .then(function () { return mandaFoto(b, 'retro'); }).then(function (p) { if (p) caricate++; });
+      }, Promise.resolve()).then(function () { return 'foto'; }, function (e) {
+        if (caricate > 0) fatto.foto_parziale = caricate;      // qualche foto è già sul server: esito parziale, detto
+        throw e;
+      }));
+    }, function () { return null; }));
 
-    return Promise.all(lavori);
+    return attendiTutte(lavori).then(function (esiti) {
+      var errori = esiti.filter(function (x) { return !x.ok; });
+      if (!errori.length) return esiti.map(function (x) { return x.v; });
+      var e = errori[0].e;
+      if (!e || typeof e !== 'object') e = new Error(String(e || 'Salvataggio non riuscito'));
+      e.parziale = Object.keys(fatto).length > 0; e.fasi = Object.keys(fatto); e.fallite = Object.keys(fallite); e.incerto = incerto;
+      throw e;
+    });
+  }
+  /* cancellazione: con il server versionato passa dalla funzione cantina_elimina (precondizione per riga, stessa regola
+     delle modifiche: una scheda cambiata altrove non si cancella alla cieca); altrimenti DELETE diretto come oggi */
+  function eliminaRighe(ids) {
+    if (!haVersione) return sb.from('bottiglie').delete().in('id', ids);
+    /* la precondizione è obbligatoria per ogni id: se una versione non è nota si rilegge prima (una riga già sparita
+       dal server non si manda); nessun valore sentinella */
+    var ignote = ids.filter(function (id) { return versioni[id] == null; });
+    var pre = ignote.length ? sb.from('bottiglie').select('id,versione').in('id', ignote).then(function (r) { if (r.error) throw lancia(r.error); (r.data || []).forEach(function (x) { versioni[x.id] = Number(x.versione); }); }) : Promise.resolve();
+    return pre.then(function () {
+      var vive = ids.filter(function (id) { return versioni[id] != null; });
+      if (!vive.length) return { data: { eliminate: 0 }, error: null };
+      return sb.rpc('cantina_elimina', { p_ids: vive, p_versioni: vive.map(function (id) { return versioni[id]; }) })
+        .then(function (r) { if (r.error && /PGRST202|Could not find the function/i.test(String(r.error.message || ''))) return sb.from('bottiglie').delete().in('id', ids); return r; });
+    });
+  }
+  /* con il server versionato ogni riga porta la versione letta: una scrittura su dati vecchi viene rifiutata
+     (versione_superata) invece di sovrascrivere; le versioni nuove tornano indietro e aggiornano la mappa */
+  function inviaBottiglie(cambiate, tentativo) {
+    var invio = haVersione ? cambiate.map(function (x) { var y = {}; for (var k in x) y[k] = x[k]; y.versione_attesa = versioni[x.id] != null ? versioni[x.id] : null; return y; }) : cambiate;
+    var richiesta = sb.from('bottiglie').upsert(invio); if (haVersione) richiesta = richiesta.select('id,versione');
+    return richiesta.then(function (r) {
+      if (r.error) {
+        if (haVersione && tentativo === 0 && /versione_superata/.test(String(r.error.message || ''))) {
+          return riallinea(cambiate).then(function (resto) { return resto.length ? inviaBottiglie(resto, 1) : null; });
+        }
+        throw lancia(r.error);
+      }
+      (r.data || []).forEach(function (x) { if (x && x.id && x.versione != null) versioni[x.id] = Number(x.versione); });
+      cambiate.forEach(function (x) { ombra[x.id] = JSON.stringify(x); });
+      return null;
+    });
+  }
+  /* dopo un rifiuto di versione: rilegge le righe inviate. Già identiche a ciò che si voleva scrivere → allineate
+     (richiesta precedente applicata, risposta persa). Versione invariata → non erano loro la causa: si rimandano.
+     Cambiate da altri → conflitto dichiarato, nessuna sovrascrittura. */
+  function riallinea(cambiate) {
+    var ids = cambiate.map(function (x) { return x.id; });
+    return sb.from('bottiglie').select('*').in('id', ids).then(function (r) {
+      if (r.error) throw lancia(r.error);
+      var sul = {}; (r.data || []).forEach(function (x) { sul[x.id] = x; });
+      var resto = [], conflitti = [];
+      cambiate.forEach(function (x) {
+        var srv = sul[x.id];
+        if (!srv) { resto.push(x); return; }
+        if (JSON.stringify(riga(bottiglia(srv, [], null), cantina.id)) === JSON.stringify(x)) { ombra[x.id] = JSON.stringify(x); versioni[x.id] = Number(srv.versione); return; }
+        if (Number(srv.versione) === versioni[x.id]) { resto.push(x); return; }
+        conflitti.push(x.id);
+      });
+      if (conflitti.length) { var e = new Error(ERR_CANTINA.versione_superata); e.conflitti = conflitti; throw e; }
+      return resto;
+    });
   }
 
   /* ------------------------- il motore ------------------------- */
@@ -581,6 +739,7 @@
     esci: esci,
     carica: carica,
     salva: salva,
+    uscita: uscita, rientro: rientro, haVersione: function () { return haVersione; },
     cataloga: cataloga,
     verificaLink: verificaLink, scambiaCodice: scambiaCodice,
     speakeasy: speakeasy, spMembro: spMembro, mioProfilo: mioProfilo, salvaProfilo: salvaProfilo,

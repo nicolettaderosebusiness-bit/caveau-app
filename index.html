@@ -27,7 +27,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   :root{
     --bg:#1C1815; --pan:rgba(44,37,32,.62); --sunk:#120F0D;
     --ed:rgba(241,235,224,.14); --ed2:rgba(241,235,224,.27);
-    --t1:#F1EBE0; --t2:#B3A695; --t3:#807469;
+    --t1:#F1EBE0; --t2:#B3A695; --t3:#9E9183;
     --vino:#71192D; --acc:#C9A06A; --acc2:#DDB784; --neg:#E0556A;
     --glass:rgba(44,37,32,.58); --blur:blur(16px) saturate(1.3);
     --sans:Figtree,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -52,7 +52,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   .tabs{display:flex;border:1px solid var(--ed);border-radius:999px;padding:3px;margin-bottom:20px;background:var(--sunk)}
   .tabs button{flex:1;padding:9px 12px;border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
   .tabs button.on{background:var(--acc);color:#1C1815}
-  .lbl{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin:14px 0 8px}
+  .lbl{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin:14px 0 8px}
   .lbl:first-child{margin-top:0}
   input[type=email],input[type=password],input[type=text]{width:100%;background:var(--sunk);border:1px solid var(--ed);border-radius:999px;
     padding:12px 17px;color:var(--t1);font-family:var(--mono);font-size:14px;outline:none}
@@ -63,13 +63,16 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     border-radius:999px;padding:12px 18px;font-weight:600;font-size:14.5px;transition:opacity .15s}
   .vai:hover{background:var(--acc2);border-color:var(--acc2)}
   .vai:disabled{opacity:.45;cursor:default}
-  .lnk{display:block;margin:14px auto 0;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--t3);text-decoration:underline;text-underline-offset:3px}
+  .lnk{display:block;margin:14px auto 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--t3);text-decoration:underline;text-underline-offset:3px}
   .lnk:hover{color:var(--t1)}
   .nota{margin:16px 2px 0;font-size:12.5px;line-height:1.6;color:var(--t3)}
+  #agg{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:400;max-width:min(560px,92vw);display:flex;gap:10px;align-items:center;background:#F1EBE0;color:#1C1815;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.45;box-shadow:0 20px 50px -20px #000}
+  #agg button{border:1px solid #1C1815;background:transparent;color:#1C1815;border-radius:8px;padding:7px 11px;font:inherit;cursor:pointer;white-space:nowrap}
+  #agg #agg-ok{background:#1C1815;color:#F1EBE0}
   .esito{margin-top:16px;border-radius:12px;padding:13px 15px;font-size:13.5px;line-height:1.55;display:none}
   .esito.ok{display:block;background:rgba(201,160,106,.14);border:1px solid rgba(201,160,106,.4);color:var(--acc2)}
   .esito.ko{display:block;background:rgba(224,85,106,.12);border:1px solid rgba(224,85,106,.42);color:#F0A3AE}
-  .firma{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5E564C}
+  .firma{margin-top:26px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9C8E80}
   .firma a{color:inherit}
   #attesa{min-height:100dvh;display:grid;place-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3)}
   #attesa[hidden]{display:none}
@@ -78,7 +81,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   .attesa .stato{font-size:14px;line-height:1.6;color:var(--t1);border-left:2px solid var(--acc);padding:10px 14px;background:var(--sunk);border-radius:0 10px 10px 0;margin:0}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 .lingua{display:flex;justify-content:flex-end;gap:4px;margin:0 0 12px}
-.lingua button{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--t3);border:1px solid var(--ed);border-radius:999px;padding:3px 9px;background:transparent;cursor:pointer}
+.lingua button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--t3);border:1px solid var(--ed);border-radius:999px;padding:3px 9px;background:transparent;cursor:pointer}
 .lingua button.on{color:var(--acc);border-color:var(--acc)}
 </style>
 </head>
@@ -121,9 +124,9 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
         <input type="text" id="p-citta" placeholder="es. Milano" maxlength="80">
         <label class="lbl" for="p-nota">Una riga per il desk · facoltativa</label>
         <input type="text" id="p-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
-        <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener" id="p-link-priv">informativa sulla privacy</a>. I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.</span></label>
-        <button class="vai" id="p-vai" type="submit">Apri la mia cantina</button>
-        <p class="nota">Si entra solo presentati da un socio: il Desk legge la richiesta e apre la tua cantina. Dentro trovi la tua cantina, lo Speakeasy e i soci.</p>
+        <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener" id="p-link-priv">informativa sulla privacy</a>. I dati servono per l’accesso, per la mia cantina, per le risposte del Desk e per presentarmi agli altri membri; non vengono ceduti a terzi.</span></label>
+        <button class="vai" id="p-vai" type="submit">Richiedi l’accesso</button>
+        <p class="nota">Si entra solo presentati da un socio: il Desk legge la richiesta e ti risponde per email, di norma entro 48 ore lavorative. Dentro trovi la tua cantina, lo Speakeasy e i soci: nome, Paese, lingua e interessi saranno visibili agli altri membri.</p>
       </form>
 
       <div id="f-attesa" class="attesa" hidden>
@@ -149,7 +152,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.1"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.1"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.3"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.3"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -174,12 +177,12 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   "Una riga per il desk · facoltativa": "A line for the Desk · optional",
   "Ho letto l’": "I have read the ",
   "informativa sulla privacy": "privacy notice",
-  ". I dati servono solo per l’accesso, per la mia cantina e per le risposte del desk, e non vengono ceduti.": ". My details are used only for access, for my cellar and for the Desk’s replies, and are never passed on.",
+  ". I dati servono per l’accesso, per la mia cantina, per le risposte del Desk e per presentarmi agli altri membri; non vengono ceduti a terzi.": ". My details are used for access, for my cellar, for the Desk’s replies and to introduce me to the other members; they are never passed on to third parties.",
   "Verifico il link…": "Checking the link…",
   "Il link non è più valido o è già stato usato. Chiedi un nuovo link con “Ho dimenticato la password”: arriva in pochi secondi e funziona da qualsiasi dispositivo.": "The link is no longer valid or has already been used. Request a new one with “I forgot my password”: it arrives in seconds and works on any device.",
   "Scegli la nuova password per ": "Choose a new password for ",
   "Password salvata. Entro…": "Password saved. Signing in…",
-  "Apri la mia cantina": "Open my cellar",
+  "Richiedi l’accesso": "Request access",
   "L’accesso è personale: il desk legge la richiesta e apre la tua cantina. Lo Speakeasy è su ammissione e si chiede da dentro.": "Access is personal: the Desk reads your request and opens your cellar. The Speakeasy is by admission, requested from inside.",
   "Ricontrolla": "Check again",
   "Esci": "Sign out",
@@ -210,12 +213,15 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   "La tua città · facoltativa": "Your city · optional",
   "es. Milano": "e.g. Milan",
   "Serve il nome del socio che ti presenta.": "The name of the member who introduces you is needed.",
-  "Si entra solo presentati da un socio: il Desk legge la richiesta e apre la tua cantina. Dentro trovi la tua cantina, lo Speakeasy e i soci.": "You join only when introduced by a member: the Desk reads the request and opens your cellar. Inside you find your cellar, the Speakeasy and the members.",
-  "Preparo la tua cantina…": "Preparing your cellar…",
+  "Si entra solo presentati da un socio: il Desk legge la richiesta e ti risponde per email, di norma entro 48 ore lavorative. Dentro trovi la tua cantina, lo Speakeasy e i soci: nome, Paese, lingua e interessi saranno visibili agli altri membri.": "You join only when introduced by a member: the Desk reads the request and replies by email, normally within 48 working hours. Inside you find your cellar, the Speakeasy and the members: your name, country, language and interests will be visible to other members.",
+  "Invio la richiesta…": "Sending your request…",
   "Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.": "We have written to you: open the message and confirm your address, then sign in here.",
   "Scegli la nuova password.": "Choose your new password.",
   "Il link non è più valido: chiedine un altro.": "The link is no longer valid: request another one.",
-  "L’archivio non risponde. Riprova fra poco.": "The archive is not responding. Try again shortly."
+  "L’archivio non risponde. Riprova fra poco.": "The archive is not responding. Try again shortly.",
+  "Caveau si è aggiornato. Ricarica quando vuoi: le modifiche non salvate restano in questa pagina finché non la ricarichi.": "Caveau has been updated. Reload whenever you like: unsaved changes stay on this page until you reload it.",
+  "Ricarica": "Reload",
+  "Chiudi": "Close"
 };
   function tr(t) { return (LINGUA === 'en' && T_EN[t]) ? T_EN[t] : t; }
   function traduciPorta() {
@@ -313,7 +319,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     if (!email || email.indexOf('@') < 1) { dillo('Serve un indirizzo email valido.', 'ko'); return; }
     if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
     if (!document.getElementById('p-priv').checked) { dillo('Per iscriverti devi accettare l’informativa.', 'ko'); return; }
-    var b = document.getElementById('p-vai'); b.disabled = true; dillo('Preparo la tua cantina…', 'ok');
+    var b = document.getElementById('p-vai'); b.disabled = true; dillo('Invio la richiesta…', 'ok');
     var nota = document.getElementById('p-nota').value.trim(), garante = document.getElementById('p-garante').value.trim(), citta = document.getElementById('p-citta').value.trim();
     if (garante.length < 3) { dillo('Serve il nome del socio che ti presenta.', 'ko'); return; }
     CELL.iscriviti(nome, email, pw, nota, garante, citta).then(function (r) {
@@ -340,6 +346,18 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     if (!('serviceWorker' in navigator)) return;
     if (location.protocol !== 'https:' && location.hostname !== 'localhost') return;
     navigator.serviceWorker.register('sw.js').catch(function () {});
+    /* Una versione nuova dell'app ha preso il controllo mentre questa pagina era aperta: lo si dice,
+       senza ricaricare da soli. Ricaricare è una scelta di chi usa l'app. */
+    var controllato = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (!controllato) { controllato = true; return; }
+      if (document.getElementById('agg')) return;
+      var d = document.createElement('div'); d.id = 'agg'; d.setAttribute('role', 'status');
+      d.innerHTML = '<span>' + tr('Caveau si è aggiornato. Ricarica quando vuoi: le modifiche non salvate restano in questa pagina finché non la ricarichi.') + '</span><button type="button" id="agg-ok">' + tr('Ricarica') + '</button><button type="button" id="agg-no" aria-label="' + tr('Chiudi') + '">✕</button>';
+      document.body.appendChild(d);
+      document.getElementById('agg-ok').addEventListener('click', function () { location.reload(); });
+      document.getElementById('agg-no').addEventListener('click', function () { d.remove(); });
+    });
   }
 
   /* ---- l'arrivo: cosa c'è nell'indirizzo decide cosa mostrare ----
