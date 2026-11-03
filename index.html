@@ -41,7 +41,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
       radial-gradient(1100px 640px at 6% -8%,rgba(201,160,106,.17),transparent 62%),
       radial-gradient(900px 620px at 104% 14%,rgba(142,34,56,.22),transparent 60%),var(--bg);background-attachment:fixed}
   button{font:inherit;cursor:pointer;background:none;border:0;color:inherit}
-  #porta{min-height:100dvh;display:grid;place-items:center;padding:28px 20px}
+  #porta{min-height:100dvh;display:grid;place-items:center;padding:calc(28px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
   #porta[hidden]{display:none}
   .porta-in{width:100%;max-width:420px}
   .marchio{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 8px;color:var(--t1);font-weight:700;font-size:22px;letter-spacing:-.03em}
@@ -152,7 +152,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.3"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.3"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.4"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.4"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');

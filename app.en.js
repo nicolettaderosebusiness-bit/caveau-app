@@ -983,7 +983,63 @@
 '  .nav-in > .nvb[data-lingua-switch]{margin-left:auto}',
 '  .salvo{order:4;flex:0 0 100%;text-align:center;padding:5px 0 6px;margin:0;font-size:11px;border-top:1px solid var(--ed)}', '.salvo:empty{display:none}',
 '}',
-'@keyframes sale{from{transform:translateY(28px);opacity:0}to{transform:none;opacity:1}}'
+'@keyframes sale{from{transform:translateY(28px);opacity:0}to{transform:none;opacity:1}}',
+'/* ---------------- revisione 3 nov 2026: barre misurate e safe area su ogni superficie; foto ---------------- */',
+':root{--nav-h:46px;--respiro:0px;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}',
+'#sat-sonda{position:fixed;top:0;left:0;width:1px;height:env(safe-area-inset-top,0px);visibility:hidden;pointer-events:none}',
+'.nav{padding-top:calc(var(--sat) + var(--respiro))}',
+'.nav-in{padding-left:max(24px,var(--sal));padding-right:max(24px,var(--sar))}',
+'@media (max-width:820px){.nav-in{padding-left:max(10px,var(--sal));padding-right:max(10px,var(--sar))}}',
+'@media (max-height:500px) and (max-width:1000px){.nav-in{overflow:visible;flex-wrap:wrap;gap:0;padding:0 max(10px,var(--sar)) 0 max(10px,var(--sal));min-height:0}.nav-br{display:flex;order:1;padding:9px 0 7px;flex:1 1 auto;min-width:0}.nav-br .nav-logo{height:22px}.nav-in > .nvb[data-lingua-switch]{order:2;margin-left:auto}.nav-in > #sp-profilo-apri{order:2}.nav-in > .nvb.esci{order:2;margin-left:0}.nav-l{order:3;width:100%;flex:0 0 100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:0;border-top:1px solid var(--ed)}.nvb{flex:none;justify-content:center;align-items:center;gap:0;padding:10px 2px 8px;min-height:40px;font-size:11.5px;letter-spacing:.05em;white-space:nowrap;text-align:center;overflow:hidden;text-overflow:ellipsis}.nvb .nvn{display:none}.nav-in > .nvb[data-lingua-switch],.nav-in > #sp-profilo-apri,.nav-in > .nvb.esci{padding:8px 6px;font-size:11px;letter-spacing:.05em}.salvo{order:4;flex:0 0 100%;text-align:center;padding:4px 0 5px;margin:0;font-size:11px;border-top:1px solid var(--ed)}.salvo:empty{display:none}}',
+'.tools{top:var(--nav-h);padding-left:max(24px,var(--sal));padding-right:max(24px,var(--sar))}',
+'@media (max-width:640px){.tools{top:auto;padding-left:max(14px,var(--sal));padding-right:max(14px,var(--sar))}}',
+'.salvabar{top:var(--nav-h);padding-left:max(24px,var(--sal));padding-right:max(24px,var(--sar))}',
+'.ro{padding-left:max(24px,var(--sal));padding-right:max(24px,var(--sar))}',
+'.mast{padding-left:max(30px,var(--sal));padding-right:max(30px,var(--sar))}',
+'@media (max-width:640px){.mast{padding-left:max(16px,var(--sal));padding-right:max(16px,var(--sar))}}',
+'.content{padding-left:max(24px,var(--sal));padding-right:max(24px,var(--sar))}',
+'@media (max-width:640px){.content{padding-left:max(14px,var(--sal));padding-right:max(14px,var(--sar))}}',
+'@media (max-width:1000px){.rail{padding-top:calc(18px + var(--sat) + var(--respiro));padding-left:max(16px,var(--sal))}}',
+'.fab{right:max(16px,var(--sar));bottom:calc(18px + var(--sab))}',
+'.fab.fab2{right:auto;left:max(16px,var(--sal));background:rgba(44,37,32,.92);color:var(--t1);border-color:var(--ed2);font-weight:600;backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}',
+'.toast{bottom:calc(20px + var(--sab))}',
+'@media (max-width:640px){.toast{bottom:calc(86px + var(--sab))}}',
+'.ov{padding:calc(18px + var(--sat)) max(18px,var(--sar)) calc(18px + var(--sab)) max(18px,var(--sal))}',
+'@media (max-width:640px){.ov{padding:0}.sheet,.sheet.wide{max-height:calc(100dvh - 8px - var(--sat))}.shd,.shb{padding-left:max(16px,var(--sal));padding-right:max(16px,var(--sar))}.shf{padding-left:max(16px,var(--sal));padding-right:max(16px,var(--sar))}}',
+'.lbx{max-height:calc(92vh - var(--sat))}',
+'.btn:disabled{opacity:.45;cursor:default;pointer-events:none}',
+'/* la sfumatura destra della nav serviva quando la barra scorreva: ora copre «Esci» */',
+'@media (max-width:640px){.nav::after{display:none}}',
+'.shf{background:rgba(28,24,21,.96)}',
+'.slot.full img{height:auto;min-height:0;aspect-ratio:4/5;object-fit:cover}',
+'@media (max-width:640px){.slots{grid-template-columns:1fr 1fr;gap:9px}.slot{min-height:150px;padding:12px 8px}.slot .sh{font-size:11px}}',
+'@media (max-width:640px){.lgo .redo{min-height:30px;display:inline-flex;align-items:center}}',
+'.slot.wait,.slot.ko{border-style:solid}', '.slot.ko{border-color:rgba(224,85,106,.6)}', '.slot.wait .sh{animation:pulsa 1.1s ease-in-out infinite}',
+'.slot-ops{position:absolute;top:7px;right:7px;display:flex;gap:4px;z-index:2}', '.slot-ops .redo{position:static}',
+'.scelta{margin-top:10px;padding:10px 12px;border:1px solid var(--ed);border-radius:10px;background:var(--pan2);font-size:13px;color:var(--t2);line-height:1.5}',
+'.scelta p{margin:0 0 8px}', '.scelta .lnk{font-size:12.5px;padding:0;display:inline}',
+'.lcont{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);margin-top:12px}',
+'.lcont b{color:var(--t1);font-weight:500}', '.lcont .ko{color:#F0A3AE}',
+'.lotto{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px}',
+'.lgrp{border:1px solid var(--ed);border-radius:12px;background:var(--pan2);padding:10px}', '.lgrp.att{border-color:var(--bronzo)}', '.lgrp.ko{border-color:rgba(224,85,106,.6)}',
+'.lgh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}',
+'.lgh .sc{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)}',
+'.lgh .ops{display:flex;gap:10px;flex-wrap:wrap}', '.lgh .lnk{font-size:11.5px;padding:2px 0;color:var(--t2)}',
+'.lgf{display:grid;grid-template-columns:1fr 1fr;gap:8px}', '.lgf.una{grid-template-columns:1fr}',
+'.lgs{position:relative;margin:0;border-radius:9px;overflow:hidden;background:var(--sunk);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:center;padding:0;border:1px solid var(--ed)}',
+'.lgs img{position:static;width:100%;aspect-ratio:4/5;height:auto;object-fit:cover;display:block}',
+'.lgs .sc{position:absolute;top:5px;left:5px;z-index:1;background:rgba(8,7,10,.82);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t1)}',
+'.lgs .sh{position:relative;z-index:1;font-size:11px;color:var(--t3);word-break:break-word;line-height:1.35;padding:30px 8px 10px;flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:118px}',
+'.lgs.ko{border-color:rgba(224,85,106,.6)}', '.lgs.ko .sh{color:#F0A3AE}', '.lgs.wait .sh{animation:pulsa 1.1s ease-in-out infinite}', '.lgs.vuota{opacity:.75;border-style:dashed}', '.lgs.vuota .sh,.lgs.wait .sh{min-height:150px}',
+'.lgo{position:static;display:flex;gap:4px;justify-content:center;flex-wrap:wrap;padding:6px;border-top:1px solid var(--ed);background:var(--pan2)}',
+'.lgo .redo,.lgp label.btn{cursor:pointer}', '.lgo .redo{position:static;background:rgba(8,7,10,.82);border:1px solid var(--ed2);color:var(--t1);border-radius:999px;padding:5px 10px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;line-height:1.3;white-space:nowrap}', '.lgo label input,.lgp label input{display:none}',
+'.lgp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:12.5px;color:var(--bronzo2)}',
+'.lgp .btn.sm{min-height:34px;padding:6px 11px;font-size:12px}',
+'.lmodo{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}', '.lmodo .seg{display:grid;grid-template-columns:1fr 1fr;max-width:100%}', '.lmodo .seg button{padding:9px 10px;font-size:12.5px;white-space:normal;line-height:1.25;text-align:center;min-height:42px}',
+'@media (max-width:640px){.lmodo{flex-direction:column;align-items:stretch;gap:8px}.lmodo .seg{width:100%}.lmodo .seg button{font-size:12px;padding:9px 6px}}',
+'.lmotivo{font-size:12.5px;color:var(--bronzo2);flex:1 1 100%;margin:0}',
+'@media (max-width:640px){.lotto{grid-template-columns:1fr 1fr;gap:8px}.lgrp{padding:8px}.lgs{min-height:118px}.lgh .ops{gap:8px}}',
+'@media (max-width:400px){.lotto{grid-template-columns:1fr}}',
     ].join('\n');
   }
 
@@ -2527,7 +2583,9 @@
     if (!window.CELL) { isReadOnly = true; return Promise.resolve(false); }
     pendenti++; saving = true; try { aggiornaSalvo(); } catch (e0) {}
     var mio = codaSalvataggi.catch(function () {}).then(function () {
-      var p; try { p = Promise.resolve(CELL.salva(ns)); } catch (e1) { p = Promise.reject(e1); }
+      /* si invia lo STATO CORRENTE, non l'istantanea presa alla commit: se nel frattempo una rilettura ha fuso i campi letti dall'IA,
+         un'istantanea vecchia li sovrascriverebbe con la versione nuova. Lo stato corrente contiene tutte le commit precedenti. */
+      var p; try { p = Promise.resolve(CELL.salva(STATE)); } catch (e1) { p = Promise.reject(e1); }
       return p.then(function (esiti) {
         erroreSalvataggio = null; ultimoSalvato = new Date().toTimeString().slice(0, 5);
         return { ok: true, foto: !!(esiti && esiti.indexOf && esiti.indexOf('foto') >= 0) };
@@ -2584,99 +2642,280 @@
       '<button type="button" class="btn pri sm" id="salva-riprova">Try again</button><button type="button" class="btn sm" id="salva-ricarica">Reload saved data</button></div>';
   }
   window.addEventListener('beforeunload', function (ev) { if (pendenti || erroreSalvataggio) { ev.preventDefault(); ev.returnValue = 'There are changes not yet saved.'; return ev.returnValue; } });
+  /* ---- barre misurate: l'altezza reale della nav (una o due righe, inset compreso) guida tools e «Non salvato»;
+     il respiro sopra l'inset esiste solo quando l'inset esiste (iPhone dalla Home), mai su computer o dentro Safari ---- */
+  var sondaSat = null, navOss = null;
+  function misuraBarre() {
+    var r = document.documentElement;
+    if (!sondaSat) { sondaSat = document.createElement('div'); sondaSat.id = 'sat-sonda'; document.body.appendChild(sondaSat); }
+    var sat = sondaSat.getBoundingClientRect().height || 0;
+    r.style.setProperty('--respiro', sat > 0 ? '6px' : '0px');
+    var nav = document.querySelector('.nav');
+    if (!nav) return;
+    var h = Math.round(nav.getBoundingClientRect().height);
+    if (h > 0) r.style.setProperty('--nav-h', h + 'px');
+    if (window.ResizeObserver) { if (navOss) navOss.disconnect(); navOss = new ResizeObserver(function () { var k = Math.round(nav.getBoundingClientRect().height); if (k > 0) r.style.setProperty('--nav-h', k + 'px'); }); navOss.observe(nav); }
+  }
+  ['resize', 'orientationchange'].forEach(function (ev) { window.addEventListener(ev, function () { setTimeout(misuraBarre, 60); }); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { setTimeout(misuraBarre, 60); });
 
 
-  /* ======================= scatto rapido =======================
-     Un tocco, la fotocamera, la foto va in coda e la lettura dell'etichetta
-     parte da sola appena il salvataggio è finito. Si può scattare la prossima
-     mentre la precedente viene letta: le letture si mettono in fila. */
+  /* ======================= foto: un ingresso solo, nessuna scrittura prima della conferma (revisione 3 nov 2026) =======================
+     Il FAB e i pulsanti aprono lo stesso foglio «Fotografa la bottiglia»: fronte e retro in anteprima, posizione e prezzo in
+     bozza, conferma esplicita. Solo alla conferma nasce UNA scheda, con UN salvataggio e (se richiesto) UNA lettura con
+     entrambe le foto. Le letture si mettono in fila una alla volta (codaLetture) e aspettano la fine del salvataggio. */
   var letture = {}, codaLetture = Promise.resolve();
+  var retroPer = null; // scheda in coda a cui aggiungere il retro (azzerata a ogni apertura/chiusura dei fogli)
+  var scatto = null;   // foglio singolo: { tok:{fronte,retro}, fronte, retro, soloFronte, pos, prezzo, confermando }
+  var lotto = null;    // caricamento multiplo: { tok, seq, items, gruppi, modo, pos, leggi, attive, confermando }
+  var renderRichiesto = false;
+  function renderPresto() {
+    if (renderRichiesto) return; renderRichiesto = true;
+    (window.requestAnimationFrame || setTimeout)(function () {
+      renderRichiesto = false;
+      var a = document.activeElement, id = a && a.id, pos = null;
+      try { if (a && a.setSelectionRange && /^(text|number|search)$/.test(a.type || 'text')) pos = a.selectionStart; } catch (e0) {}
+      render();
+      if (id) { var e = document.getElementById(id); if (e && e !== document.activeElement) { try { e.focus({ preventScroll: true }); if (pos != null && e.setSelectionRange) e.setSelectionRange(pos, pos); } catch (e1) {} } }
+    });
+  }
   function rapidoPreferito() {
     return !!(window.matchMedia && (window.matchMedia('(max-width:640px)').matches || window.matchMedia('(pointer:coarse)').matches));
   }
+  var ICONA_CAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.2-2h5.4l1.2 2h1.6A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.5" r="3.4"/></svg>';
+  var ICONA_PILA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="13" height="13" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/><circle cx="13.5" cy="12.5" r="1.6"/><path d="M8.5 19l3.2-3.6 2.3 2.4 1.6-1.7L19 19"/></svg>';
   function rapidoHtml() {
     if (isReadOnly) return '';
     var n = Object.keys(letture).filter(function (k) { return letture[k].stato !== 'ko'; }).length;
     return '<input type="file" accept="image/*" capture="environment" id="rapido-in" class="rapido-in" aria-hidden="true" tabindex="-1">' +
       '<input type="file" accept="image/*" capture="environment" id="retro-in" class="rapido-in" aria-hidden="true" tabindex="-1">' +
-      '<button type="button" class="fab" id="fab-scatta" aria-label="Snap a bottle label">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.2-2h5.4l1.2 2h1.6A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.5" r="3.4"/></svg>' +
-      '<span>Scatta</span>' + (n ? '<span class="fab-n">' + n + '</span>' : '') + '</button>';
+      '<button type="button" class="fab fab2" id="fab-bulk" aria-label="Upload several bottles">' + ICONA_PILA + '<span>More bottles</span></button>' +
+      '<button type="button" class="fab" id="fab-scatta" aria-label="Photograph a bottle">' + ICONA_CAM + '<span>Snap</span>' + (n ? '<span class="fab-n">' + n + '</span>' : '') + '</button>';
   }
   function statoLettura(b) {
     var l = letture[b.id];
     if (l && l.stato === 'leggo') return '<div class="mt"><span class="pl lett">reading the label…</span></div><div class="nm">One moment</div><div class="mk">Name, estate, vintage and grapes are on their way</div>';
     if (l && l.stato === 'salvo') return '<div class="mt"><span class="pl lett">saving the photo…</span></div><div class="nm">To catalogue</div><div class="mk">Once saved, the label is read</div>';
+    if (l && l.stato === 'recupero') return '<div class="mt"><span class="pl ' + (l.msg ? 'ko' : 'lett') + '">' + (l.msg ? 'Label read' : 'recovering the data read…') + '</span></div><div class="nm">Label read</div><div class="mk">' + escHtml(l.msg || 'recovering the data read…') + '</div>';
     if (l && l.stato === 'ko') return '<div class="mt"><span class="pl ko">reading failed</span></div><div class="nm">To catalogue</div><div class="mk">' + escHtml(l.msg || 'Try again or fill in by hand') + '</div>';
     return '<div class="mt"><span class="pl">in progress</span></div><div class="nm">To catalogue</div><div class="mk">Waiting for the label to be read</div>';
   }
   function azioniCoda(b) {
     if (isReadOnly) return '';
     var l = letture[b.id], occupata = l && (l.stato === 'leggo' || l.stato === 'salvo');
+    if (l && l.stato === 'recupero') return l.msg ? '<button type="button" class="btn sm pri retro" data-recupera="' + b.id + '">Recover the data read</button>' : '';
     return (b.foto_retro || occupata ? '' : '<button type="button" class="btn sm retro" data-retro-di="' + b.id + '">Add the back</button>') +
-      (l && l.stato === 'ko' ? '<button type="button" class="btn sm pri retro" data-rileggi="' + b.id + '">Retry the reading</button>' : '');
+      (occupata ? '' : '<button type="button" class="btn sm pri retro" data-rileggi="' + b.id + '">' + (l && l.stato === 'ko' ? 'Retry the reading' : 'Read the label') + '</button>');
   }
-  function apriRapido() { var i = document.getElementById('rapido-in'); if (i) { i.value = ''; i.click(); } }
+  function apriCamera(lato) { var i = document.getElementById(lato === 'retro' ? 'retro-in' : 'rapido-in'); if (i) { i.value = ''; i.click(); } }
+  var ATTESA_GIRI = 240;   // 240 × 250 ms = un minuto al massimo
   function attendiSalvataggio() {
     return new Promise(function (res) {
       var n = 0;
-      (function giro() { if (!saving && !attesa) return res(true); if (++n > 240) return res(false); setTimeout(giro, 250); })();
+      (function giro() { if (!saving && !attesa) return res(true); if (++n > ATTESA_GIRI) return res(false); setTimeout(giro, 250); })();
     });
   }
   function fotoSulServer(b) { return !!b && (!b.foto_fronte || b.foto_fronte.slice(0, 5) !== 'data:') && (!b.foto_retro || b.foto_retro.slice(0, 5) !== 'data:'); }
+  /* Una lettura per scheda, in fila: parte solo dopo che il salvataggio (foto comprese) è finito davvero. Niente lettura se
+     l'attesa scade o se l'ultimo salvataggio è in errore, anche quando le foto hanno già un indirizzo. Se la stessa scheda è
+     già in fila, in lettura o in recupero non si accoda due volte. */
   function leggiAppena(id) {
-    letture[id] = { stato: 'salvo' }; render();
+    var l = letture[id];
+    if (l && l.stato === 'recupero') { if (l.msg) recuperaDalServer(id); return; }   // lettura già fatta: si ripete solo la rilettura
+    if (l && (l.stato === 'salvo' || l.stato === 'leggo')) return;
+    letture[id] = { stato: 'salvo' }; renderPresto();
     codaLetture = codaLetture.then(function () {
-      return attendiSalvataggio().then(function () {
+      return attendiSalvataggio().then(function (finito) {
         var b = STATE.bottles.find(function (x) { return x.id === id; });
-        if (!b || !inCoda(b)) { delete letture[id]; render(); return; }
-        if (!window.CELL || !CELL.cataloga) { letture[id] = { stato: 'ko', msg: 'The engine cannot be reached from here' }; render(); return; }
-        if (!fotoSulServer(b)) { letture[id] = { stato: 'ko', msg: 'Photo not saved yet: try again shortly' }; render(); return; }
-        letture[id] = { stato: 'leggo' }; render();
-        return CELL.cataloga(id).then(function () { return CELL.carica(); }).then(function (nuovo) {
-          delete letture[id]; idrata(nuovo); render();
-          var l = STATE.bottles.find(function (x) { return x.id === id; });
-          toast(l && l.nome ? 'Letta: ' + l.nome : 'Label read');
-        }).catch(function (e) {
+        var ko = function (msg) { letture[id] = { stato: 'ko', msg: msg }; renderPresto(); };
+        if (!b || !inCoda(b)) { delete letture[id]; renderPresto(); return; }
+        if (!window.CELL || !CELL.cataloga) return ko('The engine cannot be reached from here');
+        if (!finito) return ko('Saving still in progress: try again shortly');
+        if (erroreSalvataggio) return ko('Saving failed: retry the save, then read the label');
+        if (!fotoSulServer(b)) return ko('Photo not saved yet: try again shortly');
+        letture[id] = { stato: 'leggo', base: JSON.stringify(b) }; renderPresto();   // base = la scheda com'era quando la lettura è partita
+        return CELL.cataloga(id).then(function () { return recuperaDalServer(id); }, function (e) {
           letture[id] = { stato: 'ko', msg: (e && e.message) || 'Reading failed' }; render();
-          toast('Reading failed: ' + ((e && e.message) || 'riprova'));
+          toast('Reading failed: ' + ((e && e.message) || 'try again'));
         });
       });
     });
   }
-  function scattoRapido(file) {
-    if (!file) return;
-    toast('Preparing the photo…');
-    toDataUrl(file, FOTO_MAX_DIM, FOTO_QUALITA).then(function (u) {
-      var b = nuova(u, '', null);
-      commit(function (ns) { ns.bottles.unshift(b); }, false);
-      leggiAppena(b.id);
-    }).catch(function () { toast('Unreadable image, try again'); });
+  /* Dopo la lettura si rilegge la cantina passando dalla coda dei salvataggi e si fonde nello stato locale SOLO la scheda
+     letta: schede aggiunte o modificate nel frattempo restano com'erano (nessuna sostituzione dell'intero stato). Se la
+     rilettura fallisce, la lettura è comunque fatta e pagata: resta lo stato «recupero», che ripete solo la rilettura. */
+  /* Fusione a tre vie della sola scheda letta: base = la scheda com'era quando la lettura è partita; i campi cambiati in locale
+     da allora (modifiche dell'utente durante lettura o rilettura) restano, tutti gli altri prendono il valore del server.
+     Le foto restano quelle locali se il server non ne manda; lo storico delle quotazioni resta locale. */
+  function fondiScheda(locale, riga, base) {
+    var b0 = {}; try { b0 = base ? JSON.parse(base) : {}; } catch (e0) {}
+    var out = JSON.parse(JSON.stringify(locale));
+    Object.keys(riga).forEach(function (k) {
+      var cambiatoQui = JSON.stringify(locale[k]) !== JSON.stringify(b0[k]);   // modificato qui mentre la lettura era in corso: resta
+      if (cambiatoQui) return;
+      if (k === 'storico') { if (Array.isArray(riga.storico)) out.storico = riga.storico; return; }   // le quotazioni le decide il server
+      out[k] = riga[k];   // foto comprese: il link firmato del server sostituisce quello locale solo se la foto non è stata cambiata qui
+    });
+    return out;
   }
-  var retroPer = null;
+  /* rilettura mirata della sola scheda (CELL.rileggi): ombra e versioni cambiano solo per quell'id; se lo strato dati non la offre,
+     si segnala l’incompatibilità senza reintrodurre la rilettura globale */
+  function rileggiScheda(id) {
+    if (window.CELL && typeof CELL.rileggi === 'function') return CELL.rileggi(id);
+    return Promise.reject(new Error('Read-back unavailable: complete the app update.'));
+  }
+  function recuperaDalServer(id) {
+    var base = letture[id] && letture[id].base;
+    letture[id] = { stato: 'recupero', msg: '', base: base }; renderPresto();
+    return accodaOperazioneServer(function () { return rileggiScheda(id); }).then(function (riga) {
+      var ns = JSON.parse(JSON.stringify(STATE)), i = ns.bottles.findIndex(function (x) { return x.id === id; });
+      if (i < 0) { /* cancellata in locale nel frattempo: non si resuscita; la cancellazione viaggia con il suo salvataggio */ }
+      else if (!riga) ns.bottles.splice(i, 1);          // sparita sul server
+      else ns.bottles[i] = fondiScheda(ns.bottles[i], riga, base);
+      STATE = ns; delete letture[id]; render();
+      if (i >= 0) toast(riga && riga.nome ? 'Read: ' + riga.nome : 'Label read');
+    }, function () {
+      letture[id] = { stato: 'recupero', msg: 'Label read: the data is on the server, but I could not read it back', base: base }; render(); toast('Reading done. I could not read the record back: recover the data without a new reading');
+    });
+  }
+  function recuperaLettura(id) { var l = letture[id]; if (!l || l.stato !== 'recupero' || !l.msg) return; recuperaDalServer(id); }
+  /* ---- foglio singolo ---- */
+  function openShoot(file) {
+    lotto = null; bulk = false; editingId = null; retroPer = null;
+    scatto = { tok: { fronte: 0, retro: 0 }, fronte: null, retro: null, soloFronte: false, pos: Object.assign({ zona: '', scaffale: '', ripiano: '' }, ultimaPos || {}), prezzo: '', confermando: false };
+    shooting = true; render();
+    if (file) aggiungiFoto('fronte', file);
+  }
+  function aggiungiFoto(lato, file) {
+    if (!file) return;
+    if (!scatto) openShoot();
+    var s = scatto, tok = ++s.tok[lato];
+    s[lato] = { stato: 'preparo', nome: file.name || '' }; if (lato === 'retro') s.soloFronte = false;
+    render();
+    toDataUrl(file, FOTO_MAX_DIM, FOTO_QUALITA).then(function (u) {
+      if (scatto !== s || s.tok[lato] !== tok) return;      // foglio chiuso o foto rifatta nel frattempo: il risultato si butta via
+      s[lato] = { stato: 'pronta', url: u }; renderPresto();
+    }, function () {
+      if (scatto !== s || s.tok[lato] !== tok) return;
+      s[lato] = { stato: 'ko', nome: file.name || '', msg: 'Unreadable image' }; renderPresto();
+    });
+  }
+  function rifaiFoto(lato) { if (!scatto) return; scatto.tok[lato]++; scatto[lato] = null; render(); }
+  function confermaScatto(leggi) {
+    var s = scatto; if (!s || s.confermando) return;
+    if (!s.fronte || s.fronte.stato !== 'pronta') { toast(s.fronte && s.fronte.stato === 'preparo' ? 'One moment: preparing the photo' : 'The front photo is needed'); return; }
+    if (s.retro && s.retro.stato === 'preparo') { toast('One moment: preparing the photo'); return; }
+    if (s.retro && s.retro.stato === 'ko') { toast('The back is unreadable: redo it or remove it'); return; }
+    if (!s.retro && !s.soloFronte) { toast('Add the back or choose to continue with the front only'); return; }
+    s.confermando = true;
+    var b = nuova(s.fronte.url, s.retro ? s.retro.url : '', num(s.prezzo), s.pos); ultimaPos = s.pos;
+    scatto = null; shooting = false;
+    commit(function (ns) { ns.bottles.unshift(b); }, false);     // UNA scheda, UN salvataggio
+    if (leggi) leggiAppena(b.id);                                 // UNA lettura, con entrambe le foto
+    toast(leggi ? 'Record created · saving the photos and reading the label' : 'Record queued · read it whenever you like');
+  }
+  /* retro aggiunto a una scheda già in coda: nessuna lettura automatica (si legge con il pulsante, una volta sola) */
   function retroRapido(file) {
     var id = retroPer; retroPer = null;
     if (!file || !id) return;
     toast('Preparing the back…');
     toDataUrl(file, FOTO_MAX_DIM, FOTO_QUALITA).then(function (u) {
       commit(function (ns) { var x = ns.bottles.find(function (y) { return y.id === id; }); if (x) x.foto_retro = u; }, false);
-      var b = STATE.bottles.find(function (x) { return x.id === id; });
-      if (b && inCoda(b)) leggiAppena(id); else toast('Back added');
+      toast('Back added · read the label whenever you like');
     }).catch(function () { toast('Unreadable image, try again'); });
+  }
+  /* ---- caricamento multiplo ---- */
+  function apriLotto() {
+    scatto = null; shooting = false; editingId = null; retroPer = null;
+    lotto = { tok: 0, seq: 0, items: [], gruppi: [], modo: 'coppie', pos: Object.assign({ zona: '', scaffale: '', ripiano: '' }, ultimaPos || {}), leggi: true, attive: 0, confermando: false };
+    bulk = true; render();
+  }
+  function lottoItem(k) { return lotto ? lotto.items.find(function (x) { return x.k === k; }) : null; }
+  function nuovoItem(f) { var L = lotto; return { k: 'f' + (++L.seq), file: f, nome: f.name || ('foto ' + L.seq), stato: 'coda', url: '', msg: '' }; }
+  function aggiungiFile(files) {
+    if (!lotto) apriLotto();
+    var L = lotto, nuovi = [];
+    Array.prototype.forEach.call(files || [], function (f) { var it = nuovoItem(f); L.items.push(it); nuovi.push(it); });
+    if (!nuovi.length) return;
+    /* i gruppi si costruiscono SOLO per le foto appena scelte, nell'ordine di scelta: i gruppi già rivisti non cambiano */
+    if (L.modo === 'coppie') {
+      var ultimo = L.gruppi.length ? L.gruppi[L.gruppi.length - 1] : null;
+      nuovi.forEach(function (it) {
+        if (ultimo && ultimo.f && !ultimo.r && !ultimo.soloFronte) { ultimo.r = it.k; ultimo = null; }
+        else { ultimo = { f: it.k, r: null, soloFronte: false }; L.gruppi.push(ultimo); }
+      });
+    } else nuovi.forEach(function (it) { L.gruppi.push({ f: it.k, r: null, soloFronte: true }); });
+    render(); avviaConversioni();
+  }
+  /* conversione progressiva: mai più di due immagini per volta; un file illeggibile resta segnalato al suo posto */
+  function avviaConversioni() {
+    var L = lotto; if (!L) return;
+    while (L.attive < 2) {
+      var it = L.items.find(function (x) { return x.stato === 'coda'; }); if (!it) break;
+      (function (it, tok) {
+        it.stato = 'preparo'; L.attive++;
+        toDataUrl(it.file, FOTO_MAX_DIM, FOTO_QUALITA).then(function (u) { if (lotto !== L || L.tok !== tok) return; it.stato = 'pronta'; it.url = u; it.file = null; },
+          function () { if (lotto !== L || L.tok !== tok) return; it.stato = 'ko'; it.msg = 'Unreadable image'; })
+          .then(function () { if (lotto !== L || L.tok !== tok) return; L.attive--; renderPresto(); avviaConversioni(); });
+      })(it, L.tok);
+    }
+    renderPresto();
+  }
+  function cambiaModo(m) {
+    var L = lotto; if (!L || L.modo === m) return;
+    var ks = []; L.gruppi.forEach(function (g) { if (g.f) ks.push(g.f); if (g.r) ks.push(g.r); });
+    L.modo = m; L.gruppi = [];
+    if (m === 'coppie') { for (var i = 0; i < ks.length; i += 2) L.gruppi.push({ f: ks[i], r: ks[i + 1] || null, soloFronte: false }); }
+    else ks.forEach(function (k) { L.gruppi.push({ f: k, r: null, soloFronte: true }); });
+    render();
+  }
+  function togliItem(k) { var L = lotto; if (!L) return; var i = L.items.findIndex(function (x) { return x.k === k; }); if (i >= 0) L.items.splice(i, 1); }
+  function gruppoOp(op, gi, lato, file) {
+    var L = lotto; if (!L) return; var g = L.gruppi[gi]; if (!g) return;
+    if (op === 'scambia') { var t = g.f; g.f = g.r; g.r = t; }
+    else if (op === 'separa' && g.r) { L.gruppi.splice(gi + 1, 0, { f: g.r, r: null, soloFronte: false }); g.r = null; }
+    else if (op === 'unisci') { var n = L.gruppi[gi + 1]; if (g.f && !g.r && n && n.f && !n.r) { g.r = n.f; g.soloFronte = false; L.gruppi.splice(gi + 1, 1); } }
+    else if (op === 'solo') { g.soloFronte = true; }
+    else if (op === 'usafronte') { if (!g.f && g.r) { g.f = g.r; g.r = null; } }
+    else if (op === 'rimuovi') { if (g[lato]) { togliItem(g[lato]); g[lato] = null; } if (!g.f && !g.r) L.gruppi.splice(gi, 1); }
+    else if (op === 'sostituisci' && file) { if (g[lato]) togliItem(g[lato]); var it = nuovoItem(file); L.items.push(it); g[lato] = it.k; if (lato === 'r') g.soloFronte = false; render(); avviaConversioni(); return; }
+    render();
+  }
+  function lottoStato() {
+    var L = lotto, n = 0, ko = 0, inCorso = 0, aperte = 0, senzaFronte = 0;
+    L.items.forEach(function (it) { if (it.stato === 'ko') ko++; else if (it.stato !== 'pronta') inCorso++; });
+    L.gruppi.forEach(function (g) { if (!g.f && g.r) senzaFronte++; else if (g.f) { n++; if (L.modo === 'coppie' && !g.r && !g.soloFronte) aperte++; } });
+    var motivo = ko ? 'Some photos are unreadable: replace or remove them' : inCorso ? 'Wait until the photos are ready' : senzaFronte ? 'Some groups have no front' : aperte ? 'Decide for the bottles without a back' : !n ? 'Choose at least one photo' : '';
+    return { bottiglie: n, foto: L.items.length, ko: ko, inCorso: inCorso, aperte: aperte, senzaFronte: senzaFronte, motivo: motivo, pronto: !motivo };
+  }
+  function confermaLotto(leggi) {
+    var L = lotto; if (!L || L.confermando) return; L.leggi = leggi !== false;
+    var st = lottoStato(); if (!st.pronto) { toast(st.motivo); return; }
+    L.confermando = true; render();
+    var pos = L.pos, out = [];
+    L.gruppi.forEach(function (g) { if (!g.f) return; var f = lottoItem(g.f), r = g.r ? lottoItem(g.r) : null; out.push(nuova(f.url, r ? r.url : '', null, pos)); });
+    ultimaPos = pos; var leggi = L.leggi !== false; lotto = null; bulk = false;
+    commit(function (ns) { ns.bottles = out.concat(ns.bottles); }, false);   // un solo salvataggio per tutto il lotto
+    if (leggi) out.forEach(function (b) { leggiAppena(b.id); });            // letture in fila, una alla volta
+    toast(out.length + ' ' + (out.length === 1 ? 'bottle' : 'bottles') + (leggi ? ' queued · reading the labels one at a time' : ' queued · read them whenever you like'));
   }
   function bindRapido(root) {
     var on = function (id, ev, fn) { var e = document.getElementById(id); if (e) e.addEventListener(ev, fn); };
-    on('fab-scatta', 'click', apriRapido);
-    on('rapido-in', 'change', function (e) { scattoRapido(e.target.files && e.target.files[0]); });
-    on('retro-in', 'change', function (e) { retroRapido(e.target.files && e.target.files[0]); });
+    on('fab-scatta', 'click', function () { openShoot(); if (rapidoPreferito()) apriCamera('fronte'); });
+    on('fab-bulk', 'click', apriLotto);
+    on('rapido-in', 'change', function (e) { var f = e.target.files && e.target.files[0]; if (f) aggiungiFoto('fronte', f); });
+    on('retro-in', 'change', function (e) { var f = e.target.files && e.target.files[0]; var per = retroPer; retroPer = null; if (!f) return; if (per) { retroPer = per; retroRapido(f); } else aggiungiFoto('retro', f); });
     root.querySelectorAll('[data-retro-di]').forEach(function (btn) {
       btn.addEventListener('click', function (ev) { ev.stopPropagation(); retroPer = btn.getAttribute('data-retro-di'); var i = document.getElementById('retro-in'); if (i) { i.value = ''; i.click(); } });
     });
     root.querySelectorAll('[data-rileggi]').forEach(function (btn) {
       btn.addEventListener('click', function (ev) { ev.stopPropagation(); leggiAppena(btn.getAttribute('data-rileggi')); });
     });
+    root.querySelectorAll('[data-recupera]').forEach(function (btn) {
+      btn.addEventListener('click', function (ev) { ev.stopPropagation(); recuperaLettura(btn.getAttribute('data-recupera')); });
+    });
   }
-  window.CAVEAU_RAPIDO = { scatta: scattoRapido, letture: function () { return letture; } };
+  window.CAVEAU_RAPIDO = { scatta: function (file) { openShoot(file); }, letture: function () { return letture; }, scatto: function () { return scatto; }, lotto: function () { return lotto; }, attesaGiri: function (n) { ATTESA_GIRI = n; } };
 
   function toast(m) {
     var o = document.querySelector('.toast'); if (o) o.remove();
@@ -2799,13 +3038,14 @@
     root.innerHTML = view();
     bind();
     firstPaint = false;
+    try { misuraBarre(); } catch (eB) {}
   }
   function view() {
     var cat = stanza === 'catalogo';
     var l = cat ? lista() : [];
-    return (isReadOnly ? '<div class="ro">Read only — this link cannot save changes</div>' : '') +
-      '<div class="scrim' + (railOpen && cat && window.innerWidth <= 1000 ? ' on' : '') + '" data-shut></div>' +
-      barraSalvataggio() + topbar() + mast() + '<div class="app">' + (cat ? rail() : '') +
+    var ro = (isReadOnly ? '<div class="ro">Read only — this link cannot save changes</div>' : '');
+    return '<div class="scrim' + (railOpen && cat && window.innerWidth <= 1000 ? ' on' : '') + '" data-shut></div>' +
+      topbar() + ro + barraSalvataggio() + mast() + '<div class="app">' + (cat ? rail() : '') +
       '<div class="main">' + (cat ? tools() : '') + '<div class="content">' +
       (cat ? stanzaCatalogo(l) : stanza === 'mercato' ? stanzaMercato() : stanza === 'club' ? stanzaClub() : stanza === 'desk' ? stanzaDesk() : stanzaPanoramica()) +
       '</div></div></div>' + sheets();
@@ -3012,7 +3252,7 @@
 
   function tools() {
     return '<div class="tools">' +
-      (isReadOnly ? '' : '<button class="btn pri wide" id="shoot" type="button">Photograph a bottle</button><button class="btn" id="bulkbtn" type="button">More photos</button>') +
+      (isReadOnly ? '' : '<button class="btn pri wide" id="shoot" type="button">Photograph a bottle</button><button class="btn" id="bulkbtn" type="button">Upload several bottles</button>') +
       '<select id="f-sort" class="search" style="min-width:170px">' +
       [['valore-desc', 'Highest value'], ['aggiunta-desc', 'Recently added'], ['nome-asc', 'Name A-Z'],
        ['annata-desc', 'Recent vintage'], ['annata-asc', 'Old vintage'], ['grad-desc', 'Strength ↓'],
@@ -3040,32 +3280,11 @@
      del modello sta sul server e lì resta. Si procede una bottiglia alla volta,
      in fila, perché due letture insieme non arrivano prima e un errore a metà
      lascerebbe la coda in uno stato che nessuno saprebbe spiegare. */
+  /* «Leggi le etichette» in blocco: ogni scheda entra nella stessa fila delle letture singole (una alla volta, fusione della sola
+     scheda letta): nessuna sostituzione dell'intero stato locale. Le schede già in fila, in lettura o in recupero non si riaccodano. */
   function catalogaCoda() {
     if (!window.CELL) { toast('The engine cannot be reached from here'); return; }
-    var coda = STATE.bottles.filter(inCoda);
-    if (!coda.length) return;
-    var btn = document.getElementById('cataloga');
-    function scrivi(t) { if (btn) { btn.disabled = true; btn.textContent = t; } }
-    var fatte = 0, falliti = [];
-    scrivi('Reading 1 of ' + coda.length + '…');
-    coda.reduce(function (c, b, i) {
-      return c.then(function () {
-        scrivi('Leggo ' + (i + 1) + ' of ' + coda.length + '…');
-        return CELL.cataloga(b.id)
-          .then(function () { fatte++; })
-          .catch(function (e) { falliti.push((e && e.message) || 'errore'); });
-      });
-    }, Promise.resolve()).then(function () {
-      return CELL.carica();
-    }).then(function (nuovo) {
-      idrata(nuovo); render();
-      if (fatte && !falliti.length) toast(fatte === 1 ? 'Label read' : fatte + ' labels read');
-      else if (fatte) toast(fatte + ' lette, ' + falliti.length + ' failed: ' + falliti[0]);
-      else toast('No reading succeeded: ' + (falliti[0] || 'riprova'));
-    }).catch(function (e) {
-      render();
-      toast((e && e.message) || 'Reading failed');
-    });
+    STATE.bottles.filter(inCoda).forEach(function (b) { leggiAppena(b.id); });
   }
 
   function queueNote() {
@@ -3081,8 +3300,8 @@
   }
   function help() {
     return '<details class="help"><summary>How it works</summary><ol>' +
-      '<li><strong>In the cellar, from your phone.</strong> Open the link, tap <em>Photograph a bottle</em>, shoot front and back, save. You type nothing: no name, no vintage, no winery.</li>' +
-      '<li><strong>A whole shelf.</strong> <em>More photos</em> takes dozens of shots at once and pairs them front/back in the order they were taken.</li>' +
+      '<li><strong>In the cellar, from your phone.</strong> Tap <em>Snap</em>: photograph the front, then the back (or choose to continue with the front only), check the previews and confirm. One record is born, with one reading of the label. You type nothing: no name, no vintage, no winery.</li>' +
+      '<li><strong>A whole shelf.</strong> <em>Upload several bottles</em> takes dozens of photos at once: choose whether they are one per bottle or front/back pairs, check the groups, add to the queue. The labels are read one at a time and every record shows its outcome.</li>' +
       '<li><strong>Cataloguing.</strong> From the queue panel, <em>Read the labels</em> fills in every field by itself. Whatever is inferred rather than read stays marked <em>to check</em>: you correct it in two seconds and your correction is never touched again.</li>' +
       '<li><strong>When a bottle leaves.</strong> Open it and mark it <em>drunk</em> or <em>sold</em> (with the price received): it leaves the cellar count but stays in the history. Or delete it altogether.</li>' +
       '<li><strong>Valuations.</strong> They refresh on their own every week: the check looks at which bottles have an old value and redoes only those. Under every figure there is always the date and the source: if it is old, it shows.</li>' +
@@ -3092,7 +3311,7 @@
   function body(l) {
     if (!STATE.bottles.length) {
       return '<div class="empty"><h2>The archive is empty</h2><p>The quickest way to fill it: photograph the front and back of a bottle. The archive takes care of the name, the vintage, the grapes and the strength.</p>' +
-        (isReadOnly ? '' : '<button class="btn pri" id="shoot-empty" type="button">Photograph the first bottle</button>') + '</div>';
+        (isReadOnly ? '' : '<button class="btn pri" id="shoot-empty" type="button">Photograph the first bottle</button><button class="btn" id="bulk-empty" type="button" style="margin-left:8px">Upload several bottles</button>') + '</div>';
     }
     if (!l.length) return '<div class="empty"><h2>' + (filters.q ? 'No results for “' + escHtml(filters.q) + '”' : 'No bottles match these filters') + '</h2><p>' + (filters.q ? 'The search looks in every field: name, producer, area, grape, vintage, notes, even the source of the valuation. Try a single word.' : 'Try widening the scope or clearing a few of them.') + '</p><button class="btn" id="reset2" type="button">Clear all</button></div>';
     if (filters.view === 'dossier') return dossierView(l);
@@ -3590,36 +3809,67 @@
     return '<div class="shd"><div><h2>' + t + '</h2>' + (sub ? '<p class="ss">' + sub + '</p>' : '') + '</div>' +
       '<button type="button" class="x" data-shutsheet aria-label="Close">✕</button></div>';
   }
-  function slot(w, lab, hint) {
-    var v = formPhotos[w];
-    return '<div class="slot' + (v ? ' full' : '') + '">' +
-      (v ? '<img src="' + v + '" alt=""><button type="button" class="redo" data-redo="' + w + '">Rifai</button>'
-         : '<span class="sc">' + lab + '</span><span class="sh">' + hint + '</span><input type="file" accept="image/*" data-shot="' + w + '" aria-label="' + lab + '">') +
-      '</div>';
+  function dis(x) { return x ? ' disabled' : ''; }
+  function slotFoto(lato, lab, hint) {
+    var s = scatto, v = s && s[lato], cap = rapidoPreferito() ? ' capture="environment"' : '';
+    var input = '<input type="file" accept="image/*"' + cap + ' data-shot="' + lato + '" aria-label="' + lab + '">';
+    if (v && v.stato === 'pronta') return '<div class="slot full"><img src="' + v.url + '" alt=""><div class="slot-ops"><button type="button" class="redo" data-redo="' + lato + '">Redo</button><button type="button" class="redo" data-rimuovi-foto="' + lato + '">Remove</button></div></div>';
+    if (v && v.stato === 'preparo') return '<div class="slot wait"><span class="sc">' + lab + '</span><span class="sh">preparing the photo…</span></div>';
+    if (v && v.stato === 'ko') return '<div class="slot ko"><span class="sc">' + lab + '</span><span class="sh">' + escHtml(v.msg) + (v.nome ? ' · ' + escHtml(v.nome) : '') + '</span>' + input + '</div>';
+    return '<div class="slot"><span class="sc">' + lab + '</span><span class="sh">' + hint + '</span>' + input + '</div>';
   }
   function shootSheet() {
+    if (!scatto) scatto = { tok: { fronte: 0, retro: 0 }, fronte: null, retro: null, soloFronte: false, pos: Object.assign({ zona: '', scaffale: '', ripiano: '' }, ultimaPos || {}), prezzo: '', confermando: false };
+    var s = scatto, fr = s.fronte && s.fronte.stato, re = s.retro && s.retro.stato, preparo = fr === 'preparo' || re === 'preparo';
+    var pronto = fr === 'pronta' && !preparo && (re === 'pronta' || (!s.retro && s.soloFronte)) && !s.confermando;
+    var scelta = '';
+    if (fr === 'pronta' && !s.retro) scelta = s.soloFronte
+      ? '<div class="scelta"><p style="margin:0">Front only, this time. <button type="button" class="lnk" id="sh-retro-apri">Add the back anyway</button></p></div>'
+      : '<div class="scelta"><p>The back helps the reading: strength, grapes and bottler are often found only there.</p><div class="grp"><button type="button" class="btn sm pri" id="sh-retro-apri">Add the back</button><button type="button" class="btn sm" id="sh-solo-fronte">Continue with the front only</button></div></div>';
     return '<div class="ov" data-ov><div class="sheet">' +
-      head('Photograph the bottle', 'Front and back, even in a hurry. Name, producer, vintage, grapes, strength, colour and origin are read from the label.') +
-      '<div class="shb"><div class="slots">' + slot('fronte', 'Front', 'the main label') + slot('retro', 'Back', 'strength, lot, bottler') + '</div>' +
-      '<p class="hint">The back is optional but it matters: strength and grapes are often found only there.</p>' +
-      '<p class="hint" style="margin-top:14px">Where are you putting it? If you say now, the bottle is born in its place (it stays set for the next one).</p><div class="posgrid" id="pos-sh">' + campiPosizione(ultimaPos, 'sh') + '</div>' +
-      '<label style="display:block;margin-top:16px"><span class="lbl">Price paid (€) — optional</span><input type="number" step="0.01" id="sh-prezzo" placeholder="if you know it, write it now"></label></div>' +
+      head('Photograph the bottle', 'Front and back as previews. Nothing is saved or read until you confirm.') +
+      '<div class="shb"><div class="slots">' + slotFoto('fronte', 'Front', 'the main label') + slotFoto('retro', 'Back', 'strength, lot, bottler') + '</div>' + scelta +
+      '<p class="hint" style="margin-top:14px">Where are you putting it? If you say now, the bottle is born in its place (it stays set for the next one).</p><div class="posgrid" id="pos-sh">' + campiPosizione(s.pos, 'sh') + '</div>' +
+      '<label style="display:block;margin-top:16px"><span class="lbl">Price paid (€) — optional</span><input type="number" step="0.01" id="sh-prezzo" placeholder="if you know it, write it now" value="' + escHtml(s.prezzo || '') + '"></label>' +
+      '<p class="hint">Until you confirm nothing is written: you can cancel or redo the photos without leaving a trace.</p></div>' +
       '<div class="shf"><button type="button" class="btn gho" data-shutsheet>Cancel</button>' +
-      '<div class="grp"><button type="button" class="btn" id="save-again">Save and photograph another</button><button type="button" class="btn pri" id="save-shot">Save to queue</button></div></div>' +
+      '<div class="grp"><button type="button" class="btn" id="sh-coda"' + dis(!pronto) + '>Add to queue</button><button type="button" class="btn pri" id="sh-conferma"' + dis(!pronto) + '>Confirm and read the label</button></div></div>' +
       '</div></div>';
   }
+  function miniatura(it, gi, lato, lab) {
+    var sost = '<label class="redo">Replace<input type="file" accept="image/*" data-sost="' + gi + ':' + lato + '"></label>';
+    var rim = '<button type="button" class="redo" data-g-rimuovi="' + gi + ':' + lato + '">Remove</button>';
+    if (!it) return '<div class="lgs vuota"><span class="sc">' + lab + '</span><span class="sh">—</span></div>';
+    if (it.stato === 'pronta') return '<figure class="lgs"><img src="' + it.url + '" alt=""><span class="sc">' + lab + '</span><span class="lgo">' + sost + rim + '</span></figure>';
+    if (it.stato === 'ko') return '<div class="lgs ko"><span class="sc">' + lab + '</span><span class="sh">' + escHtml(it.nome) + ' · ' + escHtml(it.msg) + '</span><span class="lgo">' + sost + rim + '</span></div>';
+    return '<div class="lgs wait"><span class="sc">' + lab + '</span><span class="sh">' + (it.stato === 'preparo' ? 'preparing…' : 'waiting') + '</span></div>';
+  }
   function bulkSheet() {
-    var n = bulkPaired ? Math.ceil(bulkPhotos.length / 2) : bulkPhotos.length;
+    if (!lotto) lotto = { tok: 0, seq: 0, items: [], gruppi: [], modo: 'coppie', pos: Object.assign({ zona: '', scaffale: '', ripiano: '' }, ultimaPos || {}), leggi: true, attive: 0, confermando: false };
+    var L = lotto, st = lottoStato(), coppie = L.modo === 'coppie';
+    var gruppi = L.gruppi.map(function (g, gi) {
+      var f = g.f ? lottoItem(g.f) : null, r = g.r ? lottoItem(g.r) : null, succ = L.gruppi[gi + 1];
+      var problema = (!g.f && g.r) ? 'fronte' : (coppie && g.f && !g.r && !g.soloFronte) ? 'retro' : '';
+      var ko = (f && f.stato === 'ko') || (r && r.stato === 'ko');
+      var ops = coppie ? ((g.f && g.r) ? '<button type="button" class="lnk" data-g-scambia="' + gi + '">Swap front and back</button><button type="button" class="lnk" data-g-separa="' + gi + '">Split</button>' : '') +
+        ((g.f && !g.r && succ && succ.f && !succ.r) ? '<button type="button" class="lnk" data-g-unisci="' + gi + '">Merge with the next</button>' : '') : '';
+      return '<div class="lgrp' + (problema ? ' att' : '') + (ko ? ' ko' : '') + '">' +
+        '<div class="lgh"><span class="sc">Bottle ' + (gi + 1) + '</span>' + (ops ? '<span class="ops">' + ops + '</span>' : '') + '</div>' +
+        '<div class="lgf' + (coppie ? '' : ' una') + '">' + miniatura(f, gi, 'f', 'front') + (coppie ? miniatura(r, gi, 'r', 'back') : '') + '</div>' +
+        (problema === 'retro' ? '<div class="lgp"><span>No back.</span><button type="button" class="btn sm" data-g-solo="' + gi + '">Keep the front only</button><label class="btn sm">Add the back<input type="file" accept="image/*" data-sost="' + gi + ':r"></label></div>' : '') +
+        (problema === 'fronte' ? '<div class="lgp"><span>Front missing.</span><button type="button" class="btn sm" data-g-usafronte="' + gi + '">Use this photo as the front</button></div>' : '') +
+        '</div>';
+    }).join('');
     return '<div class="ov" data-ov><div class="sheet wide">' +
-      head('Upload more photos at once', 'To tidy a whole shelf in a single session.') +
-      '<div class="shb"><div class="drop"><strong>Choose the photos</strong><p class="hint">From your phone or computer, even dozens at a time</p><input type="file" accept="image/*" multiple id="bulkin" aria-label="Choose the photos"></div>' +
-      '<label class="chk"><input type="checkbox" id="paired"' + (bulkPaired ? ' checked' : '') + '> The photos come in front/back pairs, in the order they were taken</label>' +
-      '<p class="hint" style="margin-top:14px">Same place for every photo in this session: set the position once only.</p><div class="posgrid" id="pos-bk">' + campiPosizione(ultimaPos, 'bk') + '</div>' +
-      (bulkPhotos.length ? '<div class="bg2">' + bulkPhotos.map(function (p, i) {
-        return '<figure><img src="' + p + '" alt=""><figcaption>' + (bulkPaired ? (Math.floor(i / 2) + 1) + (i % 2 ? ' R' : ' F') : '#' + (i + 1)) + '</figcaption></figure>';
-      }).join('') + '</div><p class="hint">' + bulkPhotos.length + ' photos · ' + n + (n === 1 ? ' bottle' : ' bottles') + '</p>' : '') +
+      head('Upload several bottles', 'From your camera roll or computer. First check the front/back groups, then everything is queued and the labels are read one at a time.') +
+      '<div class="shb"><div class="drop"><strong>Choose the photos</strong><p class="hint">Even dozens at once. Any file that cannot be read stays flagged, never dropped silently.</p><input type="file" accept="image/*" multiple id="bulkin" aria-label="Choose the photos"></div>' +
+      '<div class="lmodo"><div class="seg"><button type="button" data-modo="singole" class="' + (coppie ? '' : 'on') + '">One photo per bottle</button><button type="button" data-modo="coppie" class="' + (coppie ? 'on' : '') + '">Front and back pairs</button></div><p class="hint" style="margin:0">' + (coppie ? 'Photos are paired in the chosen order: check every group below before confirming.' : 'Every photo is a bottle.') + '</p></div>' +
+      (L.items.length ? '<p class="lcont"><b>' + st.foto + '</b> photos · <b>' + st.bottiglie + '</b> ' + (st.bottiglie === 1 ? 'bottle' : 'bottles') + (st.inCorso ? ' · ' + st.inCorso + ' being prepared' : '') + (st.ko ? ' · <span class="ko">' + st.ko + ' unreadable</span>' : '') + '</p>' + '<div class="lotto">' + gruppi + '</div>' : '') +
+      '<p class="hint" style="margin-top:16px">Same place for every bottle in this upload: set the position once only.</p><div class="posgrid" id="pos-bk">' + campiPosizione(L.pos, 'bk') + '</div>' +
       '</div><div class="shf"><button type="button" class="btn gho" data-shutsheet>Cancel</button>' +
-      '<button type="button" class="btn pri" id="save-bulk"' + (bulkPhotos.length ? '' : ' disabled style="opacity:.45"') + '>Add to queue ' + n + (n === 1 ? ' bottle' : ' bottles') + '</button></div>' +
+      (L.items.length && !st.pronto ? '<p class="lmotivo">' + st.motivo + '</p>' : '') +
+      '<div class="grp"><button type="button" class="btn" id="bk-solo-coda"' + dis(!st.pronto || L.confermando) + ' title="Without reading: the labels are read later, from the queue panel.">Add to queue</button>' +
+      '<button type="button" class="btn pri" id="bk-conferma"' + dis(!st.pronto || L.confermando) + '>Catalogue · ' + st.bottiglie + ' ' + (st.bottiglie === 1 ? 'bottle' : 'bottles') + '</button></div></div>' +
       '</div></div>';
   }
   function photosOf(b) {
@@ -3706,10 +3956,10 @@
     });
     on('export', 'click', exportCSV);
     on('cataloga', 'click', catalogaCoda);
-    on('shoot', 'click', function () { if (rapidoPreferito()) apriRapido(); else openShoot(); });
-    on('shoot-empty', 'click', function () { if (rapidoPreferito()) apriRapido(); else openShoot(); });
+    on('shoot', 'click', function () { openShoot(); if (rapidoPreferito()) apriCamera('fronte'); });
+    on('shoot-empty', 'click', function () { openShoot(); if (rapidoPreferito()) apriCamera('fronte'); });
     bindRapido(root);
-    on('bulkbtn', 'click', function () { bulkPhotos = []; bulk = true; render(); });
+    on('bulkbtn', 'click', apriLotto); on('bulk-empty', 'click', apriLotto);
     on('manual', 'click', function () { editingId = 'new'; render(); });
     on('rmdemo', 'click', function () {
       if (!confirm('Remove the ' + esempi().length + ' sample bottles? Your real bottles are left untouched.')) return;
@@ -3847,32 +4097,31 @@
     on('reset', 'click', reset); on('reset2', 'click', reset);
 
     root.querySelectorAll('[data-shot]').forEach(function (inp) {
-      inp.addEventListener('change', function () {
-        var f = inp.files && inp.files[0]; if (!f) return;
-        var w = inp.getAttribute('data-shot');
-        toast('Preparing the photo…');
-        toDataUrl(f, FOTO_MAX_DIM, FOTO_QUALITA).then(function (u) {
-          formPhotos[w] = u; var keep = valOf('sh-prezzo'); render(); setVal('sh-prezzo', keep);
-        }).catch(function () { toast('Unreadable image, try again'); });
-      });
+      inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; if (f) aggiungiFoto(inp.getAttribute('data-shot'), f); });
     });
     root.querySelectorAll('[data-redo]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var keep = valOf('sh-prezzo'); formPhotos[btn.getAttribute('data-redo')] = ''; render(); setVal('sh-prezzo', keep);
-      });
+      btn.addEventListener('click', function () { var lato = btn.getAttribute('data-redo'); rifaiFoto(lato); var i = document.querySelector('[data-shot="' + lato + '"]'); if (i) i.click(); });
     });
-    on('save-shot', 'click', function () { saveShot(false); });
-    on('save-again', 'click', function () { saveShot(true); });
+    root.querySelectorAll('[data-rimuovi-foto]').forEach(function (btn) { btn.addEventListener('click', function () { rifaiFoto(btn.getAttribute('data-rimuovi-foto')); }); });
+    on('sh-retro-apri', 'click', function () { if (scatto) scatto.soloFronte = false; var i = document.querySelector('[data-shot="retro"]'); if (i) i.click(); else { render(); var j = document.querySelector('[data-shot="retro"]'); if (j) j.click(); } });
+    on('sh-solo-fronte', 'click', function () { if (scatto) { scatto.soloFronte = true; render(); } });
+    on('sh-conferma', 'click', function () { confermaScatto(true); });
+    on('sh-coda', 'click', function () { confermaScatto(false); });
+    on('sh-prezzo', 'input', function (e) { if (scatto) scatto.prezzo = e.target.value; });
+    var posSh = document.getElementById('pos-sh');
+    if (posSh) ['input', 'change'].forEach(function (ev) { posSh.addEventListener(ev, function () { if (scatto) scatto.pos = posDaForm('sh'); }); });
+    var posBk = document.getElementById('pos-bk');
+    if (posBk) ['input', 'change'].forEach(function (ev) { posBk.addEventListener(ev, function () { if (lotto) lotto.pos = posDaForm('bk'); }); });
 
-    on('bulkin', 'change', function (e) {
-      var fs = Array.prototype.slice.call(e.target.files || []);
-      if (!fs.length) return;
-      toast('Preparo ' + fs.length + ' photos…');
-      Promise.all(fs.map(function (f) { return toDataUrl(f, FOTO_MAX_DIM, FOTO_QUALITA).catch(function () { return null; }); }))
-        .then(function (us) { bulkPhotos = bulkPhotos.concat(us.filter(Boolean)); render(); });
+    on('bulkin', 'change', function (e) { aggiungiFile(e.target.files); e.target.value = ''; });
+    root.querySelectorAll('[data-modo]').forEach(function (b) { b.addEventListener('click', function () { cambiaModo(b.getAttribute('data-modo')); }); });
+    on('bk-conferma', 'click', function () { confermaLotto(true); });
+    on('bk-solo-coda', 'click', function () { confermaLotto(false); });
+    [['scambia', 'data-g-scambia'], ['separa', 'data-g-separa'], ['unisci', 'data-g-unisci'], ['solo', 'data-g-solo'], ['usafronte', 'data-g-usafronte']].forEach(function (p) {
+      root.querySelectorAll('[' + p[1] + ']').forEach(function (b) { b.addEventListener('click', function () { gruppoOp(p[0], Number(b.getAttribute(p[1]))); }); });
     });
-    on('paired', 'change', function (e) { bulkPaired = e.target.checked; render(); });
-    on('save-bulk', 'click', saveBulk);
+    root.querySelectorAll('[data-g-rimuovi]').forEach(function (b) { b.addEventListener('click', function () { var q = b.getAttribute('data-g-rimuovi').split(':'); gruppoOp('rimuovi', Number(q[0]), q[1]); }); });
+    root.querySelectorAll('[data-sost]').forEach(function (inp) { inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; var q = inp.getAttribute('data-sost').split(':'); if (f) gruppoOp('sostituisci', Number(q[0]), q[1], f); }); });
 
     on('i-tipo', 'change', function (e) {
       var w = document.getElementById('wcol'); if (w) w.style.display = TIPI_CON_COLORE[e.target.value] ? '' : 'none';
@@ -3926,8 +4175,7 @@
     if (viewing) { ev.preventDefault(); viewing = null; render(); return; }   // la foto si chiude per prima
     if (editingId || shooting || bulk) { ev.preventDefault(); shut(); }
   }
-  function shut() { profiloOpen = false; spDopoProfilo = null; spForm = null; editingId = null; shooting = false; bulk = false; viewing = null; mappaOpen = false; mappaDraft = null; formPhotos = { fronte: '', retro: '' }; bulkPhotos = []; render(); }
-  function openShoot() { formPhotos = { fronte: '', retro: '' }; shooting = true; render(); }
+  function shut() { profiloOpen = false; spDopoProfilo = null; spForm = null; editingId = null; shooting = false; bulk = false; viewing = null; mappaOpen = false; mappaDraft = null; formPhotos = { fronte: '', retro: '' }; bulkPhotos = []; scatto = null; lotto = null; retroPer = null; render(); }
   function valOf(id) { var e = document.getElementById(id); return e ? e.value : ''; }
   function setVal(id, v) { var e = document.getElementById(id); if (e) e.value = v; }
   function live(id, setter) {
@@ -3951,22 +4199,6 @@
       zona: (pos && pos.zona) || '', scaffale: (pos && pos.scaffale) || '', ripiano: (pos && pos.ripiano) || '',
       club: 'privata',
       prezzo_acquisto: p != null ? p : null, valore_attuale: null, valore_data: '', valore_fonte: '', note: '', campi_incerti: [] };
-  }
-  function saveShot(again) {
-    if (!formPhotos.fronte && !formPhotos.retro) { toast('At least one photo is needed'); return; }
-    var p = num(valOf('sh-prezzo')), f = formPhotos.fronte, r = formPhotos.retro, pos = posDaForm('sh'); ultimaPos = pos;
-    formPhotos = { fronte: '', retro: '' }; shooting = !!again;
-    commit(function (ns) { ns.bottles.unshift(nuova(f, r, p, pos)); }, false);
-    toast(again ? 'Queued · photograph the next one' : 'Bottle added to the queue');
-  }
-  function saveBulk() {
-    if (!bulkPhotos.length) return;
-    var ph = bulkPhotos.slice(), out = [], pos = posDaForm('bk'); ultimaPos = pos;
-    if (bulkPaired) { for (var i = 0; i < ph.length; i += 2) out.push(nuova(ph[i], ph[i + 1] || '', null, pos)); }
-    else ph.forEach(function (p) { out.push(nuova(p, '', null, pos)); });
-    bulkPhotos = []; bulk = false;
-    commit(function (ns) { ns.bottles = out.concat(ns.bottles); }, false);
-    toast(out.length + (out.length === 1 ? ' bottle in the queue' : ' bottles in the queue'));
   }
   function raccogli() {
     var g = function (id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; };

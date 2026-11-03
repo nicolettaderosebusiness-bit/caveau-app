@@ -254,6 +254,37 @@
      eliminati altrove): la loro ombra viene dimenticata e la pagina li rimuove. Rilettura fallita: nessuna riga storica
      viene conservata (genitore/figlia null), chi chiama ricarica i dati salvati. */
   function riletturaFallita(esito) { esito.riallineata = false; esito.genitore = null; esito.figlia = null; esito.residuo = null; esito.assenti = []; return esito; }
+  /* Rilettura MIRATA di una sola scheda (dopo la lettura dell'etichetta): riga, quotazioni e foto di quell'id soltanto. Ombra e
+     versioni si aggiornano SOLO per quell'id: le altre schede restano come le conosce questo dispositivo, così un salvataggio
+     successivo non cancella una scheda aggiunta altrove né sovrascrive una scheda modificata altrove (che resta un conflitto
+     dichiarato, come sempre). Risolve con la scheda pronta per l'interfaccia (storico e foto firmate) o null se non esiste più. */
+  function rileggi(id) {
+    if (!cantina) return Promise.reject(new Error('Cantina non aperta.'));
+    return Promise.all([
+      sb.from('bottiglie').select('*').eq('id', id).maybeSingle(),
+      sb.from('quotazioni').select('bottiglia_id,vetrina,fonte,rilevata_il').eq('bottiglia_id', id).order('rilevata_il', { ascending: true }),
+      sb.from('foto').select('bottiglia_id,lato,percorso').eq('bottiglia_id', id)
+    ]).then(function (res) {
+      res.forEach(function (r) { if (r.error) throw tradurre(r.error); });
+      var r = res[0].data;
+      if (!r) { delete ombra[id]; delete versioni[id]; delete percorsi[id]; return null; }
+      var storico = (res[1].data || []).map(function (q) { return { data: s(q.rilevata_il), vetrina: q.vetrina == null ? null : Number(q.vetrina), fonte: s(q.fonte) }; });
+      var p = {}; (res[2].data || []).forEach(function (f) { if (f.percorso) p[f.lato] = f.percorso; });
+      var richiesti = [p.fronte, p.retro].filter(Boolean);
+      var firmati = richiesti.length ? sb.storage.from(BUCKET).createSignedUrls(richiesti, FIRMA_SEC).then(function (resFirma) {
+        if (!resFirma || resFirma.error) throw new Error("Not all photographs could be retrieved. Retry recovery.");
+        var url = {}; (resFirma.data || []).forEach(function (f) { if (f && f.path && f.signedUrl) url[f.path] = f.signedUrl; });
+        if (richiesti.some(function (percorso) { return !url[percorso]; })) throw new Error("Not all photographs could be retrieved. Retry recovery.");
+        return url;
+      }) : Promise.resolve({});
+      return firmati.then(function (url) {
+        var scheda = bottiglia(r, storico, { fronte: url[p.fronte] || '', retro: url[p.retro] || '' });
+        // Aggiornare l’ombra solo quando anche tutte le fotografie sono pronte.
+        percorsi[id] = p; allineaOmbra(r);
+        return scheda;
+      });
+    });
+  }
   function statoAttuale(esito, ids) {
     ids = ids.filter(function (x, i, a) { return !!x && a.indexOf(x) === i; });
     esito.assenti = [];
@@ -741,6 +772,7 @@
     salva: salva,
     uscita: uscita, rientro: rientro, haVersione: function () { return haVersione; },
     cataloga: cataloga,
+    rileggi: rileggi,
     verificaLink: verificaLink, scambiaCodice: scambiaCodice,
     speakeasy: speakeasy, spMembro: spMembro, mioProfilo: mioProfilo, salvaProfilo: salvaProfilo,
     spPubblica: spPubblica, spModifica: spModifica, spRinnova: spRinnova, spRiapri: spRiapri, spRitira: spRitira,
