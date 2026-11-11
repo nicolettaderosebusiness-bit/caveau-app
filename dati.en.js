@@ -353,7 +353,8 @@
       sb.from('accessi').select('quando,dispositivo,profilo_id').order('quando', { ascending: false }).limit(40),
       sb.from('notifiche').select('tipo,testo,inviata,errore,creata_il').order('creata_il', { ascending: false }).limit(40),
       sb.from('configurazione').select('chiave,valore'),
-      sb.rpc('desk_segnalazioni').then(function (r) { return { data: r.error ? null : r.data }; })
+      sb.rpc('desk_segnalazioni').then(function (r) { return { data: r.error ? null : r.data }; }),
+      sb.rpc('desk_adesioni').then(function (r) { return { data: r.error ? null : r.data }; })
     ]).then(function (res) {
       res.forEach(function (r) { if (r.error) throw tradurre(r.error); });
       var persone = res[0].data || [], byId = {};
@@ -365,7 +366,8 @@
         accessi: (res[2].data || []).map(function (a) { var p = byId[a.profilo_id] || {}; a.nome = p.nome; a.email = p.email; return a; }),
         notifiche: res[3].data || [],
         configurazione: cfg,
-        speakeasy: (res[5] && res[5].data) || null
+        speakeasy: (res[5] && res[5].data) || null,
+        adesioni: (res[6] && res[6].data) || null
       };
     });
   }
@@ -513,7 +515,8 @@
             resa_privata: Number(cantina.resa_privata), resa_asta: Number(cantina.resa_asta),
             soglia_vendita: Number(cantina.soglia_vendita),
             mappa: mappaPulita(cantina.mappa),
-            ultimoAggQuotazioni: s(ultima)
+            ultimoAggQuotazioni: s(ultima),
+            esempi_rimossi: a(cantina.esempi_rimossi)   /* esempi dimostrativi tolti: non si riscrive da qui, solo via RPC esempi_rimuovi */
           },
           bottles: bottles
         };
@@ -752,6 +755,18 @@
 
   function cataloga(bottigliaId) { return chiama('cataloga', { bottiglia_id: bottigliaId, lingua: window.CAVEAU_LINGUA || ((navigator.language || 'it').slice(0, 2) === 'en' ? 'en' : 'it') }); }
 
+  /* ------------------------- lancio gratuito 21.0: esempi, periodo gratuito, pilot (nessuna chiamata a funzioni edge nuove) ------------------------- */
+  function esempiRimuovi(ids) { return rpc('esempi_rimuovi', { p_ids: ids }); }
+  function miaAdesione() { return rpc('mia_adesione'); }
+  var SPIEGA_PILOT = {"pilot_pieno": "Pilot places are full: there are four in all.", "pilot_gia_concesso": "Pilot already granted to this person.", "non_approvato": "The account is not approved yet.", "profilo_non_trovato": "No account with this email.", "solo_desk": "Only the Desk can grant the pilot."};
+  function pilotConcedi(email) {
+    return rpc('pilot_concedi', { p_email: email }).catch(function (e) {
+      var m = String((e && e.message) || (e && e.grezzo && e.grezzo.message) || '');
+      var k = Object.keys(SPIEGA_PILOT).filter(function (x) { return m.indexOf(x) >= 0; })[0];
+      throw k ? new Error(SPIEGA_PILOT[k]) : e;
+    });
+  }
+
   /* ------------------------- fuori ------------------------- */
   window.CELL = {
     sb: sb,
@@ -779,6 +794,7 @@
     spInteressa: spInteressa, spControproponi: spControproponi, spAccetta: spAccetta, spRiconferma: spRiconferma, spChiudiInteresse: spChiudiInteresse,
     spContatti: spContatti, spEsito: spEsito, spUscita: spUscita, spSegnala: spSegnala, spFotoCarica: spFotoCarica, spFotoUrl: spFotoUrl,
     deskSpConfigura: deskSpConfigura, deskSegnalazioneChiudi: deskSegnalazioneChiudi, deskFondatore: deskFondatore,
+    esempiRimuovi: esempiRimuovi, miaAdesione: miaAdesione, pilotConcedi: pilotConcedi,
     utente: function () { return utente; },
     cantina: function () { return cantina; }
   };

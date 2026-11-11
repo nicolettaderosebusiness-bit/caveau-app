@@ -254,6 +254,11 @@
 '.fg .full{grid-column:1/-1}',
 '.lbl{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}',
 '.lbl .fl{color:var(--warn);text-transform:none;letter-spacing:0;font-size:11px;margin-left:6px}',
+'.nm-fl{color:var(--warn);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:none;vertical-align:middle;word-break:normal}',
+'.verif{border:1px solid var(--warn);border-radius:10px;padding:10px 12px;margin:0;min-width:0;display:grid;gap:8px}',
+'.verif legend{color:var(--warn);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:0 4px}',
+'.verif .hint{margin-top:0}', '.verif .chk{margin-top:0;color:var(--t1);text-transform:none;letter-spacing:0}', '.verif .chk input{accent-color:var(--warn);flex:0 0 auto}',
+'.ril{display:grid;gap:8px;justify-items:start;margin:10px 0 12px;min-width:0}', '.ril .hint{margin-top:0}', '.ril .ril-stato.ko{color:var(--warn)}', '#bform[inert]{opacity:.55}',
 'label.warned input,label.warned select{border-color:var(--warn);background:#221A10}',
 '.dg{display:grid;grid-template-columns:1fr 1fr;gap:0}',
 '.dc{padding:9px 0;border-bottom:1px solid var(--ed)}',
@@ -1040,6 +1045,42 @@
 '.lmotivo{font-size:12.5px;color:var(--bronzo2);flex:1 1 100%;margin:0}',
 '@media (max-width:640px){.lotto{grid-template-columns:1fr 1fr;gap:8px}.lgrp{padding:8px}.lgs{min-height:118px}.lgh .ops{gap:8px}}',
 '@media (max-width:400px){.lotto{grid-template-columns:1fr}}',
+'/* ---------------- revisione 3 nov 2026 (sera): tabella Membri dentro la griglia; barra a cinque voci ---------------- */',
+'.speak{grid-template-columns:minmax(0,1fr)}',
+'.tw{min-width:0;max-width:100%}',
+'@media (max-width:820px){.nav-l.n5{display:flex}.nav-l.n5 .nvb{flex:1 1 auto;min-width:0;padding-left:3px;padding-right:3px}}',
+'/* ---------------- collaudo mobile 7 nov 2026: navigazione ≥14px, testata 44px, Speakeasy senza scorrimenti nascosti, Membri in schede, campi 16px ---------------- */',
+'@media (max-width:640px){.nav-l{display:flex}.nav-l .nvb{flex:1 1 auto;min-width:0;font-size:14px;letter-spacing:.02em;padding:12px 4px 10px;min-height:44px}}',
+'@media (max-width:360px){.nav-l{display:grid;grid-template-columns:1fr 1fr}}',
+'@media (max-width:400px){.nav-l.n5{display:grid;grid-template-columns:1fr 1fr}.nav-l.n5 .nvb:nth-child(5){grid-column:1/-1}}',
+'@media (max-width:820px){.nav-in > .nvb[data-lingua-switch],.nav-in > #sp-profilo-apri{min-width:44px;min-height:44px;padding:8px 12px;font-size:12.5px;letter-spacing:.06em;color:var(--t1);justify-content:center;align-items:center}.nav-in > .nvb[data-lingua-switch]{border:1px solid var(--ed2);border-radius:999px}.nav-in > .nvb.esci{display:none}}',
+'@media (max-width:640px){.sp-tabs{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible}.sp-tabs button{flex:none;white-space:normal;line-height:1.2;padding:8px 4px;min-height:44px}.sp-filtri .seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));overflow:visible;flex:1 1 100%}.sp-filtri .seg button{flex:none;white-space:normal;line-height:1.2;padding:8px 4px;min-height:44px}.sp-filtri .btn{flex:1 1 100%;margin-left:0;justify-content:center;min-height:44px}}',
+'@media (max-width:640px){.speak .tw{border:0;background:none;overflow:visible}.speak table{min-width:0;display:block;font-size:14px}.speak thead{display:none}.speak tbody,.speak tr{display:block}.speak tr.r{border:1px solid var(--ed);border-radius:12px;background:var(--pan);padding:10px 12px;margin-bottom:10px}.speak td{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border:0;padding:4px 0}.speak td::before{content:attr(data-k);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);flex:0 0 auto}.speak td:first-child{display:block;font-size:16px;padding-bottom:6px}.speak td:first-child::before{content:none}}',
+'/* ---------------- mobile 11 nov 2026: testata con riga dedicata EN · Profilo · Esci; Membri in schede apribili ---------------- */',
+'.nav-u{display:contents}',
+'.sp-apri{display:none}',
+'@media (max-width:820px),(max-height:500px) and (max-width:1000px){',
+'  .nav-br{order:1;flex:0 0 100%;min-width:0;padding:6px 0 2px}.nav-br .nav-logo{height:20px}',
+'  .nav-u{order:2;display:flex;flex-wrap:wrap;flex:0 0 100%;justify-content:flex-end;align-items:center;gap:6px 8px;padding:0 0 4px}',
+'  .nav-u .nvb,.nav-u .nvb.esci{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:0;padding:0 14px;border:1px solid var(--ed2);border-radius:999px;background:rgba(241,235,224,.06);color:var(--t1);font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;line-height:1;white-space:nowrap;overflow:visible}',
+'  .nav-u .nvb:hover,.nav-u .nvb.esci:hover{color:var(--t1);background:rgba(241,235,224,.12)}',
+'  .nav-u .nvb:focus-visible{outline:2px solid var(--acc);outline-offset:2px}',
+'  .nav-l{order:3}.salvo{order:4}',
+'}',
+'@media (max-width:360px){.nav-u{gap:6px}.nav-u .nvb,.nav-u .nvb.esci{padding:0 10px;font-size:12px;letter-spacing:.06em}}',
+'@media (max-width:640px){.speak tr.r{cursor:pointer}.speak tr.r:hover td,.speak tr.r:focus-visible td{background:transparent}.speak tr.r:focus-visible{outline:2px solid var(--acc);outline-offset:2px}.speak td{flex-wrap:wrap;min-width:0;overflow-wrap:anywhere}.speak td:first-child .tnm{display:block;overflow-wrap:anywhere;font-size:16px;line-height:1.3}.speak .sp-apri{display:flex;width:max-content;max-width:100%;align-items:center;min-height:44px;margin-top:2px;padding:0;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bronzo2)}.speak .sp-apri:focus-visible{outline:2px solid var(--acc);outline-offset:2px}}',
+'/* ---------------- lancio gratuito 21.0 (11 nov 2026): esempi dimostrativi, periodo gratuito, residui responsive ---------------- */',
+'.demo-sez{border:1px dashed var(--ed2);border-radius:12px;background:var(--pan);margin-bottom:15px}.demo-sez>summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:500;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.demo-sez>summary::-webkit-details-marker{display:none}.demo-sez>summary::after{content:"+";margin-left:auto;font-family:var(--mono);color:var(--t3)}.demo-sez[open]>summary::after{content:"−"}',
+'.demo-in{padding:0 18px 16px}.demo-badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bronzo2);border:1px solid var(--bronzo-s);border-radius:999px;padding:3px 8px;background:rgba(170,130,91,.10);white-space:nowrap}',
+'.demo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px}.demo-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;border:1px solid var(--ed);border-radius:12px;background:var(--pan2);padding:12px 14px;min-height:44px;color:var(--t1);font:inherit;cursor:pointer}.demo-card:hover{border-color:var(--ed2)}.demo-card:focus-visible{outline:2px solid var(--acc);outline-offset:2px}',
+'.demo-nome{font-weight:600;font-size:15px;line-height:1.25;overflow-wrap:anywhere}.demo-sub{color:var(--t2);font-size:12.5px;overflow-wrap:anywhere}.demo-meta{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}.demo-az{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.demo-az .btn{min-height:44px}',
+'.ades{border:1px solid var(--ed);border-radius:12px;background:var(--sunk);padding:14px 16px;margin-top:16px}.ades p{margin:8px 0 0;font-size:14px;line-height:1.5}.ades .hint{margin-top:10px}',
+'.demo-card,.demo-sez>summary{min-width:0;overflow-wrap:anywhere}',
+'@media (max-width:640px){.demo-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,140px),1fr))}.demo-badge{white-space:normal;line-height:1.3}.ft{flex-wrap:wrap}.ft .dl{white-space:normal}.tools #bulkbtn{min-width:0;white-space:normal;line-height:1.2}.crow{min-width:0}.ctip{white-space:normal;max-width:calc(100% - 96px);line-height:1.3}.fab{max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.demo-az .btn,.tools .btn.wide,.empty .btn{min-width:0;max-width:100%;white-space:normal;line-height:1.2;text-align:center}.sg{white-space:normal;max-width:100%}}',
+'@media (max-width:400px){.demo-grid{grid-template-columns:1fr}}',
+'@media (max-width:640px){html .sheet input,html .sheet select,html .sheet textarea,html .sp-form input,html .sp-form textarea,html .sp-recapiti input,html .posgrid input{font-size:16px}}',
+'@media (max-width:640px){.cap{margin:2px 0 10px;padding-bottom:10px}.cap p{font-size:14px}}',
+'@media (max-width:640px){.ahd{flex-wrap:wrap;gap:6px 12px}.ameta{white-space:normal;margin-left:0;flex:1 1 100%}.arow{flex-wrap:wrap;gap:8px 12px}.atxt{flex:1 1 60%}.aval{flex:1 1 100%;flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:4px 10px;padding-left:46px}.av2{white-space:normal;text-align:left}.anm{white-space:normal}}',
     ].join('\n');
   }
 
@@ -1074,7 +1115,7 @@
   function qty(b) { return Math.max(1, Number(b.quantita) || 1); }
   // Per decidere conta quello che entra in tasca: il netto d'asta.
   function delta(b) {
-    var a = num(b.prezzo_acquisto), c = nettoAsta(b);
+    var a = num(b.prezzo_acquisto), c = vetrina(b);   // delta osservato: vetrina sul pagato, non un netto ipotetico
     if (a == null || c == null || a === 0) return null;
     return ((c - a) / a) * 100;
   }
@@ -1091,6 +1132,19 @@
     return Object.keys(s).sort(function (a, b) { return a.localeCompare(b, 'it'); });
   }
   function incerto(b, c) { return (b.campi_incerti || []).indexOf(c) !== -1; }
+  /* Il nome dove compare come titolo, con il segno «nome da verificare» quando la lettura non lo ha riconosciuto con certezza:
+     l’incertezza si vede in elenco, in scheda e nelle foto, non solo dentro il modulo. */
+  function nomeTitolo(b, vuoto) { return escHtml(b.nome || vuoto) + (incerto(b, 'nome') ? ' <span class="fl nm-fl">nome da verificare</span>' : ''); }
+  var NOMI_CAMPI = { nome: 'Nome bottiglia', tipologia: 'Tipologia', colore: 'Colore', produttore: 'Produttore', cantina: 'Cantina / distilleria', annata: 'Annata', eta: 'Età dichiarata', annata_migliore: 'Finestra di bevuta', gradazione: 'Gradazione', formato: 'Formato', provenienza: 'Provenienza', vitigni: 'Vitigni', posizione: 'Posizione', note: 'Note' };
+  /* Il riquadro dei campi da verificare nel modulo: un campo esce da «da verificare» solo se chi guarda la foto lo cambia
+     o lo spunta qui. Salvare un altro campo non lo certifica. */
+  function bloccoVerifica(b) {
+    return '<fieldset class="full verif"><legend>Da verificare sulla foto</legend><p class="hint">Questi campi sono stimati o non letti con certezza. Correggili, oppure spunta quelli che hai controllato: restano marcati finché non lo fai tu. Salvare un altro campo non li conferma.</p>' +
+      (b.campi_incerti || []).map(function (c) { return '<label class="chk"><input type="checkbox" data-conf="' + escHtml(c) + '"> ' + escHtml(NOMI_CAMPI[c] || c) + ': controllato, è giusto</label>'; }).join('') + '</fieldset>';
+  }
+  function confermati() { var out = {}; document.querySelectorAll('#bform [data-conf]').forEach(function (e) { if (e.checked) out[e.getAttribute('data-conf')] = true; }); return out; }
+  function testoCampo(v) { return Array.isArray(v) ? v.map(function (x) { return String(x == null ? '' : x).trim(); }).filter(Boolean).join(', ') : String(v == null ? '' : v).trim(); }
+  function cambiato(prima, dopo) { return testoCampo(prima) !== testoCampo(dopo); }
   /* Dove sta fisicamente. Con centinaia di bottiglie è la differenza fra
      sapere che ce l'hai e riuscire ad andartela a prendere. */
   function posizione(b) {
@@ -1261,12 +1315,38 @@
   function anniResidui(b) {
     if (spirito(b)) return null;
     var anno = new Date().getFullYear();
-    var t = String(b.annata_migliore || '');
-    var anni = (t.match(/\d{4}/g) || []).map(Number);
+    var anni = (String(b.annata_migliore || '').match(/\d{4}/g) || []).map(Number);
     if (anni.length >= 2) return anni[anni.length - 1] - anno;
-    if (anni.length === 1) return anni[0] + 4 - anno;
-    if (/pronta|adesso|ora/i.test(t)) return 2;
-    return null;
+    return null;   // un solo anno o «pronta»: nessuna finestra inventata (vedi finestraInfo)
+  }
+  function finestraInfo(b) {
+    var t = String(b.annata_migliore || '').trim(), anni = (t.match(/\d{4}/g) || []).map(Number);
+    if (spirito(b)) return { tipo: 'distillato', testo: t };
+    if (anni.length >= 2) return { tipo: 'intervallo', da: anni[0], a: anni[anni.length - 1], testo: t };
+    if (anni.length === 1) return { tipo: 'anno', anno: anni[0], testo: t };
+    if (/pronta|adesso|ora|ready|now/i.test(t)) return { tipo: 'pronta', testo: t };
+    return { tipo: 'ignota', testo: t };
+  }
+  function maturita(b) {
+    var f = finestraInfo(b);
+    if (f.tipo === 'distillato') return 'distillato';
+    if (f.tipo === 'anno') return 'anno_solo';
+    if (f.tipo === 'pronta') return 'pronta';
+    if (f.tipo === 'ignota') return 'ignota';
+    var a = anniResidui(b);
+    if (a < 0) return 'chiusa';
+    if (a <= 3) return 'in_chiusura';
+    return 'tempo';
+  }
+  function prezzoStato(b) {
+    var v = vetrina(b), gg = giorniDaQuot(b);
+    if (v == null) return 'nessuna';
+    if (gg == null || gg > SOGLIA_VECCHIA) return 'vecchia';
+    var vv = variazione(b);
+    if (!vv) return 'una_sola';
+    if (vv.pct > 2) return 'sale';
+    if (vv.pct < -2) return 'scende';
+    return 'stabile';
   }
   function statoFinestra(b) {
     if (spirito(b)) return 'distillato';
@@ -1287,56 +1367,51 @@
      Senza una misura dell'andamento, o senza finestra per un vino, il segnale è neutro ('dati'):
      un dato mancante non diventa mai un segnale positivo. */
   function segnale(b) {
+    /* Stato descrittivo della bottiglia, non un consiglio: prima la qualità della quotazione, poi la maturità. */
     if (inCoda(b) || uscita(b)) return null;
-    var v = vetrina(b), gg = giorniDaQuot(b);
-    if (v == null || gg == null || gg > SOGLIA_VECCHIA) return 'quotare';
-    var m = momentum(b), a = anniResidui(b);
-    if (!spirito(b) && a != null && a <= 3) {
-      // la finestra è un dato disponibile anche senza mercato: qui si decide sulla finestra
-      if (m == null) return vendibile(b) ? 'vendi' : 'bevi';
-      var sg = m >= 0 ? 'vendi' : 'bevi';
-      return (sg === 'vendi' && !vendibile(b)) ? 'bevi' : sg;
-    }
-    if (m == null) return 'dati';
-    if (!spirito(b) && a == null) return 'dati';
-    return m >= 0 ? 'tieni' : 'osserva';
+    var p = prezzoStato(b);
+    if (p === 'nessuna' || p === 'vecchia') return 'quotare';
+    if (p === 'una_sola') return 'dati';
+    return maturita(b);
   }
   // il rinforzo d'acquisto («varrebbe la pena averne altre») è stato tolto: due prezzi retail non lo giustificano
   function rinforza(b) { return false; }
   var SEGNALI = {
-    vendi:   { et: 'Finestra di uscita',   col: 'ambra' },
-    tieni:   { et: 'Tieni',   col: 'teal' },
-    bevi:    { et: 'Bevi',    col: 'cremisi' },
-    osserva: { et: 'Osserva', col: 'neutro' },
-    quotare: { et: 'Da quotare', col: 'violetto' },
-    dati:    { et: 'Senza dati di mercato', col: 'neutro' }
+    in_chiusura: { et: 'Finestra in chiusura', col: 'ambra' },
+    chiusa: { et: 'Finestra chiusa', col: 'cremisi' },
+    pronta: { et: 'Indicata come pronta', col: 'ambra' },
+    tempo: { et: 'Tempo davanti', col: 'teal' },
+    anno_solo: { et: 'Un solo anno indicato', col: 'neutro' },
+    ignota: { et: 'Finestra non indicata', col: 'neutro' },
+    distillato: { et: 'Distillato · senza finestra', col: 'violetto' },
+    dati: { et: 'Una sola quotazione', col: 'neutro' },
+    quotare: { et: 'Senza quotazione recente', col: 'violetto' }
   };
 
   /* Perché, in una riga. Senza motivo un consiglio non serve a niente. */
   function perche(b) {
     var s = segnale(b);
     if (!s) return '';
-    var m = momentum(b), a = anniResidui(b), gg = giorniDaQuot(b);
-    var np = nettoAsta(b), pg = num(b.prezzo_acquisto);
-    var esito = (np != null && pg) ? (np >= pg ? 'nello scenario d’asta resterebbe sopra il pagato' : 'nello scenario d’asta resterebbe sotto il pagato') : '';
-    if (s === 'quotare') {
-      if (vetrina(b) == null) return 'Non è mai stata quotata.';
-      return 'Ultima quotazione ' + (gg == null ? 'senza data' : 'di ' + gg + ' giorni fa') + ': troppo vecchia per fidarsi.';
-    }
-    if (s === 'vendi') return 'La finestra ' + (a < 0 ? 'è già chiusa' : 'si chiude fra ' + a + (a === 1 ? ' anno' : ' anni')) + '. Prezzo osservato ' + andamentoTesto(b) + (esito ? ' — ' + esito : '') + '. Se vuoi uscire da questa bottiglia, puoi proporla nello Speakeasy: la scelta è tua.';
-    if (s === 'bevi') {
-      if (!vendibile(b)) return 'Finestra ' + (a < 0 ? 'già chiusa' : 'in chiusura') + ', ma venderla lascerebbe ' + fmtM(np) + ' nello scenario d’asta: sotto i ' + fmtM(sogliaVendita()) + ' la vendita non ripaga la fatica. Stappala.';
-      if (m == null) return 'La finestra ' + (a < 0 ? 'è già chiusa' : 'si chiude fra ' + a + (a === 1 ? ' anno' : ' anni')) + '. Prezzo osservato ' + andamentoTesto(b) + (esito ? ' — ' + esito : '') + '. Se vuoi uscire da questa bottiglia, puoi proporla nello Speakeasy: la scelta è tua.';
-      return 'Finestra ' + (a < 0 ? 'già chiusa' : 'quasi chiusa') + ' e prezzo osservato ' + andamentoTesto(b) + ': aspettare non aggiunge nulla.';
-    }
-    if (s === 'tieni') return 'Hai ancora ' + (spirito(b) ? 'tutto il tempo che vuoi: in bottiglia sigillata non decade' : a + (a === 1 ? ' anno' : ' anni') + ' di finestra') + '. Prezzo osservato ' + andamentoTesto(b) + '.';
-    if (s === 'osserva') return 'Prezzo osservato ' + andamentoTesto(b) + ', ma ' + (spirito(b) ? 'non c’è fretta: in bottiglia non si rovina' : 'la finestra è ancora lontana') + '. Nessuna urgenza.';
-    if (s === 'dati') return (m == null ? 'Andamento non misurabile: ' + (serie(b).length < 2 ? 'una sola quotazione' : 'rilevazioni troppo vicine') + '.' : 'Prezzo osservato ' + andamentoTesto(b) + '.') + (!spirito(b) && a == null ? ' Finestra di bevuta non indicata: senza, non si può dire se c’è tempo.' : '');
-    return '';
+    var f = finestraInfo(b), a = anniResidui(b), parti = [];
+    if (f.tipo === 'intervallo') parti.push('Finestra indicata ' + f.da + '–' + f.a + (a < 0 ? ', già passata' : a <= 3 ? ', si chiude fra ' + a + (a === 1 ? ' anno' : ' anni') : ', ancora ' + a + ' anni'));
+    else if (f.tipo === 'anno') parti.push('Indicato un solo anno (' + f.anno + '): finestra non stimata');
+    else if (f.tipo === 'pronta') parti.push('Indicata come pronta, senza intervallo');
+    else if (f.tipo === 'distillato') parti.push('Distillato: nessuna finestra da vino, conservazione non nota');
+    else parti.push('Finestra non indicata');
+    parti.push(prezzoTesto(b));
+    return parti.join('. ') + '.';
+  }
+  function prezzoTesto(b) {
+    var v = vetrina(b), gg = giorniDaQuot(b), vv = variazione(b), f = fonteQuot(b);
+    if (v == null) return 'Nessuna quotazione';
+    var t = 'Vetrina ' + fmtM(v) + (gg == null ? ' (senza data)' : gg === 0 ? ' (oggi)' : ' (' + gg + ' giorni fa)') + (f ? ', fonte ' + f : ', fonte non indicata');
+    if (gg != null && gg > SOGLIA_VECCHIA) t += ': quotazione vecchia';
+    if (vv) t += '; osservato ' + (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(0) + '%' + ' in ' + vv.giorni + ' giorni su ' + serie(b).length + ' rilevazioni';
+    return t;
   }
   function conSegnale(s) {
     return STATE.bottles.filter(function (b) { return segnale(b) === s; })
-      .sort(function (x, y) { return (nettoAsta(y) || 0) * qty(y) - (nettoAsta(x) || 0) * qty(x); });
+      .sort(function (x, y) { return (vetrina(y) || 0) * qty(y) - (vetrina(x) || 0) * qty(x); });
   }
 
   /* ============ illustrazione della bottiglia ============ */
@@ -1450,33 +1525,38 @@
 
 
   /* ================= CRUSCOTTO: cosa conviene fare oggi ================= */
-  var ORD_SEGNALI = ['vendi', 'bevi', 'tieni', 'osserva', 'dati', 'quotare'];
+  var ORD_SEGNALI = ['in_chiusura', 'chiusa', 'pronta', 'tempo', 'anno_solo', 'ignota', 'distillato', 'dati', 'quotare'];
   var SPIEGA = {
-    vendi: 'La finestra di bevuta sta per chiudersi e il mercato regge: se vuoi uscire da questa bottiglia, il momento è ora. Venderla è una scelta tua, non un consiglio.',
-    bevi: 'Finestra agli sgoccioli e niente da guadagnare a venderle — o perché il mercato non premia più, o perché al netto resterebbe troppo poco. Il valore migliore che puoi ricavarne è stapparle.',
-    tieni: 'Tempo davanti e prezzo osservato in crescita o stabile: non c’è motivo di muoversi. La variazione è quella fra la prima e l’ultima quotazione, nel periodo indicato: non un rendimento.',
-    osserva: 'Prezzi in calo ma nessuna urgenza: niente da fare adesso, si ricontrolla al prossimo giro.',
-    quotare: 'Senza una quotazione recente qualsiasi consiglio sarebbe inventato. Queste vanno riquotate.',
-    dati: 'Manca una misura dell’andamento o la finestra di bevuta: con una sola quotazione, o con rilevazioni troppo vicine, non si può dire se una bottiglia sale o scende. Qui nessun consiglio: solo i dati che ci sono.'
+    in_chiusura: 'La finestra di bevuta indicata si chiude entro tre anni. È un dato sulla maturità, non un invito a vendere o a bere.',
+    chiusa: 'La finestra indicata è già passata: dice solo che il vino è oltre l’intervallo. Lo stato reale dipende dalla conservazione, che l’app non conosce.',
+    pronta: 'L’etichetta o la lettura indica «pronta», senza un intervallo di anni: l’app non ne inventa uno.',
+    tempo: 'La finestra indicata dura ancora più di tre anni.',
+    anno_solo: 'È indicato un solo anno: non basta a definire una finestra e l’app non ne aggiunge altri.',
+    ignota: 'Nessuna finestra di bevuta indicata.',
+    distillato: 'Per i distillati non vale la finestra del vino. La conservazione dipende dalle condizioni della bottiglia, che qui non sono note.',
+    dati: 'Una sola quotazione, o rilevazioni troppo vicine: nessun andamento misurabile.',
+    quotare: 'Nessuna quotazione recente: il valore mostrato, se c’è, è vecchio.'
   };
   function cruscotto() {
     var utili = STATE.bottles.filter(function (b) { return segnale(b); });
     if (!utili.length) return '';
+    var quotate = utili.filter(function (b) { return vetrina(b) != null; }).length;
     var tiles = ORD_SEGNALI.map(function (k) {
       var l = conSegnale(k);
-      var tot = l.reduce(function (s, b) { return s + (nettoAsta(b) || 0) * qty(b); }, 0);
+      if (!l.length) return '';
+      var q = l.filter(function (b) { return vetrina(b) != null; }).length;
       var on = filters.segnale === k;
       return '<button type="button" class="tile' + (on ? ' on' : '') + '" data-seg="' + k + '" style="--ac:var(--' + SEGNALI[k].col + ')" aria-pressed="' + (on ? 'true' : 'false') + '">' +
         '<span class="tn tab">' + l.length + '</span>' +
         '<span class="tl">' + SEGNALI[k].et + '</span>' +
-        '<span class="tv tab">' + (tot ? fmtM(tot) + ' nello scenario' : '—') + '</span></button>';
+        '<span class="tv tab">' + q + ' su ' + l.length + ' con quotazione' + '</span></button>';
     }).join('');
     var sel = filters.segnale;
-    return '<section class="dash"><div class="dash-hd"><h3>Segnali da leggere insieme</h3>' +
-      '<span class="dash-note">Scenario d’asta: ' + Math.round(resaAsta() * 100) + '% del prezzo di vetrina · coefficiente modificabile nei filtri, non una quotazione</span></div>' +
+    return '<section class="dash"><div class="dash-hd"><h3>' + 'Maturità e prezzo osservato' + '</h3>' +
+      '<span class="dash-note">' + quotate + ' su ' + utili.length + ' con una quotazione · nessun consiglio: solo lo stato dei dati' + '</span></div>' +
       '<div class="tiles">' + tiles + '</div>' +
-      (sel ? '<p class="dash-x"><strong>' + SEGNALI[sel].et + '.</strong> ' + SPIEGA[sel] + ' <button type="button" class="lnk" id="seg-off">mostra tutte</button></p>' : '') +
-      '<p class="disc">Il segnale è un orientamento costruito sui dati disponibili: finestra stimata, quotazioni indicative e coefficienti di scenario. Non certifica il momento migliore e non dice cosa fare dei tuoi soldi. La vendita, se la vuoi, la decidi tu: puoi metterla in bacheca nello Speakeasy e parlarne direttamente con un altro membro. Caveau non compra mai per conto proprio.</p>' +
+      (sel ? '<p class="dash-x"><strong>' + SEGNALI[sel].et + '.</strong> ' + SPIEGA[sel] + ' <button type="button" class="lnk" id="seg-off">' + 'mostra tutte' + '</button></p>' : '') +
+      '<p class="disc">' + 'Le tessere raggruppano le bottiglie per quello che si sa della finestra di bevuta e delle quotazioni. Non sono raccomandazioni: vendere, bere o tenere resta una scelta tua, e i prezzi osservati non sono prezzi realizzabili.' + '</p>' +
       '</section>';
   }
 
@@ -1490,10 +1570,10 @@
   function matrice(l) {
     var vivi = l.filter(function (b) { return segnale(b) && segnale(b) !== 'quotare' && segnale(b) !== 'dati' && variazione(b) != null; });
     var vini = vivi.filter(function (b) { return !spirito(b) && anniResidui(b) != null; });
-    var dist = vivi.filter(function (b) { return spirito(b) || anniResidui(b) == null; });
+    var dist = vivi.filter(function (b) { return spirito(b); });
     var fuori = l.filter(function (b) { return segnale(b) && vivi.indexOf(b) === -1; });
     if (!vivi.length) {
-      return '<div class="empty"><h2>Non c’è ancora abbastanza storia</h2><p>La matrice ha bisogno di almeno due quotazioni per bottiglia, a settimane di distanza: solo così si può dire se una bottiglia sta salendo. Arriveranno con i prossimi aggiornamenti mensili.</p></div>';
+      return '<div class="empty"><h2>Non c’è ancora abbastanza storia</h2><p>La mappa ha bisogno di almeno due quotazioni per bottiglia, a settimane di distanza: solo così si può misurare una variazione.</p></div>';
     }
     var W = 760, H = 470, L = 66, R = 26, T = 26, Bo = 54;
     var FASCIA = 52;                      // fascia dei distillati, sopra la scala
@@ -1510,16 +1590,16 @@
     }
     var x0 = X(0), y0 = Y(ysplit);
     var tutti = vini.concat(dist);
-    var maxV = Math.max.apply(null, tutti.map(function (b) { return (nettoAsta(b) || 0) * qty(b); }).concat([1]));
-    function raggio(b) { return 5.5 + 9 * Math.sqrt(((nettoAsta(b) || 0) * qty(b)) / maxV); }
+    var maxV = Math.max.apply(null, tutti.map(function (b) { return (vetrina(b) || 0) * qty(b); }).concat([1]));
+    function raggio(b) { return 5.5 + 9 * Math.sqrt(((vetrina(b) || 0) * qty(b)) / maxV); }
     function zona(xa, xb, ya, yb, col) {
       return '<rect x="' + xa + '" y="' + ya + '" width="' + (xb - xa) + '" height="' + (yb - ya) + '" fill="var(--' + col + ')" opacity=".055"/>';
     }
     function dot(b, cx, cy) {
       var vv = variazione(b);
       var info = (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(0) + '% in ' + vv.giorni + ' giorni · ' +
-        (spirito(b) ? 'non scade' : anniResidui(b) + (anniResidui(b) === 1 ? ' anno' : ' anni') + ' di finestra') +
-        ' · ' + fmtM((nettoAsta(b) || 0) * qty(b)) + ' nello scenario';
+        (spirito(b) ? 'senza finestra' : anniResidui(b) + (anniResidui(b) === 1 ? ' anno' : ' anni') + ' di finestra') +
+        ' · ' + fmtM((vetrina(b) || 0) * qty(b)) + ' di vetrina';
       return '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + raggio(b).toFixed(1) + '" class="mdot" tabindex="0" role="button" ' +
         'data-mid="' + b.id + '" data-nome="' + escHtml(b.nome || 'Senza nome') + '" data-info="' + escHtml(info) + '">' +
         '<title>' + escHtml(b.nome || '') + '</title></circle>';
@@ -1529,9 +1609,9 @@
     function mx(b) { var vv = variazione(b); return vv ? vv.pct : 0; }
     var puntiDist = dist.slice().sort(function (a, b) { return X(mx(a)) - X(mx(b)); })
       .map(function (b) { return dot(b, X(mx(b)), yDist); }).join('');
-    var puntiVini = vini.slice().sort(function (a, b) { return ((nettoAsta(b) || 0) * qty(b)) - ((nettoAsta(a) || 0) * qty(a)); })
+    var puntiVini = vini.slice().sort(function (a, b) { return ((vetrina(b) || 0) * qty(b)) - ((vetrina(a) || 0) * qty(a)); })
       .map(function (b) { return dot(b, X(mx(b)), Y(anniResidui(b))); }).join('');
-    var top = vini.slice().sort(function (a, b) { return ((nettoAsta(b) || 0) * qty(b)) - ((nettoAsta(a) || 0) * qty(a)); }).slice(0, 3);
+    var top = vini.slice().sort(function (a, b) { return ((vetrina(b) || 0) * qty(b)) - ((vetrina(a) || 0) * qty(a)); }).slice(0, 3);
 
     var tacche = [0, 1, 3, 6, 12, 24].map(function (v) {
       return '<text x="' + (L - 10) + '" y="' + (Y(v) + 4) + '" class="mal" text-anchor="end">' + v + '</text>';
@@ -1545,11 +1625,11 @@
       '<line x1="' + L + '" y1="' + y0 + '" x2="' + (W - R) + '" y2="' + y0 + '" class="max"/>' +
       '<line x1="' + x0 + '" y1="' + PT + '" x2="' + x0 + '" y2="' + (H - Bo) + '" class="max"/>' +
       '<rect x="' + L + '" y="' + PT + '" width="' + (W - L - R) + '" height="' + (H - PT - Bo) + '" class="mfr"/>' +
-      '<text x="' + (L + 9) + '" y="' + (T + 16) + '" class="mq" text-anchor="start">DISTILLATI · NON SCADONO</text>' +
-      '<text x="' + (W - R - 9) + '" y="' + (PT + 20) + '" class="mq" text-anchor="end">TIENI</text>' +
-      '<text x="' + (W - R - 9) + '" y="' + (y0 + 21) + '" class="mq" text-anchor="end">USCITA</text>' +
-      '<text x="' + (L + 9) + '" y="' + (y0 + 21) + '" class="mq" text-anchor="start">BEVI</text>' +
-      '<text x="' + (L + 9) + '" y="' + (PT + 20) + '" class="mq" text-anchor="start">OSSERVA</text>' +
+      '<text x="' + (L + 9) + '" y="' + (T + 16) + '" class="mq" text-anchor="start">DISTILLATI · SENZA FINESTRA DA VINO</text>' +
+      '<text x="' + (W - R - 9) + '" y="' + (PT + 20) + '" class="mq" text-anchor="end">TEMPO DAVANTI · PREZZO IN CRESCITA</text>' +
+      '<text x="' + (W - R - 9) + '" y="' + (y0 + 21) + '" class="mq" text-anchor="end">IN CHIUSURA · PREZZO IN CRESCITA</text>' +
+      '<text x="' + (L + 9) + '" y="' + (y0 + 21) + '" class="mq" text-anchor="start">IN CHIUSURA · PREZZO IN CALO</text>' +
+      '<text x="' + (L + 9) + '" y="' + (PT + 20) + '" class="mq" text-anchor="start">TEMPO DAVANTI · PREZZO IN CALO</text>' +
       tacche +
       '<text x="' + L + '" y="' + (H - 22) + '" class="mal" text-anchor="start">← mercato in calo</text>' +
       '<text x="' + (W - R) + '" y="' + (H - 22) + '" class="mal" text-anchor="end">mercato in crescita →</text>' +
@@ -1564,7 +1644,7 @@
       '</svg>';
 
     return '<div class="mwrap"><div class="mbox">' + svg + '<div class="mtip" id="mtip" hidden></div></div>' +
-      '<p class="mleg">Ogni cerchio è una bottiglia; la grandezza è il valore netto che rappresenta in cantina. La scala verticale è compressa in alto: lo spazio sta dove si decide, cioè vicino alla chiusura della finestra.</p>' +
+      '<p class="mleg">' + 'Ogni cerchio è una bottiglia; la grandezza è il valore di vetrina che rappresenta in cantina. La scala verticale è compressa in alto, vicino alla chiusura della finestra.' + '</p>' +
       (fuori.length ? '<div class="mout"><strong>' + fuori.length + (fuori.length === 1 ? ' bottiglia non collocabile' : ' bottiglie non collocabili') + '</strong> — servono almeno due quotazioni a distanza di settimane per misurare un andamento: ' +
         fuori.slice(0, 8).map(function (b) { return escHtml(b.nome || 'senza nome'); }).join(', ') + (fuori.length > 8 ? '…' : '') + '</div>' : '') +
       '</div>';
@@ -1597,7 +1677,6 @@
     if (inCoda(b)) return '';
     var sg = segnale(b), v = vetrina(b), m = momentum(b), gg = giorniDaQuot(b);
     var s = serie(b), pg = num(b.prezzo_acquisto);
-    function pctN(a, base) { if (a == null || !base) return ''; var d = (a - base) / base * 100; return (d >= 0 ? '+' : '') + d.toFixed(0) + '%'; }
     function cifra(et, val, sub) {
       return '<div class="qc"><div class="qk">' + et + '</div><div class="qv tab">' + fmtM(val) + '</div>' + (sub ? '<div class="qs">' + sub + '</div>' : '') + '</div>';
     }
@@ -1606,15 +1685,16 @@
       (sg ? '<div class="qhd">' + badge(b) + '<p>' + escHtml(perche(b)) + '</p></div>' : '') +
       '<div class="qgrid">' +
       cifra('Pagato', pg) +
-      cifra('Vetrina oggi', v, (gg == null ? 'mai quotata' : (gg === 0 ? 'aggiornata oggi' : gg + ' giorni fa')) + (v == null ? '' : ' · ' + (fonteQuot(b) ? escHtml(fonteQuot(b)) : 'fonte non indicata'))) +
-      cifra('Scenario · privato', nettoPriv(b), Math.round(resaPriv() * 100) + '% della vetrina' + (pct(nettoPriv(b), pg) ? ' · ' + pct(nettoPriv(b), pg) + ' sul pagato' : '')) +
-      cifra('Scenario · asta', nettoAsta(b), Math.round(resaAsta() * 100) + '% della vetrina' + (pct(nettoAsta(b), pg) ? ' · ' + pct(nettoAsta(b), pg) + ' sul pagato' : '')) +
+      cifra('Ultimo prezzo rilevato', v, (gg == null ? 'mai quotata' : (gg === 0 ? 'aggiornata oggi' : gg + ' giorni fa')) + (v == null ? '' : ' · ' + (fonteQuot(b) ? escHtml(fonteQuot(b)) : 'fonte non indicata'))) +
       '</div>' +
-      (function () { var vv = variazione(b); return vv ? '<p class="qm">Prezzo osservato <strong class="' + (vv.pct > 0 ? 'pos' : vv.pct < 0 ? 'neg' : 'flat') + '">' + (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(1) + '%</strong> in ' + vv.giorni + ' giorni, su ' + s.length + ' rilevazioni' + (vv.giorni >= 90 ? ' (circa ' + (m >= 0 ? '+' : '') + m.toFixed(0) + '% su base annua, solo come ordine di grandezza)' : '') + '. È la differenza fra prezzi richiesti, non un rendimento.</p>' : '<p class="qm">Serve una seconda quotazione, ad almeno due settimane di distanza, per misurare l’andamento.</p>'; })() +
+      (function () { var vv = variazione(b); return vv ? '<p class="qm">' + 'Prezzo osservato ' + '<strong class="' + (vv.pct > 0 ? 'pos' : vv.pct < 0 ? 'neg' : 'flat') + '">' + (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(1) + '%</strong>' + ' in ' + vv.giorni + ' giorni, su ' + s.length + ' rilevazioni' + '.</p>' : ''; })() +
       (s.length ? '<ul class="qst">' + s.slice().reverse().map(function (p) {
         return '<li><span class="qd">' + fmtD(p.data) + '</span><span class="qp tab">' + fmtM(num(p.vetrina)) + '</span><span class="qf">' + escHtml(p.fonte || '') + '</span></li>';
       }).join('') + '</ul>' : '') +
-      '<p class="qnote">I valori vengono da ricerche periodiche su cataloghi di settore e risultati d’asta: non sono un listino in diretta. Il netto è una stima — privata ' + Math.round(resaPriv() * 100) + '%, asta ' + Math.round(resaAsta() * 100) + '% del prezzo di vetrina — modificabile dai filtri.</p>' +
+      (v == null ? '' : '<details class="help"><summary>' + 'Ipotesi di realizzo · calcolatore, non una quotazione' + '</summary><div class="qgrid" style="margin-top:10px">' +
+        cifra('Ipotesi · privato', nettoPriv(b), Math.round(resaPriv() * 100) + '% della vetrina' + (pct(nettoPriv(b), pg) ? ' · ' + pct(nettoPriv(b), pg) + ' sul pagato' : '')) +
+        cifra('Ipotesi · asta', nettoAsta(b), Math.round(resaAsta() * 100) + '% della vetrina' + (pct(nettoAsta(b), pg) ? ' · ' + pct(nettoAsta(b), pg) + ' sul pagato' : '')) + '</div></details>') +
+      '<p class="qnote">' + 'Valori indicativi basati sui dati disponibili. Consulta la data e la fonte, quando presenti. Non sono prezzi di vendita garantiti. Le ipotesi di realizzo usano coefficienti predefiniti (85 % privato, 60 % asta), modificabili dai filtri: non sono quotazioni.' + '</p>' +
       '</section>';
   }
 
@@ -1730,13 +1810,13 @@
   function stanzaClub() {
     var z = STANZE[3];
     if (!SP.proposte) { caricaSpeakeasy(); return capitolo(z, 'La bacheca riservata dei membri.') + '<p class="disc">Apro lo Speakeasy…</p>'; }
-    var intro = 'Le bottiglie che i membri hanno scelto di condividere, vino e distillati, in vendita o in scambio. Si parla fra persone che il club conosce: accordo, consegna e pagamento sono fra voi. Caveau non compra, non vende, non incassa.';
+    var intro = 'Bottiglie che i membri condividono, in vendita o in scambio, fra persone che il club conosce. Accordo, consegna e pagamento sono fra voi: Caveau non compra, non vende, non incassa.';
     var n = daGestire();
     var tabs = '<div class="seg sp-tabs">' +
       '<button type="button"' + (spTab === 'bacheca' ? ' class="on"' : '') + ' data-sp-tab="bacheca">Bacheca</button>' +
       '<button type="button"' + (spTab === 'proposte' ? ' class="on"' : '') + ' data-sp-tab="proposte">Le mie proposte' + (n ? ' · ' + n : '') + '</button>' +
       '<button type="button"' + (spTab === 'membri' ? ' class="on"' : '') + ' data-sp-tab="membri">Membri</button></div>';
-    return capitolo(z, intro) + spBanner() + '<div class="speak">' + tabs +
+    return capitolo({ n: z.n, t: 'Fra membri' }, intro) + spBanner() + '<div class="speak">' + tabs +
       (spTab === 'bacheca' ? tabBacheca() : spTab === 'proposte' ? tabProposte() : tabMembri()) +
       clubBox() +
       '<p class="disc"><button type="button" class="lnk" id="sp-ricarica">Aggiorna</button></p></div>';
@@ -1905,7 +1985,7 @@
   function tabMembri() {
     if (spMembroId) return profiloMembro();
     var righe = (SP.membri || []).map(function (m) {
-      return '<tr class="r" data-sp-membro="' + escHtml(m.codice) + '" tabindex="0"><td><span class="tnm">' + escHtml(m.nome || '—') + '</span>' + (m.sei_tu ? ' <span class="sp-when">tu</span>' : '') + '</td><td>' + escHtml(m.paese || '—') + (m.citta ? '<br><span class="sp-when">' + escHtml(m.citta) + '</span>' : '') + '</td><td>' + (m.lingua === 'en' ? 'English' : 'Italiano') + '</td><td>' + (m.membro_dal ? fmtD(String(m.membro_dal).slice(0, 10)) : '—') + '</td></tr>';
+      return '<tr class="r" data-sp-membro="' + escHtml(m.codice) + '" tabindex="0"><td><span class="tnm">' + escHtml(m.nome || '—') + '</span>' + (m.sei_tu ? ' <span class="sp-when">tu</span>' : '') + '<button type="button" class="lnk sp-apri" data-sp-apri>Apri il profilo →</button></td><td data-k="Paese">' + escHtml(m.paese || '—') + (m.citta ? '<br><span class="sp-when">' + escHtml(m.citta) + '</span>' : '') + '</td><td data-k="Lingua">' + (m.lingua === 'en' ? 'English' : 'Italiano') + '</td><td data-k="Membro dal">' + (m.membro_dal ? fmtD(String(m.membro_dal).slice(0, 10)) : '—') + '</td></tr>';
     }).join('');
     return '<section class="blk"><header class="blkh"><h3>I membri</h3><p>Chi fa parte del club: nome, Paese e da quando. Apri un nome per vedere i suoi interessi e le bottiglie che ha scelto di condividere.</p></header>' +
       '<div class="tw"><table><thead><tr><th>Membro</th><th>Paese</th><th>Lingua</th><th>Membro dal</th></tr></thead><tbody>' + (righe || '<tr><td colspan="4">Ancora nessuno.</td></tr>') + '</tbody></table></div></section>';
@@ -1924,6 +2004,26 @@
       '<header class="blkh" style="margin-top:18px"><h3>In bacheca</h3></header>' + (ann ? '<div class="sp-grid">' + ann + '</div>' : '<p class="disc">Nessuna bottiglia condivisa al momento.</p>') + '</section>';
   }
 
+  /* ======================= periodo gratuito (lancio gratuito 21.0) =======================
+     Solo informazione: lo stato viene dalla RPC mia_adesione (pilot concesso dal Desk). Nessun pagamento, nessun pulsante.
+     Se la RPC manca, fallisce o non trova un pilot, il pannello non compare e il socio non vede alcun errore. */
+  var T_GRATUITO = {"pg_titolo": "Periodo gratuito", "pg_in_corso": "Il tuo periodo gratuito dura fino al %s (%s giorni). Nessun pagamento è richiesto ora.", "pg_prorogato": "Il periodo gratuito del tuo invito è prorogato: nessun pagamento è richiesto e la cantina resta aperta.", "pg_nota": "Quando l’adesione annuale sarà attivabile te lo diremo con almeno sette giorni di preavviso. Nessun addebito senza la tua adesione esplicita."};
+  var PILOT = null, pilotCarico = false;
+  function caricaPilot() {
+    if (!window.CELL || !CELL.miaAdesione || pilotCarico) return;
+    pilotCarico = true;
+    CELL.miaAdesione().then(function (a) { PILOT = a || {}; pilotCarico = false; aggiornaPilot(); })
+      .catch(function () { PILOT = {}; pilotCarico = false; aggiornaPilot(); });
+  }
+  function aggiornaPilot() { var e = document.getElementById('pilot-info'); if (!e) return; var n = document.createElement('div'); n.innerHTML = pilotHtml(); e.replaceWith(n.firstChild); }
+  function pilotHtml() {
+    var a = PILOT, t = T_GRATUITO;
+    if (!a) { if (!pilotCarico) setTimeout(caricaPilot, 0); return '<div id="pilot-info" hidden></div>'; }
+    if (!a.pilot_fine) return '<div id="pilot-info" hidden></div>';
+    var fine = fmtD(String(a.proroga_fino_a || a.pilot_fine).slice(0, 10)), g = a.pilot_giorni_rimanenti;
+    var testo = (g == null || Number(g) > 0) ? t.pg_in_corso.replace('%s', fine).replace('%s', g == null ? '—' : String(g)) : t.pg_prorogato.replace('%s', fine);
+    return '<div class="ades" id="pilot-info"><span class="lbl">' + t.pg_titolo + '</span><p>' + testo + '</p><p class="hint">' + t.pg_nota + '</p></div>';
+  }
   /* ---------------------------------------------------- il mio profilo */
   function profiloSheet() {
     var p = PROFILO;
@@ -1938,8 +2038,8 @@
       '<label class="chk" style="margin-top:10px"><input type="checkbox" id="pf-citta-vis"' + (p.citta_visibile ? ' checked' : '') + '> Mostra la città agli altri membri (altrimenti vedono solo il Paese)</label>' +
       '<label style="display:block;margin-top:12px"><span class="lbl">Interessi · separati da virgola</span><input type="text" id="pf-interessi" value="' + escHtml((p.interessi || []).join(', ')) + '" placeholder="es. Barolo, whisky torbato, Champagne"></label>' +
       '<label style="display:block;margin-top:12px"><span class="lbl">Due righe su di te · facoltative</span><textarea id="pf-desc" rows="2" maxlength="280">' + escHtml(p.descrizione || '') + '</textarea></label>' +
-      '<p class="hint">Nel profilo compaiono solo queste righe e le bottiglie che hai in bacheca. La tua cantina, i valori e i tuoi recapiti restano privati.</p></div>' +
-      '<div class="shf"><button type="button" class="btn gho" data-shutsheet>Annulla</button><button type="button" class="btn pri" id="pf-salva">Salva il profilo</button></div></div></div>';
+      '<p class="hint">Nel profilo compaiono solo queste righe e le bottiglie che hai in bacheca. La tua cantina, i valori e i tuoi recapiti restano privati.</p>' + pilotHtml() + '</div>' +
+      '<div class="shf"><button type="button" class="btn gho" data-shutsheet>Annulla</button><button type="button" class="btn gho" id="esci-profilo">Esci</button><button type="button" class="btn pri" id="pf-salva">Salva il profilo</button></div></div></div>';
   }
   function salvaProfilo() {
     function g(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
@@ -2131,6 +2231,10 @@
     on('an-salva', 'click', salvaAnnuncio);
     on('sp-profilo-apri', 'click', function () { profiloOpen = true; render(); });
     on('pf-salva', 'click', salvaProfilo);
+    all('[data-demo-apri]', function (e) { demoApertoId = e.getAttribute('data-demo-apri'); render(); });
+    all('[data-demo-rimuovi]', function (e) { demoRimuovi([e.getAttribute('data-demo-rimuovi')]); });
+    on('demo-rimuovi-tutti', 'click', function () { var v = demoVisibili(); if (!v.length) return; if (!confirm("Eliminare i %d esempi? Le tue bottiglie non cambiano.".replace('%d', v.length))) return; demoRimuovi(v.map(function (d) { return d.id; })); });
+    on('demo-aggiungi', 'click', function () { var b = document.getElementById('bulkbtn') || document.getElementById('shoot'); if (b) b.click(); });
     on('sp-ricarica', 'click', function () { spReset(); render(); });
     on('sp-in-bacheca', 'click', function () { editingId = null; spTab = 'proposte'; stanza = 'club'; render(); });
     /* il Desk: interruttori dello Speakeasy e chiusura delle segnalazioni */
@@ -2147,7 +2251,7 @@
   function caricaDesk() {
     if (deskCaricando || !window.CELL) return;
     deskCaricando = true;
-    CELL.desk().then(function (d) { DESK = d; deskCaricando = false; render(); })
+    CELL.desk().then(function (d) { DESK = d; DESK.adesioniPer = {}; (d.adesioni || []).forEach(function (a) { if (a && a.profilo_id) DESK.adesioniPer[a.profilo_id] = a; }); deskCaricando = false; render(); })
       .catch(function (e) { deskCaricando = false; toast((e && e.message) || 'Desk non raggiungibile'); });
   }
   function fmtDT(iso) { if (!iso) return '—'; var d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }); }
@@ -2163,10 +2267,11 @@
     var attesa = (DESK.persone || []).filter(function (p) { return p.stato_account === 'in_attesa'; });
     var altre = (DESK.persone || []).filter(function (p) { return p.stato_account !== 'in_attesa'; });
     function riga(p) {
+      var ad = (DESK.adesioniPer || {})[p.id];
       var stato = { approvato: 'approvato', rifiutato: 'rifiutato', sospeso: 'sospeso', in_attesa: 'in attesa' }[p.stato_account] || p.stato_account;
       return '<tr><td><span class="tnm">' + escHtml(p.nome || '—') + '</span><br><span class="mono" style="font-family:var(--mono);font-size:10.5px;color:var(--t3)">' + escHtml(p.email) + (p.ruolo === 'desk' ? ' · desk' : '') + '</span></td>' +
         '<td>' + stato + '</td><td>' + (p.fondatore ? '<b>Fondatore</b>' : 'Membro') + (p.presentato_da ? '<br><span style="font-size:10.5px;color:var(--t3)">presentato da ' + escHtml(p.presentato_da) + '</span>' : '') + (p.paese || p.citta ? '<br><span style="font-size:10.5px;color:var(--t3)">' + escHtml([p.paese, p.citta].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
-        '<td>' + (p.pagato_fino_a ? fmtD(p.pagato_fino_a) : '—') + '</td><td>' + fmtDT(p.ultimo_accesso) + '<br><span style="font-size:10.5px;color:var(--t3)">' + (p.accessi || 0) + ' accessi</span></td>' +
+        '<td>' + (p.pagato_fino_a ? fmtD(p.pagato_fino_a) : '—') + (ad && ad.pilot_fine ? '<br><span style="font-size:10.5px;color:var(--t3)">' + escHtml(({"pilot": "pilot", "nessuna": ""})[ad.stato] || ad.stato || '') + ' · ' + "pilot fino al %s".replace('%s', fmtD(String(ad.proroga_fino_a || ad.pilot_fine).slice(0, 10))) + (String(ad.proroga_fino_a || ad.pilot_fine).slice(0, 10) < new Date().toISOString().slice(0, 10) ? ' · ' + "prorogato" : '') + '</span>' : '') + '</td><td>' + fmtDT(p.ultimo_accesso) + '<br><span style="font-size:10.5px;color:var(--t3)">' + (p.accessi || 0) + ' accessi</span></td>' +
         '<td>' + escHtml(p.nota_desk || '') + '</td>' +
         '<td class="dk-az">' +
         (p.stato_account !== 'approvato' ? '<button type="button" class="btn sm pri" data-desk-act="approva" data-email="' + escHtml(p.email) + '">Approva</button>' : '') +
@@ -2174,6 +2279,7 @@
         (p.stato_account === 'approvato' && p.ruolo !== 'desk' ? '<button type="button" class="btn sm" data-desk-act="sospendi" data-email="' + escHtml(p.email) + '">Sospendi</button>' : '') +
         (p.stato_account === 'approvato' ? (p.fondatore ? '<button type="button" class="btn sm" data-desk-act="nofondatore" data-email="' + escHtml(p.email) + '">Togli fondatore</button>' : '<button type="button" class="btn sm" data-desk-act="fondatore" data-email="' + escHtml(p.email) + '">Fondatore</button>') : '') +
         '<button type="button" class="btn sm" data-desk-act="pagato" data-email="' + escHtml(p.email) + '">Pagato · +12 mesi</button>' +
+        (p.stato_account === 'approvato' && p.ruolo !== 'desk' && !(ad && ad.pilot_inizio) ? '<button type="button" class="btn sm" data-desk-act="pilot" data-email="' + escHtml(p.email) + '">Pilot · 3 mesi gratis</button>' : '') +
         '</td></tr>';
     }
     var testaTab = '<thead><tr><th>Persona</th><th>Account</th><th>Membro</th><th>Pagato fino a</th><th>Ultimo accesso</th><th>Nota</th><th>Azioni</th></tr></thead>';
@@ -2207,6 +2313,11 @@
       '</div>';
   }
   function deskAzione(az, email) {
+    if (az === 'pilot') {
+      if (!confirm("Concedere il pilot gratuito di tre mesi a %s? I posti sono quattro in tutto e la concessione non si annulla da qui.".replace('%s', email))) return;
+      CELL.pilotConcedi(email).then(function (r) { toast("Pilot concesso fino al %s".replace('%s', fmtD(String((r && r.pilot_fine) || '').slice(0, 10)))); DESK = null; render(); }).catch(function (e) { toast((e && e.message) || 'Non riuscito'); });
+      return;
+    }
     if (az === 'fondatore' || az === 'nofondatore') {
       CELL.deskFondatore(email, az === 'fondatore').then(function () {
         var fine = az === 'fondatore' ? CELL.avvisa('fondatore', '', email).catch(function () {}) : Promise.resolve();
@@ -2445,7 +2556,7 @@
   function rigaPos(b) {
     return '<button type="button" class="prow" data-open="' + b.id + '" style="' + blkVars(b) + '">' +
       '<span class="prip tab">' + (b.ripiano ? 'rip. ' + escHtml(b.ripiano) : '—') + '</span>' +
-      '<span class="pnm">' + escHtml(inCoda(b) ? 'Da catalogare' : (b.nome || 'Senza nome')) + '</span>' +
+      '<span class="pnm">' + (inCoda(b) ? 'Da catalogare' : nomeTitolo(b, 'Senza nome')) + '</span>' +
       '<span class="pmk">' + escHtml(b.produttore || b.cantina || '') + (etaTesto(b) ? ' · ' + etaTesto(b) : '') + '</span>' +
       (qty(b) > 1 ? '<span class="pq tab">' + qty(b) + ' bt</span>' : '') +
       '<span class="pv tab">' + fmtM(vetrina(b)) + '</span></button>';
@@ -2716,27 +2827,71 @@
     });
   }
   function fotoSulServer(b) { return !!b && (!b.foto_fronte || b.foto_fronte.slice(0, 5) !== 'data:') && (!b.foto_retro || b.foto_retro.slice(0, 5) !== 'data:'); }
+  /* ---- rilettura di una scheda già catalogata (9 nov 2026) ----
+     Si rilegge solo una bottiglia propria in cantina, con foto, non in coda, non esempio, non uscita. Lo stato non viene
+     mai riportato a da_analizzare: la scheda resta com'è e si aggiorna quando il server risponde. */
+  function rileggibile(b) { return !!b && inCantina(b) && !inCoda(b) && !b.esempio && haFoto(b); }
+  /* esito ambiguo = nessuna risposta leggibile (rete, timeout): il server potrebbe aver letto e scritto comunque */
+  function esitoAmbiguo(e) { var m = String((e && e.message) || e || ''); return /failed to fetch|networkerror|network request failed|load failed|timed? ?out|aborted|socket|ECONN/i.test(m); }
+  /* Quantità, prezzi, valore, note e visibilità li protegge il SERVER (cataloga): il client non ripara nulla da solo. Il successo di una
+     rilettura lo prova soltanto la risposta della chiamata (letture[id].esitoCerto), mai un confronto fra campi o versioni: potrebbero
+     essere cambiati da un altro dispositivo, o essere identici dopo una lettura riuscita. */
+  function moduloCambiato(b, data) { return Object.keys(data).some(function (k) { return cambiato(k === 'quantita' ? qty(b) : b[k], data[k]); }); }
+  /* Le modifiche non salvate del modulo aperto si salvano PRIMA della rilettura, con la stessa regola di «Salva» (incertezze comprese):
+     così non vanno perse e la fusione le trova già nello stato di partenza. */
+  function salvaModuloAperto(id) {
+    if (editingId !== id || !document.getElementById('bform')) return false;
+    var b = STATE.bottles.find(function (x) { return x.id === id; }); if (!b) return false;
+    var data = raccogli(), conf = confermati();
+    if (!moduloCambiato(b, data)) return false;
+    commit(function (ns) { aggiornaScheda(ns, id, data, conf); }, false);
+    return true;
+  }
+  /* Il comando: conferma esplicita (costo e perimetro), poi UNA lettura in fila. Doppio clic e lettura in corso o in recupero: nulla.
+     Dopo un errore definitivo (stato ko) un nuovo tentativo è possibile solo passando di nuovo dalla conferma. */
+  function occupata(id) { return !!letture[id] && letture[id].stato !== 'ko'; }
+  function rileggiEtichetta(id) {
+    if (isReadOnly) return;
+    var b = STATE.bottles.find(function (x) { return x.id === id; });
+    if (!b || !rileggibile(b)) { toast('Questa scheda non si può rileggere'); return; }
+    if (!window.CELL || !CELL.cataloga) { toast('Il motore non è raggiungibile da qui'); return; }
+    if (occupata(id)) { toast('Lettura già in corso per questa scheda'); return; }
+    if (!fotoSulServer(b)) { toast('Foto non ancora salvata: riprova fra poco'); return; }
+    var modificato = editingId === id && !!document.getElementById('bform') && moduloCambiato(b, raccogli());
+    if (!confirm('Rileggere l’etichetta di questa bottiglia?\n\nUsa una lettura del motore (conta nel limite giornaliero). Può aggiornare i campi letti dall’etichetta: nome, produttore, cantina, tipologia, colore, annata, età, gradazione, vitigni, provenienza, formato, finestra di bevuta e le note di lettura.\n\nNon cambia quantità, prezzi, valore, le note che hai scritto, la posizione già impostata né le tue proposte in Speakeasy.' + (modificato ? '\n\nLe modifiche non ancora salvate vengono salvate prima.' : ''))) return;
+    if (occupata(id)) return;   // avviata altrove mentre la finestra era aperta
+    if (letture[id]) delete letture[id];   // errore precedente: il nuovo tentativo parte pulito, dopo la conferma appena data
+    if (modificato) salvaModuloAperto(id);
+    leggiAppena(id, true);
+    toast('Rileggo l’etichetta: la scheda si aggiorna da sola');
+  }
   /* Una lettura per scheda, in fila: parte solo dopo che il salvataggio (foto comprese) è finito davvero. Niente lettura se
      l'attesa scade o se l'ultimo salvataggio è in errore, anche quando le foto hanno già un indirizzo. Se la stessa scheda è
-     già in fila, in lettura o in recupero non si accoda due volte. */
-  function leggiAppena(id) {
+     già in fila, in lettura o in recupero non si accoda due volte.
+     Con rilettura = true si legge una scheda già catalogata (rileggibile): stessa fila, stessa attesa dei salvataggi,
+     stessa pretesa che le foto siano sul server; una sola chiamata al motore per ogni avvio confermato. */
+  function leggiAppena(id, rilettura) {
     var l = letture[id];
     if (l && l.stato === 'recupero') { if (l.msg) recuperaDalServer(id); return; }   // lettura già fatta: si ripete solo la rilettura
     if (l && (l.stato === 'salvo' || l.stato === 'leggo')) return;
-    letture[id] = { stato: 'salvo' }; renderPresto();
+    letture[id] = { stato: 'salvo', rilettura: !!rilettura }; renderPresto();
     codaLetture = codaLetture.then(function () {
       return attendiSalvataggio().then(function (finito) {
         var b = STATE.bottles.find(function (x) { return x.id === id; });
-        var ko = function (msg) { letture[id] = { stato: 'ko', msg: msg }; renderPresto(); };
-        if (!b || !inCoda(b)) { delete letture[id]; renderPresto(); return; }
+        var ko = function (msg) { letture[id] = { stato: 'ko', msg: msg, rilettura: !!rilettura }; renderPresto(); };
+        if (!b || !(rilettura ? rileggibile(b) : inCoda(b))) { delete letture[id]; renderPresto(); return; }
         if (!window.CELL || !CELL.cataloga) return ko('Il motore non è raggiungibile da qui');
+        if (isReadOnly) return ko('Sola lettura: nessuna lettura dell’etichetta');   // ricontrollo al momento della chiamata, non solo al clic
         if (!finito) return ko('Salvataggio ancora in corso: riprova fra poco');
         if (erroreSalvataggio) return ko('Salvataggio non riuscito: riprova a salvare, poi leggi l’etichetta');
         if (!fotoSulServer(b)) return ko('Foto non ancora salvata: riprova fra poco');
-        letture[id] = { stato: 'leggo', base: JSON.stringify(b) }; renderPresto();   // base = la scheda com'era quando la lettura è partita
-        return CELL.cataloga(id).then(function () { return recuperaDalServer(id); }, function (e) {
-          letture[id] = { stato: 'ko', msg: (e && e.message) || 'Lettura non riuscita' }; render();
-          toast('Lettura non riuscita: ' + ((e && e.message) || 'riprova'));
+        letture[id] = { stato: 'leggo', base: JSON.stringify(b), rilettura: !!rilettura }; renderPresto();   // base = la scheda com'era quando la lettura è partita
+        return CELL.cataloga(id).then(function () { if (letture[id]) letture[id].esitoCerto = true; return recuperaDalServer(id); }, function (e) {
+          /* Rilettura con esito ambiguo (nessuna risposta leggibile dal server): la lettura potrebbe essere stata fatta e pagata.
+             Nessuna nuova chiamata al motore, automatica o proposta: resta solo il recupero della scheda dal server. */
+          if (rilettura && esitoAmbiguo(e)) { letture[id] = { stato: 'recupero', msg: 'Rilettura senza risposta: potrebbe essere stata fatta. Recupera i dati dal server, senza una nuova lettura', base: letture[id] && letture[id].base, rilettura: true }; render(); toast('Nessuna risposta dal motore. Non ripeto la lettura: recupera i dati dal server'); return; }
+          letture[id] = { stato: 'ko', msg: (e && e.message) || 'Lettura non riuscita', rilettura: !!rilettura }; render();
+          toast((rilettura ? 'Rilettura non riuscita: ' : 'Lettura non riuscita: ') + ((e && e.message) || 'riprova'));
         });
       });
     });
@@ -2765,17 +2920,23 @@
     return Promise.reject(new Error('Rilettura non disponibile: completa l’aggiornamento dell’app.'));
   }
   function recuperaDalServer(id) {
-    var base = letture[id] && letture[id].base;
-    letture[id] = { stato: 'recupero', msg: '', base: base }; renderPresto();
+    var l0 = letture[id] || {}, base = l0.base, rilettura = !!l0.rilettura, certo = !rilettura || !!l0.esitoCerto;   // certo = la chiamata ha risposto bene
+    letture[id] = { stato: 'recupero', msg: '', base: base, rilettura: rilettura, esitoCerto: certo }; renderPresto();
     return accodaOperazioneServer(function () { return rileggiScheda(id); }).then(function (riga) {
       var ns = JSON.parse(JSON.stringify(STATE)), i = ns.bottles.findIndex(function (x) { return x.id === id; });
       if (i < 0) { /* cancellata in locale nel frattempo: non si resuscita; la cancellazione viaggia con il suo salvataggio */ }
       else if (!riga) ns.bottles.splice(i, 1);          // sparita sul server
       else ns.bottles[i] = fondiScheda(ns.bottles[i], riga, base);
-      STATE = ns; delete letture[id]; render();
+      /* Rilettura con esito ambiguo: i valori correnti del server valgono (anche se cambiati da un altro dispositivo), ma nulla prova
+         che la nostra lettura sia avvenuta: niente «Letta», nessuna nuova chiamata al motore, lo stato resta ambiguo e lo dice; il
+         recupero si può ripetere. Un esito certo della chiamata libera sempre la scheda, anche se i dati letti sono identici a prima. */
+      STATE = ns;
+      if (rilettura && !certo && i >= 0) { letture[id] = { stato: 'recupero', msg: 'Dati correnti recuperati dal server. Non posso confermare che la rilettura sia avvenuta: nessuna nuova lettura da qui. Puoi ripetere il recupero più tardi', base: JSON.stringify(ns.bottles[i]), rilettura: true, esitoCerto: false }; render(); toast('Dati recuperati. Rilettura non confermata: non la ripeto'); return; }
+      delete letture[id]; render();
       if (i >= 0) toast(riga && riga.nome ? 'Letta: ' + riga.nome : 'Etichetta letta');
     }, function () {
-      letture[id] = { stato: 'recupero', msg: 'Etichetta letta: i dati sono sul server, ma non sono riuscito a rileggerli', base: base }; render(); toast('Lettura fatta. Non sono riuscito a rileggere la scheda: recupera i dati senza una nuova lettura');
+      if (!certo) { letture[id] = { stato: 'recupero', msg: 'Rilettura senza risposta e recupero non riuscito: i dati sul server potrebbero essere cambiati o no. Riprova il recupero, senza una nuova lettura', base: base, rilettura: true, esitoCerto: false }; render(); toast('Recupero non riuscito. Non ripeto la lettura: riprova il recupero'); return; }
+      letture[id] = { stato: 'recupero', msg: 'Etichetta letta: i dati sono sul server, ma non sono riuscito a rileggerli', base: base, rilettura: rilettura, esitoCerto: true }; render(); toast('Lettura fatta. Non sono riuscito a rileggere la scheda: recupera i dati senza una nuova lettura');
     });
   }
   function recuperaLettura(id) { var l = letture[id]; if (!l || l.stato !== 'recupero' || !l.msg) return; recuperaDalServer(id); }
@@ -2915,7 +3076,7 @@
       btn.addEventListener('click', function (ev) { ev.stopPropagation(); recuperaLettura(btn.getAttribute('data-recupera')); });
     });
   }
-  window.CAVEAU_RAPIDO = { scatta: function (file) { openShoot(file); }, letture: function () { return letture; }, scatto: function () { return scatto; }, lotto: function () { return lotto; }, attesaGiri: function (n) { ATTESA_GIRI = n; } };
+  window.CAVEAU_RAPIDO = { salvataggioInCorso: function () { return pendenti > 0; }, pilot: function () { return PILOT; }, demo: function () { return { visibili: demoVisibili().map(function (d) { return d.id; }), rimossi: demoRimossi() }; }, scatta: function (file) { openShoot(file); }, letture: function () { return letture; }, scatto: function () { return scatto; }, lotto: function () { return lotto; }, attesaGiri: function (n) { ATTESA_GIRI = n; } };
 
   function toast(m) {
     var o = document.querySelector('.toast'); if (o) o.remove();
@@ -3058,7 +3219,7 @@
      sempre in quale ti trovi. */
   var STANZE = [
     { k: 'catalogo',   n: '01', t: 'Catalogo' },
-    { k: 'mercato',    n: '02', t: 'Mercato' },
+    { k: 'mercato',    n: '02', t: 'Valori' },
     { k: 'panoramica', n: '03', t: 'Panoramica' },
     { k: 'club',       n: '04', t: 'Speakeasy' },
     { k: 'desk',       n: '05', t: 'Desk' }
@@ -3066,13 +3227,15 @@
   function topbar() {
     return '<nav class="nav"><div class="nav-in">' +
       '<span class="nav-br"><img class="nav-logo" src="marchio-caveau.svg" alt="Caveau" width="863" height="172"><span class="piano' + (clubAttivo() ? ' club' : '') + '">' + (clubAttivo() ? 'Club' : 'Cantina') + '</span></span>' +
-      '<div class="nav-l">' + stanzeVisibili().map(function (z) {
+      '<div class="nav-l' + (stanzeVisibili().length > 4 ? ' n5' : '') + '">' + stanzeVisibili().map(function (z) {
         return '<button type="button" class="nvb' + (z.k === 'club' ? ' club' : '') + (stanza === z.k ? ' on' : '') + '" data-stanza="' + z.k + '"' +
           (stanza === z.k ? ' aria-current="page"' : '') + '><span class="nvn tab">' + z.n + '</span>' + z.t + '</button>';
       }).join('') + '</div>' +
+      '<div class="nav-u">' +
       '<button type="button" class="nvb" data-lingua-switch title="Italiano / English">' + (window.CAVEAU_LINGUA === 'en' ? 'IT' : 'EN') + '</button>' +
       '<button type="button" class="nvb" id="sp-profilo-apri" title="Il mio profilo">Profilo</button>' +
       '<button type="button" class="nvb esci" id="esci" title="Chiudi la sessione">Esci</button>' +
+      '</div>' +
       statoSalvo() +
       '</div></nav>';
   }
@@ -3084,7 +3247,7 @@
   function stanzaCatalogo(l) {
     return capitolo(STANZE[0], 'Tutto quello che c\u2019\u00e8 in cantina, bottiglia per bottiglia \u2014 e dove sta.') +
       (filters.q ? '<p class="qres"><strong>' + l.length + '</strong> ' + (l.length === 1 ? 'bottiglia trovata' : 'bottiglie trovate') + ' per \u201c' + escHtml(filters.q) + '\u201d <button type="button" class="lnk" id="q-off2">annulla</button></p>' : '') +
-      notaPosizione(l) + demoNote() + queueNote() + help() + body(l);
+      notaPosizione(l) + demoSezione() + demoNote() + queueNote() + help() + body(l);
   }
   /* Con i filtri chiusi (sul telefono lo sono quasi sempre) bisogna vedere
      a colpo d'occhio che si sta guardando un solo scaffale. */
@@ -3099,7 +3262,7 @@
   }
   function stanzaMercato() {
     var l = STATE.bottles.filter(function (b) { return inCantina(b) && !inCoda(b); });
-    return capitolo(STANZE[1], 'Valori e segnali della tua cantina, bottiglia per bottiglia. Gli scambi fra membri sono nello Speakeasy.') +
+    return capitolo({ n: STANZE[1].n, t: 'Valori e maturità' }, 'Quotazioni osservate, finestra di bevuta e copertura dei dati, bottiglia per bottiglia. Nessun consiglio: gli scambi fra membri sono nello Speakeasy.') +
       cruscotto() + azioni(l) + matriceBox(l) + valoreNelTempo();
   }
   /* La Panoramica e' l'inventario a colpo d'occhio: quante bottiglie, di che
@@ -3139,9 +3302,9 @@
     }
     return '<header class="mast st-' + stanza + '"><div class="mast-in">' +
       '<button class="rtog btn sm gho" id="rtog" type="button" style="margin-bottom:12px">☰ Filtri</button>' +
-      '<div class="eb">' + (stanza === 'club' ? 'Caveau · Speakeasy · fra membri' : 'Caveau · la tua cantina · solo tu') + '</div>' +
-      '<div class="brand">' + MARCHIO + '<h1>' + escHtml(STATE.meta.titolo) + '</h1></div>' +
-      '<p class="sub">' + escHtml(STATE.meta.sottotitolo || '') + '</p>' +
+      '<div class="eb">' + (stanza === 'club' ? 'Caveau · fra membri' : 'Caveau · la tua cantina · solo tu') + '</div>' +
+      '<div class="brand">' + MARCHIO + '<h1>' + (stanza === 'club' ? 'Speakeasy' : escHtml(STATE.meta.titolo)) + '</h1></div>' +
+      '<p class="sub">' + (stanza === 'club' ? escHtml(STATE.meta.titolo) + ' · la tua cantina resta privata' : escHtml(STATE.meta.sottotitolo || '')) + '</p>' +
       '<div class="cerca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>' +
       '<input type="search" id="f-q" placeholder="Cerca qualsiasi cosa: Nebbiolo, Islay, 2016, magnum, torbato, da verificare…" value="' + escHtml(filters.q) + '" aria-label="Cerca nell\u2019archivio">' +
       (filters.q ? '<button type="button" class="cx" id="q-off" aria-label="Svuota la ricerca">✕</button>' : '') +
@@ -3149,11 +3312,7 @@
       (!(stanza === 'panoramica' || (stanza === 'catalogo' && pezzi > 0)) ? '' : '<div class="lgrid">' +
       lc(pezzi, 'Bottiglie in cantina') +
       lc(fmtM(acq || null), 'Speso') +
-      lc(fmtM(val || null), 'Prezzo di vetrina') +
-      '<div class="lc due" style="--ac:var(--teal)"><div class="duen">' +
-        '<div><div class="n tab">' + fmtM(netP || null) + '</div><div class="c">' + 'privata · ' + Math.round(resaPriv() * 100) + '% della vetrina' + '</div></div>' +
-        '<div><div class="n tab">' + fmtM(netA || null) + (dT != null ? '<span class="up ' + (dT >= 0 ? 'pos' : 'neg') + '">' + (dT >= 0 ? '+' : '') + dT.toFixed(0) + '%</span>' : '') + '</div><div class="c">' + 'asta · ' + Math.round(resaAsta() * 100) + '% della vetrina' + '</div></div>' +
-      '</div><div class="c" style="margin-top:9px">Scenari di realizzo · stime, non quotazioni</div></div>' +
+      lc(fmtM(val || null), 'Vetrina · ' + inC.filter(function (b) { return vetrina(b) != null; }).reduce(function (n, b) { return n + qty(b); }, 0) + ' su ' + pezzi + ' bottiglie quotate') +
       lc(ven.length ? fmtM(ric) : bev, ven.length ? 'Incassato · ' + ven.length + (ven.length === 1 ? ' vendita' : ' vendite') : (bev === 1 ? 'Bevuta' : 'Bevute')) +
       '</div>') + '</div></header>';
   }
@@ -3268,6 +3427,43 @@
       '</div>' + rapidoHtml();
   }
 
+  /* ======================= sei esempi dimostrativi (lancio gratuito 21.0, 11 nov 2026) =======================
+     Dataset dell'interfaccia, separato da STATE.bottles: mai nell'inventario, nei totali, in Valori, nello Speakeasy,
+     nell'export o nella lettura IA. La rimozione è persistente per cantina e fra dispositivi (cantine.esempi_rimossi,
+     RPC esempi_rimuovi, un solo UPDATE atomico); senza strato dati resta in memoria. */
+  var DEMO = [{"id": "demo-wine-red", "nome": "Rosso di Toscana — Esempio", "produttore": "Tenuta dimostrativa", "tipologia": "Vino", "colore": "Rosso", "annata": "2016", "eta": "", "gradazione": "", "formato": "0,75 L", "quantita": 3, "posizione": "A · 01", "valore": 120, "valore_fonte": "Dato dimostrativo, non quotazione", "nota": "Esempio di scheda con annata, quantità e collocazione. Le bottiglie reali richiedono i tuoi dati."}, {"id": "demo-wine-white", "nome": "Bianco di Borgogna — Esempio", "produttore": "Domaine dimostrativo", "tipologia": "Vino", "colore": "Bianco", "annata": "2020", "eta": "", "gradazione": "", "formato": "0,75 L", "quantita": 2, "posizione": "A · 02", "valore": 85, "valore_fonte": "Dato dimostrativo, non quotazione", "nota": "Esempio di bottiglia con nota personale: da condividere a tavola. Non è un consiglio di consumo."}, {"id": "demo-sparkling", "nome": "Champagne millesimato — Esempio", "produttore": "Maison dimostrativa", "tipologia": "Spumante", "colore": "Bianco", "annata": "2012", "eta": "", "gradazione": "", "formato": "1,50 L", "quantita": 1, "posizione": "B · 01", "valore": 240, "valore_fonte": "Dato dimostrativo, non quotazione", "nota": "Il formato magnum mostra come distinguere capacità e numero di bottiglie."}, {"id": "demo-whisky", "nome": "Single malt 18 anni — Esempio", "produttore": "Distilleria dimostrativa", "tipologia": "Whisky", "colore": "", "annata": "", "eta": "18", "gradazione": "46", "formato": "0,70 L", "quantita": 1, "posizione": "C · 01", "valore": 180, "valore_fonte": "Dato dimostrativo, non quotazione", "nota": "Per i distillati, età dichiarata e gradazione sono distinte dall’annata. Nessuna finestra del vino."}, {"id": "demo-rum", "nome": "Rum selezione privata — Esempio", "produttore": "Selezionatore dimostrativo", "tipologia": "Rum", "colore": "", "annata": "", "eta": "", "gradazione": "45", "formato": "0,70 L", "quantita": 2, "posizione": "C · 02", "valore": 95, "valore_fonte": "Dato dimostrativo, non quotazione", "nota": "Esempio di rum senza annata indicata: il dato mancante resta vuoto, non viene inventato."}, {"id": "demo-grappa", "nome": "Grappa riserva — Esempio", "produttore": "Distilleria dimostrativa", "tipologia": "Grappa", "colore": "", "annata": "", "eta": "", "gradazione": "43", "formato": "0,70 L", "quantita": 1, "posizione": "C · 03", "valore": 65, "valore_fonte": "Dato dimostrativo, non quotazione", "nota": "Anche la grappa trova posto nella collezione, con le informazioni pertinenti alla categoria."}];
+  var demoApertoId = null, demoRimozione = false;
+  function demoRimossi() { return (STATE.meta && STATE.meta.esempi_rimossi) || []; }
+  function demoVisibili() { var r = demoRimossi(); return DEMO.filter(function (d) { return r.indexOf(d.id) < 0; }); }
+  function demoCard(d) {
+    return '<button type="button" class="demo-card" data-demo-apri="' + escHtml(d.id) + '">' +
+      '<span class="demo-badge">' + "ESEMPIO · DA ELIMINARE" + '</span>' +
+      '<span class="demo-nome">' + escHtml(d.nome) + '</span><span class="demo-sub">' + escHtml(d.produttore) + (d.annata ? ' · ' + escHtml(d.annata) : '') + '</span>' +
+      '<span class="demo-meta">' + escHtml(d.tipologia) + ' · ' + escHtml(d.formato) + ' · ' + d.quantita + '</span></button>';
+  }
+  function demoSezione() {
+    var v = demoVisibili(); if (!v.length) return '';
+    var reali = STATE.bottles.filter(inCantina).length;
+    return '<details class="demo-sez"' + (reali ? '' : ' open') + '><summary><span class="demo-badge">' + "ESEMPIO · DA ELIMINARE" + '</span> ' + "Sei esempi per orientarti" + ' · ' + v.length + '</summary>' +
+      '<div class="demo-in"><p class="hint">' + "Queste sei bottiglie servono a mostrarti l’app. Non fanno parte della tua collezione, non entrano nei totali, in Valori, nello Speakeasy né nelle letture: eliminale quando hai finito di esplorare." + '</p><div class="demo-grid">' + v.map(demoCard).join('') + '</div>' +
+      '<div class="demo-az"><button type="button" class="btn" id="demo-rimuovi-tutti">' + "Elimina i %d esempi".replace('%d', v.length) + '</button>' +
+      (isReadOnly ? '' : '<button type="button" class="btn pri" id="demo-aggiungi">' + "Aggiungi la tua prima bottiglia" + '</button>') + '</div></div></details>';
+  }
+  function demoSheet(d) {
+    var r = function (k, v) { return v ? '<div class="dc"><span class="lbl">' + k + '</span><div>' + escHtml(String(v)) + '</div></div>' : ''; };
+    return '<div class="ov" data-ov><div class="sheet"><div class="shd"><div><span class="demo-badge">' + "ESEMPIO · DA ELIMINARE" + '</span><h2>' + escHtml(d.nome) + '</h2><p class="ss">' + "Scheda dimostrativa, in sola lettura. I dati sono inventati e il valore è illustrativo, non una quotazione." + '</p></div><button type="button" class="x" data-shutsheet aria-label="' + "Chiudi" + '">✕</button></div>' +
+      '<div class="shb"><div class="dg">' + r("Produttore", d.produttore) + r("Tipologia", d.tipologia + (d.colore ? ' · ' + d.colore : '')) + r("Annata", d.annata) + r("Età dichiarata", d.eta ? d.eta + ' ' + "anni" : '') + r("Gradazione", d.gradazione ? d.gradazione + ' %' : '') + r("Formato", d.formato) + r("Quantità", d.quantita) + r("Posizione di esempio", d.posizione) + r("Valore illustrativo", d.valore + ' € · ' + d.valore_fonte) + r("Nota", d.nota) + '</div></div>' +
+      '<div class="shf"><button type="button" class="btn gho" data-shutsheet>' + "Chiudi" + '</button><button type="button" class="btn dgr" data-demo-rimuovi="' + escHtml(d.id) + '">' + "Elimina l’esempio" + '</button></div></div></div>';
+  }
+  function demoRimuovi(ids) {
+    if (demoRimozione || !ids.length) return;
+    demoRimozione = true;
+    var fine = function (lista) { if (STATE.meta) STATE.meta.esempi_rimossi = lista; demoApertoId = null; demoRimozione = false; render(); toast("Esempi rimossi"); };
+    if (window.CELL && CELL.esempiRimuovi) {
+      CELL.esempiRimuovi(ids).then(function (lista) { fine(Array.isArray(lista) ? lista : demoRimossi().concat(ids)); })
+        .catch(function (e) { demoRimozione = false; toast((e && e.message) || "Rimozione non riuscita: riprova"); render(); });
+    } else fine(demoRimossi().concat(ids));
+  }
   function demoNote() {
     var n = esempi().length;
     if (!n) return '';
@@ -3300,11 +3496,11 @@
   }
   function help() {
     return '<details class="help"><summary>Come si usa</summary><ol>' +
-      '<li><strong>In cantina, dal telefono.</strong> Tocca <em>Scatta</em>: fotografa il fronte, poi il retro (o scegli di continuare solo col fronte), controlla le anteprime e conferma. Nasce una scheda sola, con una sola lettura dell’etichetta. Non scrivi niente: né nome, né annata, né cantina.</li>' +
+      '<li><strong>In cantina, dal telefono.</strong> Tocca <em>Scatta</em>: fotografa il fronte, poi il retro (o scegli di continuare solo col fronte), controlla le anteprime e conferma. Nasce una scheda sola, con una sola lettura dell’etichetta. Controlla i dati suggeriti e completa o correggi ciò che manca.</li>' +
       '<li><strong>Uno scaffale intero.</strong> <em>Carica più bottiglie</em> accetta decine di foto insieme: scegli se sono una per bottiglia o coppie fronte/retro, controlla i gruppi, metti in coda. Le etichette vengono lette una alla volta e ogni scheda mostra il suo esito.</li>' +
-      '<li><strong>La catalogazione.</strong> Dal riquadro della coda, <em>Leggi le etichette</em> riempie ogni campo da solo. Ciò che viene dedotto invece che letto resta marcato <em>da verificare</em>: lo correggi in due secondi e la tua correzione non viene più toccata.</li>' +
+      '<li><strong>La catalogazione.</strong> Dal riquadro della coda, <em>Leggi le etichette</em> suggerisce i dati riconosciuti. Controllali rispetto alle foto, compresi i campi non segnalati <em>da verificare</em>. Una nuova lettura può aggiornare i dati dell’etichetta.</li>' +
       '<li><strong>Quando una bottiglia esce.</strong> Aprila e segnala <em>bevuta</em> o <em>venduta</em> (col prezzo incassato): esce dal conteggio della cantina ma resta nello storico. Oppure eliminala del tutto.</li>' +
-      '<li><strong>Le quotazioni.</strong> Si aggiornano da sole ogni settimana: il controllo guarda quali bottiglie hanno un valore vecchio e rifà solo quelle. Sotto ogni cifra c’è sempre la data e la fonte: se è vecchia, si vede.</li>' +
+      '<li><strong>Le quotazioni.</strong> Valori indicativi basati sui dati disponibili. Consulta la data e la fonte, quando presenti. Non sono prezzi di vendita garantiti.</li>' +
       '</ol></details>';
   }
 
@@ -3321,6 +3517,7 @@
 
   function stampOf(b) {
     if (inCoda(b)) return '<span class="stamp">in coda</span>';
+    if (letture[b.id]) return '<span class="stamp">rileggo l’etichetta</span>';
     if (b.stato === 'bevuta') return '<span class="stamp">bevuta' + (b.bevuta_il ? ' · ' + fmtD(b.bevuta_il) : '') + '</span>';
     if (b.stato === 'venduta') return '<span class="stamp">venduta' + (b.prezzo_vendita != null ? ' · ' + fmtM(b.prezzo_vendita) : '') + '</span>';
     if (b.stato === 'regalata') return '<span class="stamp">regalata' + (b.regalata_a ? ' · ' + escHtml(b.regalata_a) : '') + '</span>';
@@ -3337,12 +3534,12 @@
           ? statoLettura(b) + bottoneFoto(b) + azioniCoda(b)
           : '<div class="mt">' + tagLiquido(b) + badge(b) + tagAnnuncio(b) + '</div>' +
             '<div class="can"><span>' + escHtml(b.produttore || b.cantina || '\u2014') + '</span></div>' +
-            '<div class="nm">' + escHtml(b.nome || 'Senza nome') + '</div>' +
+            '<div class="nm">' + nomeTitolo(b, 'Senza nome') + '</div>' +
             '<div class="mk">' + annataChip(b) +
             '<span>' + escHtml(b.tipologia || 'Altro') + (b.gradazione ? ' \u00b7 ' + escHtml(grad(b)) + '%' : '') +
             (qty(b) > 1 ? ' \u00b7 ' + qty(b) + ' bt' : '') + '</span></div>' + bottoneFoto(b)) +
         '<div class="ft"><span class="vl tab">' + fmtM(vetrina(b)) + '</span>' + spark(b) +
-        (d != null ? '<span class="dl tab ' + (d > 0 ? 'pos' : d < 0 ? 'neg' : 'flat') + '">' + (d >= 0 ? '+' : '') + d.toFixed(0) + '%/anno</span>' : '<span class="dl flat">—</span>') +
+        (function () { var vv = variazione(b); return vv ? '<span class="dl tab ' + (vv.pct > 0 ? 'pos' : vv.pct < 0 ? 'neg' : 'flat') + '">' + (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(0) + '% · ' + vv.giorni + ' gg</span>' : '<span class="dl flat">—</span>'; })() +
         '</div></div></article>';
     }).join('') + '</div>';
   }
@@ -3375,7 +3572,7 @@
 
       '<div class="d-name"><div class="who">' +
         '<div class="d-maker"><span>' + escHtml(b.produttore || b.cantina || '—') + '</span></div>' +
-        '<h3 class="d-title">' + (coda ? 'Da catalogare' : escHtml(b.nome || 'Senza nome')) + '</h3></div>' +
+        '<h3 class="d-title">' + (coda ? 'Da catalogare' : nomeTitolo(b, 'Senza nome')) + '</h3></div>' +
         (e ? '<div class="d-year tab"' + (e.tip ? ' title="' + escHtml(e.tip) + '"' : '') + '>' + e.big + '<small>' + e.lab + '</small></div>' : '') +
       '</div>' +
 
@@ -3389,10 +3586,10 @@
       '<div class="d-val"><div class="d-k">Prezzo di vetrina</div>' +
         '<div class="d-valtop"><span class="d-big tab">' + fmtM(vetrina(b)) + '</span>' +
         '<span class="d-trend">' + spark(b) +
-        (m != null ? '<span class="dl tab ' + (m > 0 ? 'pos' : m < 0 ? 'neg' : 'flat') + '">' + (m >= 0 ? '+' : '') + m.toFixed(0) + '%/anno</span>' : '') +
+        (function () { var vv = variazione(b); return vv ? '<span class="dl tab ' + (vv.pct > 0 ? 'pos' : vv.pct < 0 ? 'neg' : 'flat') + '">' + (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(0) + '% · ' + vv.giorni + ' gg</span>' : ''; })() +
         '</span></div>' +
-        '<div class="d-net"><div>scenario · privato<b class="tab">' + fmtM(nettoPriv(b)) + '</b></div>' +
-        '<div>scenario · asta<b class="tab">' + fmtM(nettoAsta(b)) + '</b></div></div></div>' +
+        '<div class="d-net"><div>fonte <b class="tab">' + escHtml(fonteQuot(b) || 'fonte non indicata') + '</b></div>' +
+        '<div>quotazione <b class="tab">' + (giorniDaQuot(b) == null ? 'mai quotata' : giorniDaQuot(b) === 0 ? 'aggiornata oggi' : giorniDaQuot(b) + ' giorni fa') + '</b></div></div></div>' +
 
       '<div class="d-acts"><button type="button" class="d-act" data-open="' + b.id + '">Apri la scheda' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 17 17 7M9 7h8v8"/></svg></button>' +
@@ -3436,7 +3633,7 @@
             '<div class="scf-l">' + bs.map(function (b) {
               return '<button type="button" class="prow" data-open="' + b.id + '" style="' + blkVars(b) + '">' +
                 '<span class="prip tab">' + (b.ripiano ? 'rip. ' + escHtml(b.ripiano) : '—') + '</span>' +
-                '<span class="pnm">' + escHtml(inCoda(b) ? 'Da catalogare' : (b.nome || 'Senza nome')) + '</span>' +
+                '<span class="pnm">' + (inCoda(b) ? 'Da catalogare' : nomeTitolo(b, 'Senza nome')) + '</span>' +
                 '<span class="pmk">' + escHtml(b.produttore || b.cantina || '') + (etaTesto(b) ? ' · ' + etaTesto(b) : '') + '</span>' +
                 (qty(b) > 1 ? '<span class="pq tab">' + qty(b) + ' bt</span>' : '') +
                 '<span class="pv tab">' + fmtM(vetrina(b)) + '</span></button>';
@@ -3450,38 +3647,39 @@
     var sel = filters.segnale;
     var gruppi = ORD_SEGNALI.filter(function (k) { return !sel || sel === k; }).map(function (k) {
       var bs = l.filter(function (b) { return segnale(b) === k; })
-        .sort(function (x, y) { return (nettoAsta(y) || 0) * qty(y) - (nettoAsta(x) || 0) * qty(x); });
+        .sort(function (x, y) { return (vetrina(y) || 0) * qty(y) - (vetrina(x) || 0) * qty(x); });
       if (!bs.length) return '';
-      var tot = bs.reduce(function (n, b) { return n + (nettoAsta(b) || 0) * qty(b); }, 0);
+      var q = bs.filter(function (b) { return vetrina(b) != null; }).length;
+      var tot = bs.reduce(function (n, b) { return n + (vetrina(b) || 0) * qty(b); }, 0);
       return '<section class="asec" style="--ac:var(--' + SEGNALI[k].col + ')">' +
         '<header class="ahd"><h3>' + SEGNALI[k].et + '</h3>' +
-        '<span class="ameta tab">' + bs.length + (bs.length === 1 ? ' bottiglia' : ' bottiglie') + (tot ? ' · ' + fmtM(tot) + ' nello scenario d’asta' : '') + '</span></header>' +
+        '<span class="ameta tab">' + bs.length + (bs.length === 1 ? ' bottiglia' : ' bottiglie') + (tot ? ' · vetrina complessiva ' + fmtM(tot) + ' (' + q + ' su ' + bs.length + ' quotate' + ')' : '') + '</span></header>' +
         '<p class="anote">' + SPIEGA[k] + '</p>' +
         '<div class="arows">' + bs.map(function (b) {
-          var vv = variazione(b);
+          var vv = variazione(b), gg = giorniDaQuot(b), v = vetrina(b);
           return '<button type="button" class="arow" data-open="' + b.id + '" style="' + blkVars(b) + '">' +
             '<span class="aic">' + bottleSVG(b) + '</span>' +
-            '<span class="atxt"><span class="anm">' + escHtml(b.nome || 'Senza nome') + '</span>' +
+            '<span class="atxt"><span class="anm">' + nomeTitolo(b, 'Senza nome') + '</span>' +
             '<span class="amk">' + escHtml(b.produttore || b.cantina || '') + (etaTesto(b) ? ' · ' + etaTesto(b) : '') +
             (qty(b) > 1 ? ' · ' + qty(b) + ' bt' : '') + '</span>' +
             '<span class="awhy">' + escHtml(perche(b)) + '</span></span>' +
-            '<span class="aval"><span class="av1 tab">' + fmtM(nettoAsta(b)) + '</span>' +
-            '<span class="av2">scenario d’asta' + (qty(b) > 1 ? ' · ' + fmtM((nettoAsta(b) || 0) * qty(b)) + ' in tutto' : '') + '</span>' +
+            '<span class="aval"><span class="av1 tab">' + fmtM(v) + '</span>' +
+            '<span class="av2">' + (v == null ? 'senza quotazione' : 'vetrina' + ' · ' + (gg == null ? '' : gg === 0 ? 'oggi' : gg + ' giorni fa') + (qty(b) > 1 ? ' · ' + fmtM((v || 0) * qty(b)) + ' in tutto' : '')) + '</span>' +
             (vv ? '<span class="dl tab ' + (vv.pct > 0 ? 'pos' : vv.pct < 0 ? 'neg' : 'flat') + '">' + (vv.pct >= 0 ? '+' : '') + vv.pct.toFixed(0) + '% in ' + vv.giorni + ' gg' + '</span>' : '') +
             '</span></button>';
         }).join('') + '</div></section>';
     }).join('');
     if (gruppi) return gruppi;
     var inC = STATE.bottles.filter(inCantina);
-    if (!inC.length) return '<div class="empty"><h2>Qui compariranno i valori della tua cantina</h2><p>Comincia dal Catalogo: fotografa una bottiglia o inseriscila a mano. Appena una bottiglia ha una quotazione, qui trovi scenari e segnali.</p><button type="button" class="btn pri" data-stanza="catalogo">Vai al Catalogo</button></div>';
-    if (!sel && !inC.some(function (b) { return vetrina(b) != null; })) return '<div class="empty"><h2>Nessuna quotazione, per ora</h2><p>Le bottiglie in cantina non hanno ancora un prezzo di vetrina. Aggiungilo dalla scheda (Valore di mercato, data e fonte) oppure aspetta il prossimo aggiornamento.</p></div>';
-    return '<div class="empty"><h2>Nessuna bottiglia con questo segnale</h2><p>Togli la selezione qui sopra per vedere tutte le altre.</p></div>';
+    if (!inC.length) return '<div class="empty"><h2>' + 'Qui compariranno i valori della tua cantina' + '</h2><p>' + 'Comincia dal Catalogo: fotografa una bottiglia o inseriscila a mano. Appena una bottiglia ha una quotazione, qui trovi valori e maturità.' + '</p><button type="button" class="btn pri" data-stanza="catalogo">' + 'Vai al Catalogo' + '</button></div>';
+    if (!sel && !inC.some(function (b) { return vetrina(b) != null; })) return '<div class="empty"><h2>' + 'Nessuna quotazione, per ora' + '</h2><p>' + 'Le bottiglie in cantina non hanno ancora un prezzo di vetrina. Aggiungilo dalla scheda (Valore di mercato, data e fonte) oppure aspetta il prossimo aggiornamento.' + '</p></div>';
+    return '<div class="empty"><h2>' + 'Nessuna bottiglia in questo gruppo' + '</h2><p>' + 'Togli la selezione qui sopra per vedere tutte le altre.' + '</p></div>';
   }
   function matriceBox(l) {
     var sel = filters.segnale;
     var f = sel ? l.filter(function (b) { return segnale(b) === sel; }) : l;
-    return '<section class="blk"><header class="blkh"><h3>La matrice</h3>' +
-      '<p>Due assi soltanto: quanto tempo resta prima che la finestra di bevuta si chiuda, e come si sta muovendo il mercato. La posizione è il consiglio; la grandezza del punto dice quanto vale quella riga in cantina.</p></header>' +
+    return '<section class="blk"><header class="blkh"><h3>' + 'La mappa' + '</h3>' +
+      '<p>' + 'Due assi descrittivi: gli anni di finestra che restano e la variazione osservata del prezzo. La posizione descrive, non consiglia; la grandezza del punto è il valore di vetrina di quella riga.' + '</p></header>' +
       matrice(f) + '</section>';
   }
 
@@ -3495,7 +3693,11 @@
     var date = {};
     inC.forEach(function (b) { serie(b).forEach(function (pt) { date[pt.data] = true; }); });
     var dd = Object.keys(date).sort();
-    if (dd.length < 2) return '';
+    // solo le date in cui OGNI bottiglia ha già una quotazione: niente zeri, niente salti finti
+    var coperte = dd.filter(function (d) { return inC.every(function (b) { return serie(b).some(function (pt) { return pt.data <= d; }); }); });
+    var conQuot = inC.filter(function (b) { return serie(b).length; }).length;
+    if (coperte.length < 2) return inC.length ? '<section class="blk"><header class="blkh"><h3>' + 'Paniere nel tempo' + '</h3><p>' + conQuot + ' bottiglie su ' + inC.length + ' hanno una quotazione e le date coperte da tutte sono ' + coperte.length + ': il grafico compare quando almeno due date hanno una quotazione per ogni bottiglia, così il paniere resta confrontabile. Nessuna bottiglia viene contata a zero.' + '</p></header></section>' : '';
+    dd = coperte;
     var speso = inC.reduce(function (n, b) { return n + (num(b.prezzo_acquisto) || 0) * qty(b); }, 0);
     var pts = dd.map(function (d) {
       var vet = 0, net = 0;
@@ -3516,8 +3718,8 @@
     var area = linea('v') + ' L' + X(pts.length - 1).toFixed(1) + ',' + Y(bot).toFixed(1) + ' L' + X(0).toFixed(1) + ',' + Y(bot).toFixed(1) + ' Z';
     var tick = [bot, bot + (top - bot) / 2, top];
     var ultimo = pts[pts.length - 1];
-    return '<section class="blk"><header class="blkh"><h3>Quanto vale la cantina, nel tempo</h3>' +
-      '<p>Ogni punto è una rilevazione datata. La linea piena è il prezzo di vetrina, quella sotto il scenario d’asta, la tratteggiata quanto è stato speso.</p></header>' +
+    return '<section class="blk"><header class="blkh"><h3>' + 'Il paniere di oggi alle date delle rilevazioni' + '</h3>' +
+      '<p>' + 'Stesse bottiglie e stesse quantità di oggi, rivalutate a ogni data con l’ultima quotazione nota. Non è la storia della cantina né un rendimento: dice quanto varrebbe oggi il paniere ai prezzi osservati allora.' + '</p></header>' +
       '<div class="chart"><svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Valore della cantina nel tempo">' +
       '<defs><linearGradient id="vgrad" x1="0" y1="0" x2="0" y2="1">' +
       '<stop offset="0%" stop-color="var(--bronzo)" stop-opacity=".32"/><stop offset="100%" stop-color="var(--bronzo)" stop-opacity="0"/></linearGradient></defs>' +
@@ -3527,17 +3729,15 @@
       }).join('') +
       '<path d="' + area + '" fill="url(#vgrad)"/>' +
       '<path d="' + linea('v') + '" fill="none" stroke="var(--bronzo)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>' +
-      '<path d="' + linea('n') + '" fill="none" stroke="var(--teal)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>' +
       (speso ? '<line x1="' + L + '" y1="' + Y(speso).toFixed(1) + '" x2="' + (W - R) + '" y2="' + Y(speso).toFixed(1) + '" stroke="var(--t3)" stroke-width="1.4" stroke-dasharray="5 4"/>' +
-        '<text class="axl" x="' + (W - R - 4) + '" y="' + (Y(speso) - 8).toFixed(1) + '" text-anchor="end">speso ' + fmtM(speso) + '</text>' : '') +
+        '<text class="axl" x="' + (W - R - 4) + '" y="' + (Y(speso) - 8).toFixed(1) + '" text-anchor="end">' + 'speso ' + fmtM(speso) + '</text>' : '') +
       pts.map(function (p, i) { return '<circle cx="' + X(i).toFixed(1) + '" cy="' + Y(p.v).toFixed(1) + '" r="3.4" fill="var(--bronzo)"/>'; }).join('') +
       pts.map(function (p, i) {
         return '<text class="axl" x="' + X(i).toFixed(1) + '" y="' + (H - 12) + '" text-anchor="' + (i === 0 ? 'start' : i === pts.length - 1 ? 'end' : 'middle') + '">' + fmtD(p.d) + '</text>';
       }).join('') +
       '</svg></div>' +
-      '<div class="lgn"><span class="lg"><i style="background:var(--bronzo)"></i>prezzo di vetrina · ' + fmtM(Math.round(ultimo.v)) + '</span>' +
-      '<span class="lg"><i style="background:var(--teal)"></i>scenario d’asta · ' + fmtM(Math.round(ultimo.n)) + '</span>' +
-      (speso ? '<span class="lg"><i class="lgd"></i>speso · ' + fmtM(speso) + '</span>' : '') + '</div></section>';
+      '<div class="lgn"><span class="lg"><i style="background:var(--bronzo)"></i>' + 'vetrina · ' + fmtM(Math.round(ultimo.v)) + '</span>' +
+            (speso ? '<span class="lg"><i class="lgd"></i>' + 'speso · ' + fmtM(speso) + '</span>' : '') + '</div></section>';
   }
 
   /* ============ PANORAMICA — l'inventario ============ */
@@ -3577,7 +3777,7 @@
       (top ? scheggia(top, 'L’annata più presente', byAnno[top] + (byAnno[top] === 1 ? ' bottiglia' : ' bottiglie')) : '') +
       (vecchia ? scheggia(anni[0], 'La più vecchia', escHtml(vecchia.nome || '')) : '') +
       (senzAnno ? scheggia(senzAnno, 'Senza annata', 'distillati e NAS') : '') +
-      (val ? scheggia(fmtM(val), 'Prezzo di vetrina', 'scenario d’asta ' + fmtM(net)) : '') +
+      (val ? scheggia(fmtM(val), 'Prezzo di vetrina', inC.filter(function (b) { return vetrina(b) != null; }).reduce(function (n, b) { return n + qty(b); }, 0) + ' bottiglie su ' + pezzi + ' con quotazione') : '') +
       '</div></section>';
   }
 
@@ -3698,7 +3898,7 @@
         return '<button type="button" class="pgr" data-open="' + b.id + '" style="' + blkVars(b) + '">' +
           '<span class="pgn tab">' + (i + 1) + '</span>' +
           '<span class="pgi">' + bottleSVG(b) + '</span>' +
-          '<span class="pgt"><span class="pgnm">' + escHtml(b.nome || 'Senza nome') + '</span>' +
+          '<span class="pgt"><span class="pgnm">' + nomeTitolo(b, 'Senza nome') + '</span>' +
           '<span class="pgmk">' + escHtml(b.produttore || b.cantina || '') + (etaTesto(b) ? ' · ' + etaTesto(b) : '') +
           ' · ' + escHtml(area(b)) + (posizione(b) ? ' · ' + escHtml(posizione(b)) : '') + '</span></span>' +
           '<span class="pgv tab">' + fmtM(vetrina(b)) + (qty(b) > 1 ? '<span class="pgq">× ' + qty(b) + '</span>' : '') + '</span></button>';
@@ -3740,7 +3940,7 @@
       out.map(function (b) {
         var d = b.venduta_il || b.bevuta_il || b.regalata_il || '';
         return '<tr class="r" data-open="' + b.id + '" tabindex="0" style="' + blkVars(b) + '">' +
-          '<td><span class="tnm">' + escHtml(b.nome || '—') + '</span>' + (qty(b) > 1 ? ' <span class="pl">' + qty(b) + ' bt</span>' : '') + (b.esempio ? ' <span class="pl">esempio</span>' : '') + '</td>' +
+          '<td><span class="tnm">' + nomeTitolo(b, '—') + '</span>' + (qty(b) > 1 ? ' <span class="pl">' + qty(b) + ' bt</span>' : '') + (b.esempio ? ' <span class="pl">esempio</span>' : '') + '</td>' +
           '<td><span class="pl">' + escHtml(STATI[b.stato]) + '</span>' + (b.regalata_a ? ' ' + escHtml(b.regalata_a) : '') + '</td>' +
           '<td class="tab">' + (d ? fmtD(d) : '—') + '</td>' +
           '<td class="tab">' + fmtM(num(b.prezzo_acquisto)) + '</td>' +
@@ -3750,12 +3950,12 @@
   }
 
   function tableView(l) {
-    return '<div class="tw"><table><thead><tr><th></th><th>Nome</th><th>Stato</th><th>Tipologia</th><th>Produttore</th><th>Annata</th><th>Grad.</th><th>Provenienza</th><th>Vitigni</th><th>Pagato</th><th>Vetrina</th><th>Netto asta</th><th>Segnale</th><th>Δ</th></tr></thead><tbody>' +
+    return '<div class="tw"><table><thead><tr><th></th><th>Nome</th><th>Stato</th><th>Tipologia</th><th>Produttore</th><th>Annata</th><th>Grad.</th><th>Provenienza</th><th>Vitigni</th><th>Pagato</th><th>Vetrina</th><th>Fonte</th><th>Stato</th><th>Δ</th></tr></thead><tbody>' +
       l.map(function (b) {
         var d = delta(b);
         return '<tr class="r' + (uscita(b) ? ' gone' : '') + '" data-open="' + b.id + '" tabindex="0" style="' + blkVars(b) + '">' +
           '<td><div class="rbox">' + bottleSVG(b) + '</div></td>' +
-          '<td><span class="tnm">' + (inCoda(b) ? 'Da catalogare' : escHtml(b.nome || '—')) + '</span>' + (b.esempio ? ' <span class="pl">esempio</span>' : '') +
+          '<td><span class="tnm">' + (inCoda(b) ? 'Da catalogare' : nomeTitolo(b, '—')) + '</span>' + (b.esempio ? ' <span class="pl">esempio</span>' : '') +
           (haFoto(b) ? ' <button type="button" class="foto-btn tiny" data-foto="' + b.id + '">foto</button>' : '') + '</td>' +
           '<td>' + escHtml(STATI[b.stato] || '—') + '</td>' +
           '<td><span class="swatch"></span>' + escHtml(b.tipologia || '—') + (b.colore ? ' · ' + escHtml(b.colore) : '') + '</td>' +
@@ -3766,7 +3966,7 @@
           '<td>' + escHtml((b.vitigni || []).join(', ') || '—') + '</td>' +
           '<td class="tab">' + fmtM(num(b.prezzo_acquisto)) + '</td>' +
           '<td class="tab">' + fmtM(vetrina(b)) + '</td>' +
-          '<td class="tab">' + fmtM(nettoAsta(b)) + '</td>' +
+          '<td>' + (fonteQuot(b) ? escHtml(fonteQuot(b)) : '—') + '</td>' +
           '<td>' + (segnale(b) ? badge(b) : '—') + '</td>' +
           '<td class="tab">' + (d != null ? '<span class="dl ' + (d > 0 ? 'pos' : d < 0 ? 'neg' : 'flat') + '">' + (d >= 0 ? '+' : '') + d.toFixed(0) + '%</span>' : '—') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
@@ -3779,7 +3979,7 @@
     if (!b) return '';
     var f = b.foto_fronte, r = b.foto_retro;
     return '<div class="ov lb" data-ovfoto><div class="lbx">' +
-      '<div class="lbhd"><div><h2>' + escHtml(b.nome || 'Bottiglia da catalogare') + '</h2>' +
+      '<div class="lbhd"><div><h2>' + nomeTitolo(b, 'Bottiglia da catalogare') + '</h2>' +
       '<p class="ss">' + escHtml([b.produttore, b.annata].filter(Boolean).join(' · ')) + '</p></div>' +
       '<button type="button" class="x" data-shutfoto aria-label="Chiudi">✕</button></div>' +
       '<div class="lbimgs">' +
@@ -3792,6 +3992,7 @@
 
   /* ======================= schede modali ======================= */
   function sheets() {
+    if (demoApertoId) { var dd = DEMO.filter(function (x) { return x.id === demoApertoId; })[0]; if (dd) return demoSheet(dd); demoApertoId = null; }
     if (profiloOpen) return profiloSheet();
     if (spForm) return formAnnuncioSheet();
     if (mappaOpen) return mappaSheet();
@@ -3883,7 +4084,7 @@
     function c(k, v) { return '<div class="dc"><div class="dk">' + k + '</div><div class="dv">' + escHtml(v) + '</div></div>'; }
     var d = delta(b);
     return '<div class="ov" data-ov><div class="sheet">' +
-      head(escHtml(b.nome || 'Da catalogare'), escHtml(b.produttore || '')) +
+      head(nomeTitolo(b, 'Da catalogare'), escHtml(b.produttore || '')) +
       '<div class="shb">' + photosOf(b) + pannelloQuot(b) + '<div class="dg">' +
       c('Stato', STATI[b.stato] || '—') + c('Tipologia', b.tipologia || '—') +
       c('Colore', b.colore || '—') + c('Annata', b.annata || '—') +
@@ -3895,6 +4096,20 @@
       '</div>' + (b.note ? '<div class="nbox">' + escHtml(b.note) + '</div>' : '') + '</div>' +
       '<div class="shf"><span></span><button class="btn gho" data-shutsheet type="button">Chiudi</button></div></div></div>';
   }
+  function letturaInCorso(b) { var l = letture[b.id]; return !!l && (l.stato === 'salvo' || l.stato === 'leggo' || (l.stato === 'recupero' && !l.msg)); }
+  /* Rilettura dell’etichetta dalla scheda: solo per una bottiglia propria già catalogata, con foto, non esempio, non uscita.
+     Una chiamata al motore per ogni clic confermato; mentre è in corso il modulo è inerte, così nessuna modifica va persa.
+     Dopo un errore con risposta del server il pulsante torna disponibile (scelta esplicita, nuova conferma); dopo un esito
+     ambiguo resta solo il recupero dei dati dal server, senza nuova lettura. */
+  function bloccoRilettura(b) {
+    if (isReadOnly || !rileggibile(b) || !(window.CELL && CELL.cataloga)) return '';
+    var l = letture[b.id];
+    var stato = !l ? '' : letturaInCorso(b) ? '<p class="hint ril-stato">Rileggo l’etichetta: la scheda si aggiorna da sola tra poco. Le modifiche riprendono dopo.</p>'
+      : l.stato === 'recupero' ? '<p class="hint ril-stato ko">' + escHtml(l.msg) + '</p><button type="button" class="btn sm pri" data-recupera="' + escHtml(b.id) + '">Recupera i dati letti</button>'
+      : '<p class="hint ril-stato ko">Rilettura non riuscita: ' + escHtml(l.msg || 'riprova più tardi') + '. Nessun nuovo tentativo automatico.</p>';
+    var pulsante = (!l || l.stato === 'ko') ? '<button type="button" class="btn sm" id="a-rileggi">Rileggi l’etichetta</button>' : '';
+    return '<div class="ril">' + stato + pulsante + (!l ? '<p class="hint">Una nuova lettura IA comporta un costo e può aggiornare i dati dell’etichetta. Controlla il risultato. Note personali, quantità, prezzi e posizione già impostata restano invariati.</p>' : '') + '</div>';
+  }
   function formSheet(b, isNew) {
     var coda = inCoda(b), out = uscita(b);
     function fl(c) { return incerto(b, c) ? '<span class="fl">da verificare</span>' : ''; }
@@ -3904,12 +4119,13 @@
       : out ? (b.stato === 'bevuta' ? 'Bevuta il ' + fmtD(b.bevuta_il) + '. Resta nello storico, fuori dal conteggio della cantina.'
               : b.stato === 'regalata' ? 'Regalata il ' + fmtD(b.regalata_il) + (b.regalata_a ? ' a ' + escHtml(b.regalata_a) : '') + '. Resta nello storico.'
                                     : 'Venduta il ' + fmtD(b.venduta_il) + (b.prezzo_vendita != null ? ' per ' + fmtM(b.prezzo_vendita) : '') + '. Resta nello storico.')
-      : (b.esempio ? 'Bottiglia di esempio, a scopo dimostrativo.' : (b.note_analisi ? escHtml(b.note_analisi) : 'Correggi qualsiasi campo: quello che scrivi tu resta.'));
+      : (b.esempio ? 'Bottiglia di esempio, a scopo dimostrativo.' : (b.note_analisi ? escHtml(b.note_analisi) : 'Controlla e correggi i dati della scheda. Una nuova lettura può aggiornare i campi dell’etichetta.'));
     return '<div class="ov" data-ov><div class="sheet">' +
-      head(isNew ? 'Inserimento manuale' : (coda ? 'Bottiglia in coda' : escHtml(b.nome || 'Scheda')), sub) +
-      '<div class="shb">' + (isNew ? '' : photosOf(b)) + (isNew ? '' : pannelloQuot(b)) +
-      '<form id="bform"><div class="fg">' +
-      '<label class="full"' + wc('nome') + '><span class="lbl">Nome bottiglia' + fl('nome') + '</span><input type="text" id="i-nome" value="' + escHtml(b.nome) + '" placeholder="es. Barolo Cannubi"></label>' +
+      head(isNew ? 'Inserimento manuale' : (coda ? 'Bottiglia in coda' : nomeTitolo(b, 'Scheda')), sub) +
+      '<div class="shb">' + (isNew ? '' : photosOf(b)) + (isNew ? '' : pannelloQuot(b)) + (isNew ? '' : bloccoRilettura(b)) +
+      '<form id="bform"' + (!isNew && letturaInCorso(b) ? ' inert' : '') + '><div class="fg">' +
+      '<label class="full' + (incerto(b, 'nome') ? ' warned' : '') + '"><span class="lbl">Nome bottiglia' + fl('nome') + '</span><input type="text" id="i-nome" value="' + escHtml(b.nome) + '" placeholder="es. Barolo Cannubi"></label>' +
+      (incerto(b, 'nome') ? '<p class="hint full nm-hint">La lettura non ha riconosciuto con certezza il nome proprio dell’etichetta: confrontalo con la foto e correggilo, oppure confermalo nel riquadro «Da verificare sulla foto».</p>' : '') +
       '<label' + wc('tipologia') + '><span class="lbl">Tipologia' + fl('tipologia') + '</span><select id="i-tipo">' + TIPI.map(function (t) { return '<option value="' + t + '"' + ((b.tipologia || 'Vino') === t ? ' selected' : '') + '>' + t + '</option>'; }).join('') + '</select></label>' +
       '<label id="wcol" style="' + (TIPI_CON_COLORE[b.tipologia || 'Vino'] ? '' : 'display:none') + '"><span class="lbl">Colore' + fl('colore') + '</span><select id="i-col"><option value="">—</option>' + COLORI.map(function (c) { return '<option value="' + c + '"' + (b.colore === c ? ' selected' : '') + '>' + c + '</option>'; }).join('') + '</select></label>' +
       '<label' + wc('produttore') + '><span class="lbl">Produttore' + fl('produttore') + '</span><input type="text" id="i-prod" value="' + escHtml(b.produttore) + '"></label>' +
@@ -3923,7 +4139,7 @@
       '<label' + wc('gradazione') + '><span class="lbl">Gradazione % vol' + fl('gradazione') + '</span><input type="number" step="0.1" id="i-grad" value="' + (b.gradazione != null ? escHtml(b.gradazione) : '') + '"></label>' +
       '<label' + wc('annata_migliore') + '><span class="lbl">Finestra di bevuta · anni' + fl('annata_migliore') + '</span><input type="text" id="i-anmig" placeholder="es. 2028–2042" value="' + escHtml(b.annata_migliore) + '"></label>' +
       '<label' + wc('provenienza') + '><span class="lbl">Provenienza' + fl('provenienza') + '</span><input type="text" id="i-prv" placeholder="es. Bolgheri · Islay" value="' + escHtml(b.provenienza) + '"></label>' +
-      '<label class="full"' + wc('vitigni') + '><span class="lbl">Vitigni · separati da virgola' + fl('vitigni') + '</span><input type="text" id="i-vit" value="' + escHtml((b.vitigni || []).join(', ')) + '"></label>' +
+      '<label class="full' + (incerto(b, 'vitigni') ? ' warned' : '') + '"><span class="lbl">Vitigni · separati da virgola' + fl('vitigni') + '</span><input type="text" id="i-vit" value="' + escHtml((b.vitigni || []).join(', ')) + '"></label>' +
       '<label><span class="lbl">Prezzo pagato € · per bottiglia</span><input type="number" step="0.01" id="i-pacq" value="' + (b.prezzo_acquisto != null ? b.prezzo_acquisto : '') + '"></label>' +
       '<label><span class="lbl">Valore di mercato € · per bottiglia</span><input type="number" step="0.01" id="i-val" value="' + (b.valore_attuale != null ? b.valore_attuale : '') + '"></label>' +
       '<label><span class="lbl">Data quotazione</span><input type="date" id="i-vdata" value="' + escHtml(b.valore_data) + '"></label>' +
@@ -3932,13 +4148,14 @@
       '</div></details>' +
       (isNew || out || b.esempio ? '' : '<div class="full sp-scheda"><span class="lbl">Speakeasy · la bacheca del club</span>' + (annuncioDiBottiglia(b.id) ? '<p class="hint">Questa bottiglia è in bacheca' + (annuncioDiBottiglia(b.id).stato === 'in_trattativa' ? ', in trattativa' : '') + '. <button type="button" class="lnk" id="sp-in-bacheca">Gestiscila in Le mie proposte</button></p>' : '<p class="hint">Solo se vuoi: la bottiglia compare ai membri, in vendita a prezzo totale del lotto o in scambio. Il resto della cantina resta privato.</p><span><button type="button" class="btn sm" data-sp-pubblica="' + b.id + '">Metti in bacheca</button></span>') + '</div>') +
       (isNew ? '<label class="full"><span class="lbl">Foto · facoltativa</span><input type="file" accept="image/*" id="i-foto"><p class="hint">Se vuoi che la scheda si compili da sola, usa invece “Fotografa una bottiglia”.</p></label>' : '') +
+      (isNew || !(b.campi_incerti || []).length ? '' : bloccoVerifica(b)) +
       '</div></form></div>' +
       '<div class="shf">' +
       '<div class="grp">' + (isNew ? '' :
         (out ? '<button type="button" class="btn sm" id="a-back">Rimetti in cantina</button>'
              : '<button type="button" class="btn sm" id="a-bevuta">Bevuta</button><button type="button" class="btn sm" id="a-venduta">Venduta</button><button type="button" class="btn sm" id="a-regalata">Regalata</button>') +
         '<button type="button" class="btn sm dgr" id="a-del">Elimina</button>') + '</div>' +
-      '<div class="grp"><button type="button" class="btn gho" data-shutsheet>Annulla</button><button type="button" class="btn pri" id="a-save">Salva</button></div>' +
+      '<div class="grp"><button type="button" class="btn gho" data-shutsheet>Annulla</button><button type="button" class="btn pri" id="a-save"' + (!isNew && letturaInCorso(b) ? ' disabled' : '') + '>Salva</button></div>' +
       '</div></div></div>';
   }
 
@@ -3954,6 +4171,7 @@
       if (!confirm('Chiudere la sessione su questo dispositivo?')) return;
       CELL.esci();
     });
+    on('esci-profilo', 'click', function () { var e = document.getElementById('esci'); if (e) e.click(); });
     on('export', 'click', exportCSV);
     on('cataloga', 'click', catalogaCoda);
     on('shoot', 'click', function () { openShoot(); if (rapidoPreferito()) apriCamera('fronte'); });
@@ -4156,6 +4374,7 @@
     bindSpeakeasy(root, on);
     root.querySelectorAll('[data-lingua-switch]').forEach(function (e) { e.addEventListener('click', function () { try { localStorage.setItem('caveau.lingua', window.CAVEAU_LINGUA === 'en' ? 'it' : 'en'); } catch (x) {} location.reload(); }); });
     on('a-save', 'click', submit);
+    on('a-rileggi', 'click', function () { rileggiEtichetta(editingId); });
     on('bform', 'submit', function (e) { e.preventDefault(); submit(); });
     on('a-del', 'click', function () { del(editingId); });
     on('salva-riprova', 'click', riprovaSalvataggio);
@@ -4175,7 +4394,7 @@
     if (viewing) { ev.preventDefault(); viewing = null; render(); return; }   // la foto si chiude per prima
     if (editingId || shooting || bulk) { ev.preventDefault(); shut(); }
   }
-  function shut() { profiloOpen = false; spDopoProfilo = null; spForm = null; editingId = null; shooting = false; bulk = false; viewing = null; mappaOpen = false; mappaDraft = null; formPhotos = { fronte: '', retro: '' }; bulkPhotos = []; scatto = null; lotto = null; retroPer = null; render(); }
+  function shut() { demoApertoId = null; profiloOpen = false; spDopoProfilo = null; spForm = null; editingId = null; shooting = false; bulk = false; viewing = null; mappaOpen = false; mappaDraft = null; formPhotos = { fronte: '', retro: '' }; bulkPhotos = []; scatto = null; lotto = null; retroPer = null; render(); }
   function valOf(id) { var e = document.getElementById(id); return e ? e.value : ''; }
   function setVal(id, v) { var e = document.getElementById(id); if (e) e.value = v; }
   function live(id, setter) {
@@ -4215,8 +4434,23 @@
       club: g('i-club') || 'privata'
     };
   }
+  /* Applica allo stato i campi del modulo di una scheda esistente: usata da «Salva» e dal salvataggio che precede una rilettura. */
+  function aggiornaScheda(ns, id, data, conf) {
+    var i = ns.bottles.findIndex(function (x) { return x.id === id; }); if (i < 0) return;
+    var p = ns.bottles[i], era = p.stato === 'da_analizzare', prima = JSON.parse(JSON.stringify(p));
+    Object.assign(p, data);
+    /* Un campo esce da «da verificare» solo se chi salva lo ha cambiato o lo ha spuntato come controllato:
+       salvare un altro campo non certifica un nome o un dato non verificato. */
+    p.campi_incerti = (p.campi_incerti || []).filter(function (c) {
+      if (conf[c]) return false;
+      var dopo = c === 'posizione' ? [data.zona, data.scaffale, data.ripiano] : data[c];
+      var avanti = c === 'posizione' ? [prima.zona, prima.scaffale, prima.ripiano] : prima[c];
+      return !cambiato(avanti, dopo);
+    });
+    if (era && data.nome) { p.stato = 'catalogata'; p.note_analisi = 'Scheda compilata a mano.'; }
+  }
   function submit() {
-    var isNew = editingId === 'new', data = raccogli();
+    var isNew = editingId === 'new', data = raccogli(), conf = confermati();
     if (isNew && !data.nome) { toast('Serve almeno il nome'); return; }
     var fi = document.getElementById('i-foto');
     var file = fi && fi.files && fi.files[0];
@@ -4231,16 +4465,7 @@
         }, true).then(function (ok) { if (ok) toast('Bottiglia aggiunta'); });
       } else {
         var id = editingId;
-        commit(function (ns) {
-          var i = ns.bottles.findIndex(function (x) { return x.id === id; }); if (i < 0) return;
-          var p = ns.bottles[i], era = p.stato === 'da_analizzare';
-          Object.assign(p, data);
-          p.campi_incerti = (p.campi_incerti || []).filter(function (c) {
-            var v = c === 'posizione' ? (data.zona || data.scaffale) : data[c];
-            return !(Array.isArray(v) ? v.length : v);
-          });
-          if (era && data.nome) { p.stato = 'catalogata'; p.note_analisi = 'Scheda compilata a mano.'; }
-        }, true).then(function (ok) { if (ok) toast('Scheda aggiornata'); });
+        commit(function (ns) { aggiornaScheda(ns, id, data, conf); }, true).then(function (ok) { if (ok) toast('Scheda aggiornata'); });
       }
     };
     if (file) toDataUrl(file, THUMB_MAX_DIM, THUMB_QUALITA).then(done).catch(function () { done(''); });
@@ -4423,7 +4648,7 @@
   window.CAVEAU = {
     avvia: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); ensureStyle(); render(); },
     ricarica: function (stato, profilo) { if (profilo) PROFILO = profilo; idrata(stato); render(); },
-    versione: '20.0'
+    versione: '21.0'
   };
 
 })();

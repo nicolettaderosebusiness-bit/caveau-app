@@ -152,7 +152,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.4"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=20.4"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.0"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.0"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -220,6 +220,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   "Il link non è più valido: chiedine un altro.": "The link is no longer valid: request another one.",
   "L’archivio non risponde. Riprova fra poco.": "The archive is not responding. Try again shortly.",
   "Caveau si è aggiornato. Ricarica quando vuoi: le modifiche non salvate restano in questa pagina finché non la ricarichi.": "Caveau has been updated. Reload whenever you like: unsaved changes stay on this page until you reload it.",
+  "Attendi il salvataggio…": "Waiting for the save to finish…",
   "Ricarica": "Reload",
   "Chiudi": "Close"
 };
@@ -316,13 +317,14 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   fI.addEventListener('submit', function (e) {
     e.preventDefault();
     var nome = document.getElementById('p-nome').value.trim(), email = document.getElementById('p-email').value.trim(), pw = document.getElementById('p-pw').value;
+    var nota = document.getElementById('p-nota').value.trim(), garante = document.getElementById('p-garante').value.trim(), citta = document.getElementById('p-citta').value.trim();
+    /* tutti i controlli PRIMA di spegnere il pulsante: così ogni errore lascia il modulo riutilizzabile (difetto del 3 novembre: presentatore mancante → pulsante spento per sempre) */
     if (!email || email.indexOf('@') < 1) { dillo('Serve un indirizzo email valido.', 'ko'); return; }
     if (pw.length < 10) { dillo('La password deve avere almeno dieci caratteri.', 'ko'); return; }
+    if (garante.length < 3) { dillo('Serve il nome del socio che ti presenta.', 'ko'); return; }
     if (!document.getElementById('p-priv').checked) { dillo('Per iscriverti devi accettare l’informativa.', 'ko'); return; }
     var b = document.getElementById('p-vai'); b.disabled = true; dillo('Invio la richiesta…', 'ok');
-    var nota = document.getElementById('p-nota').value.trim(), garante = document.getElementById('p-garante').value.trim(), citta = document.getElementById('p-citta').value.trim();
-    if (garante.length < 3) { dillo('Serve il nome del socio che ti presenta.', 'ko'); return; }
-    CELL.iscriviti(nome, email, pw, nota, garante, citta).then(function (r) {
+    Promise.resolve().then(function () { return CELL.iscriviti(nome, email, pw, nota, garante, citta); }).then(function (r) {
       b.disabled = false;
       if (r && r.conferma) { scheda('entra'); dillo('Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.', 'ok'); return; }
       setTimeout(dentro, 0);
@@ -355,7 +357,11 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
       var d = document.createElement('div'); d.id = 'agg'; d.setAttribute('role', 'status');
       d.innerHTML = '<span>' + tr('Caveau si è aggiornato. Ricarica quando vuoi: le modifiche non salvate restano in questa pagina finché non la ricarichi.') + '</span><button type="button" id="agg-ok">' + tr('Ricarica') + '</button><button type="button" id="agg-no" aria-label="' + tr('Chiudi') + '">✕</button>';
       document.body.appendChild(d);
-      document.getElementById('agg-ok').addEventListener('click', function () { location.reload(); });
+      document.getElementById('agg-ok').addEventListener('click', function () {
+        /* mai ricaricare mentre un salvataggio è in corso: si aspetta che finisca, poi si ricarica */
+        var b = this; function prova() { var occupato = !!(window.CAVEAU_RAPIDO && CAVEAU_RAPIDO.salvataggioInCorso && CAVEAU_RAPIDO.salvataggioInCorso()); if (occupato) { b.disabled = true; b.textContent = tr('Attendi il salvataggio…'); setTimeout(prova, 1500); return; } location.reload(); }
+        prova();
+      });
       document.getElementById('agg-no').addEventListener('click', function () { d.remove(); });
     });
   }
