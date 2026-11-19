@@ -1784,7 +1784,7 @@
     return ((SP.proposte && SP.proposte.inviate) || []).filter(function (i) { return i.annuncio_id === annuncioId && ['inviato', 'controproposto', 'in_attesa', 'da_riconfermare', 'accettato'].indexOf(i.stato) >= 0; })[0] || null;
   }
   function richiedeProfilo(fn) {
-    if (PROFILO.completo) { fn(); return; }
+    if (PROFILO.completo && String(PROFILO.citta || "").trim() && PROFILO.citta_visibile) { fn(); return; }
     spDopoProfilo = fn; profiloOpen = true; render();
   }
   function spBanner() {
@@ -2028,14 +2028,14 @@
   function profiloSheet() {
     var p = PROFILO;
     return '<div class="ov" data-ov><div class="sheet">' +
-      head('Il mio profilo', spDopoProfilo ? 'Prima di pubblicare o proporre servono nome, Paese e lingua: è così che gli altri membri sanno con chi parlano.' : 'Quello che gli altri membri vedono di te. Niente numeri, niente classifiche.') +
+      head('Il mio profilo', spDopoProfilo ? 'Prima di pubblicare o proporre servono nome, città, Paese e lingua: è così che gli altri membri sanno con chi parlano.' : 'Quello che gli altri membri vedono di te. Niente numeri, niente classifiche.') +
       '<div class="shb"><div class="posgrid">' +
       '<label><span class="lbl">Nome e cognome</span><input type="text" id="pf-nome" value="' + escHtml(p.nome || '') + '" maxlength="80"></label>' +
       '<label><span class="lbl">Paese</span><input type="text" id="pf-paese" list="pf-paesi" value="' + escHtml(p.paese || '') + '" maxlength="60"><datalist id="pf-paesi">' + SP_PAESI.map(function (x) { return '<option value="' + x + '">'; }).join('') + '</datalist></label>' +
-      '<label><span class="lbl">Città · facoltativa</span><input type="text" id="pf-citta" value="' + escHtml(p.citta || '') + '" maxlength="60"></label>' +
+      '<label><span class="lbl">Città</span><input type="text" id="pf-citta" required value="' + escHtml(p.citta || '') + '" maxlength="60"></label>' +
       '<label><span class="lbl">Lingua</span><select id="pf-lingua"><option value="it"' + (p.lingua !== 'en' ? ' selected' : '') + '>Italiano</option><option value="en"' + (p.lingua === 'en' ? ' selected' : '') + '>English</option></select></label>' +
       '</div>' +
-      '<label class="chk" style="margin-top:10px"><input type="checkbox" id="pf-citta-vis"' + (p.citta_visibile ? ' checked' : '') + '> Mostra la città agli altri membri (altrimenti vedono solo il Paese)</label>' +
+      '<p class="hint">La città fa parte del tuo profilo nel club. Salvando, la rendi visibile agli altri soci. L’indirizzo e la posizione delle bottiglie restano privati.</p>' +
       '<label style="display:block;margin-top:12px"><span class="lbl">Interessi · separati da virgola</span><input type="text" id="pf-interessi" value="' + escHtml((p.interessi || []).join(', ')) + '" placeholder="es. Barolo, whisky torbato, Champagne"></label>' +
       '<label style="display:block;margin-top:12px"><span class="lbl">Due righe su di te · facoltative</span><textarea id="pf-desc" rows="2" maxlength="280">' + escHtml(p.descrizione || '') + '</textarea></label>' +
       '<p class="hint">Nel profilo compaiono solo queste righe e le bottiglie che hai in bacheca. La tua cantina, i valori e i tuoi recapiti restano privati.</p>' + pilotHtml() + '</div>' +
@@ -2046,9 +2046,10 @@
     var nome = g('pf-nome'), paese = g('pf-paese'), lingua = g('pf-lingua') || 'it';
     if (!nome) { toast('Serve il nome'); return; }
     if (!paese) { toast('Serve il Paese'); return; }
+    if (!g('pf-citta')) { toast('Indica la città'); return; }
     var interessi = g('pf-interessi').split(',').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, 12);
     var btn = document.getElementById('pf-salva'); if (btn) btn.disabled = true;
-    var vis = !!((document.getElementById('pf-citta-vis') || {}).checked);
+    var vis = true; // Shared with members only after the explicit profile save.
     CELL.salvaProfilo({ nome: nome, paese: paese, citta: g('pf-citta'), citta_visibile: vis, lingua: lingua, interessi: interessi, descrizione: g('pf-desc') }).then(function (p) {
       p = p || {};
       PROFILO.nome = p.nome || nome; PROFILO.paese = p.paese || paese; PROFILO.citta = p.citta || ''; PROFILO.citta_visibile = !!p.citta_visibile; PROFILO.lingua = p.lingua || lingua; PROFILO.interessi = p.interessi || interessi; PROFILO.descrizione = p.descrizione || ''; PROFILO.completo = !!p.completo;
