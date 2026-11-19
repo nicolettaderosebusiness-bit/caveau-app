@@ -758,7 +758,16 @@
   /* ------------------------- lancio gratuito 21.0: esempi, periodo gratuito, pilot (nessuna chiamata a funzioni edge nuove) ------------------------- */
   function esempiRimuovi(ids) { return rpc('esempi_rimuovi', { p_ids: ids }); }
   function miaAdesione() { return rpc('mia_adesione'); }
-  var SPIEGA_PILOT = {"pilot_pieno": "Pilot places are full: there are four in all.", "pilot_gia_concesso": "Pilot already granted to this person.", "non_approvato": "The account is not approved yet.", "profilo_non_trovato": "No account with this email.", "solo_desk": "Only the Desk can grant the pilot."};
+  /* 21.3 · percorso di adesione: solo Desk, assegnazione immutabile, riferimento obbligatorio; il server decide limiti e conflitti */
+  var SPIEGA_PERCORSO = {"percorso_pieno": "No places left on this path: the limit is set by the server.", "percorso_in_conflitto": "This account already has a different path: no change from the Desk.", "percorso_non_valido": "Invalid path.", "riferimento_obbligatorio": "The reference to the decision is required (at least three characters).", "non_approvato": "The account is not approved yet.", "account_desk": "A Desk account does not receive a path.", "profilo_non_trovato": "No account with this email.", "solo_desk": "Only the Desk can assign a path.", "percorso_immutabile": "The path cannot be modified."};
+  function percorsoAssegna(email, percorso, riferimento) {
+    return rpc('percorso_assegna', { p_email: email, p_percorso: percorso, p_riferimento: riferimento }).catch(function (e) {
+      var m = String((e && e.message) || (e && e.grezzo && e.grezzo.message) || '');
+      var k = Object.keys(SPIEGA_PERCORSO).filter(function (x) { return m.indexOf(x) >= 0; })[0];
+      throw k ? new Error(SPIEGA_PERCORSO[k]) : e;
+    });
+  }
+  var SPIEGA_PILOT = {"percorso_nucleo": "The pilot cannot be granted to a Founding Circle member.", "pilot_pieno": "Pilot places are full: there are four in all.", "pilot_gia_concesso": "Pilot already granted to this person.", "non_approvato": "The account is not approved yet.", "profilo_non_trovato": "No account with this email.", "solo_desk": "Only the Desk can grant the pilot."};
   function pilotConcedi(email) {
     return rpc('pilot_concedi', { p_email: email }).catch(function (e) {
       var m = String((e && e.message) || (e && e.grezzo && e.grezzo.message) || '');
@@ -794,7 +803,7 @@
     spInteressa: spInteressa, spControproponi: spControproponi, spAccetta: spAccetta, spRiconferma: spRiconferma, spChiudiInteresse: spChiudiInteresse,
     spContatti: spContatti, spEsito: spEsito, spUscita: spUscita, spSegnala: spSegnala, spFotoCarica: spFotoCarica, spFotoUrl: spFotoUrl,
     deskSpConfigura: deskSpConfigura, deskSegnalazioneChiudi: deskSegnalazioneChiudi, deskFondatore: deskFondatore,
-    esempiRimuovi: esempiRimuovi, miaAdesione: miaAdesione, pilotConcedi: pilotConcedi,
+    esempiRimuovi: esempiRimuovi, miaAdesione: miaAdesione, pilotConcedi: pilotConcedi, percorsoAssegna: percorsoAssegna,
     utente: function () { return utente; },
     cantina: function () { return cantina; }
   };

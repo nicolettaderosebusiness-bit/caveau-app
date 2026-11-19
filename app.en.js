@@ -1074,7 +1074,9 @@
 '.demo-in{padding:0 18px 16px}.demo-badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bronzo2);border:1px solid var(--bronzo-s);border-radius:999px;padding:3px 8px;background:rgba(170,130,91,.10);white-space:nowrap}',
 '.demo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px}.demo-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;border:1px solid var(--ed);border-radius:12px;background:var(--pan2);padding:12px 14px;min-height:44px;color:var(--t1);font:inherit;cursor:pointer}.demo-card:hover{border-color:var(--ed2)}.demo-card:focus-visible{outline:2px solid var(--acc);outline-offset:2px}',
 '.demo-nome{font-weight:600;font-size:15px;line-height:1.25;overflow-wrap:anywhere}.demo-sub{color:var(--t2);font-size:12.5px;overflow-wrap:anywhere}.demo-meta{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.04em}.demo-az{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.demo-az .btn{min-height:44px}',
-'.ades{border:1px solid var(--ed);border-radius:12px;background:var(--sunk);padding:14px 16px;margin-top:16px}.ades p{margin:8px 0 0;font-size:14px;line-height:1.5}.ades .hint{margin-top:10px}',
+'.ades{border:1px solid var(--ed);border-radius:12px;background:var(--sunk);padding:14px 16px;margin-top:16px}.ades p{margin:8px 0 0;font-size:14px;line-height:1.5}.ades .hint{margin-top:10px}.ades + .ades{margin-top:10px}.dk-per{font-size:10.5px;color:var(--acc);letter-spacing:.04em}.dk-ro{font-family:var(--mono);font-size:13px;color:var(--t2);white-space:nowrap}.dk-bloccato .btn[disabled]{opacity:.55;cursor:not-allowed}',
+/* 21.3 · testo ingrandito sul telefono (≤640px): input del foglio entro il contenitore; interruttori del Desk a capo; campo numerico 16px (il selettore batte input[type=number]); parole lunghe nei segmenti Speakeasy spezzabili (al 200% «proposte»/«Distillati» allargavano il documento già in 21.2) */
+'@media (max-width:640px){.sheet input,.sheet select,.sheet textarea{max-width:100%;min-width:0;box-sizing:border-box}.posgrid{grid-template-columns:minmax(0,1fr)}.dk-grid{grid-template-columns:minmax(0,1fr)}.dk-sw{flex-wrap:wrap}.dk-sw .btn{max-width:100%;white-space:normal;line-height:1.2}html input.dk-num{font-size:16px}.sp-tabs button,.sp-filtri .seg button{overflow-wrap:anywhere}}',
 '.demo-card,.demo-sez>summary{min-width:0;overflow-wrap:anywhere}',
 '@media (max-width:640px){.demo-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,140px),1fr))}.demo-badge{white-space:normal;line-height:1.3}.ft{flex-wrap:wrap}.ft .dl{white-space:normal}.tools #bulkbtn{min-width:0;white-space:normal;line-height:1.2}.crow{min-width:0}.ctip{white-space:normal;max-width:calc(100% - 96px);line-height:1.3}.fab{max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.demo-az .btn,.tools .btn.wide,.empty .btn{min-width:0;max-width:100%;white-space:normal;line-height:1.2;text-align:center}.sg{white-space:normal;max-width:100%}}',
 '@media (max-width:400px){.demo-grid{grid-template-columns:1fr}}',
@@ -2007,7 +2009,10 @@
   /* ======================= periodo gratuito (lancio gratuito 21.0) =======================
      Solo informazione: lo stato viene dalla RPC mia_adesione (pilot concesso dal Desk). Nessun pagamento, nessun pulsante.
      Se la RPC manca, fallisce o non trova un pilot, il pannello non compare e il socio non vede alcun errore. */
-  var T_GRATUITO = {"pg_titolo": "Complimentary period", "pg_in_corso": "Your complimentary period lasts until %s (%s days). No payment is required now.", "pg_prorogato": "The complimentary period of your invitation is extended: no payment is required and your cellar stays open.", "pg_nota": "When the annual membership becomes available we will tell you at least seven days in advance. No charge without your explicit sign-up."};
+  var T_GRATUITO = {"pg_titolo": "Complimentary period", "pg_in_corso": "Your complimentary period lasts until %s (%s days). No payment is required now.", "pg_prorogato": "The complimentary period of your invitation is extended: no payment is required and your cellar stays open.", "pg_nota": "No payment is active. Any future terms will be communicated to you personally, beforehand.", "pg_prec_titolo": "Earlier complimentary period", "pg_prec": "The complimentary period granted earlier (until %s) is not the end of your membership: the Founding Circle’s complimentary membership prevails, with no expiry."};
+  var T_ADESIONE = {"nf_titolo": "Your membership · Founding Circle", "nf_testo": "Your ordinary membership is complimentary for as long as Caveau operates. No card or paid renewal is required.", "nf_nota": "The recognition is personal and non-transferable. Experiences, purchases and separate services remain excluded.", "pc_titolo": "Your membership · Charter Members", "pc_testo": "You are eligible for half-price membership for your first two years. The amounts and start date will be confirmed before you join.", "pc_nota": "No payments are active. The two years will start only from the paid membership you accept.", "or_titolo": "Your membership", "or_testo": "Access approved by the Desk. Membership terms will be confirmed before any payment.", "nd_titolo": "Your membership", "nd_testo": "Membership terms to be defined with the Desk. No payment is active."};
+  var ETIC_PERCORSO = {"nucleo_fondatore": "Founding Circle", "primo_circolo": "Charter Members", "ordinario": "Ordinary"};
+  var T_DESK_PERCORSO = {"rif": "Assign “%s” to %s.\nPaste the reference to Nicoletta’s decision (document and date). Without a reference the assignment is refused.", "rif_corto": "A reference of at least three characters is needed: nothing assigned.", "conferma": "Confirm “%s” for %s? The assignment is final: it cannot be changed or revoked from the Desk. No email is sent.", "fatto": "Path assigned: %s", "gia": "Path already assigned earlier: nothing changed.", "non_riuscito": "Failed"};
   var PILOT = null, pilotCarico = false;
   function caricaPilot() {
     if (!window.CELL || !CELL.miaAdesione || pilotCarico) return;
@@ -2016,13 +2021,30 @@
       .catch(function () { PILOT = {}; pilotCarico = false; aggiornaPilot(); });
   }
   function aggiornaPilot() { var e = document.getElementById('pilot-info'); if (!e) return; var n = document.createElement('div'); n.innerHTML = pilotHtml(); e.replaceWith(n.firstChild); }
+  /* 21.3 · «La tua adesione»: il percorso (Nucleo fondatore, Primo Circolo, ordinario) viene dal server (mia_adesione.percorso) e non è
+     mai scelto dal client. RPC 21.3 riconosciuta dalla PRESENZA della chiave «percorso»: se è presente ma nulla → «condizioni da definire
+     con il Desk»; se la chiave manca (migrazione non applicata) → compatibilità 21.2: solo l'eventuale pilot già concesso. Per il Nucleo un
+     pilot storico resta visibile come «periodo precedente», senza conto alla rovescia: prevale la gratuità. Nessuna decorrenza per il
+     Primo Circolo finché beneficio_decorrenza è null. */
   function pilotHtml() {
-    var a = PILOT, t = T_GRATUITO;
+    var a = PILOT, t = T_GRATUITO, t2 = T_ADESIONE;
     if (!a) { if (!pilotCarico) setTimeout(caricaPilot, 0); return '<div id="pilot-info" hidden></div>'; }
-    if (!a.pilot_fine) return '<div id="pilot-info" hidden></div>';
-    var fine = fmtD(String(a.proroga_fino_a || a.pilot_fine).slice(0, 10)), g = a.pilot_giorni_rimanenti;
-    var testo = (g == null || Number(g) > 0) ? t.pg_in_corso.replace('%s', fine).replace('%s', g == null ? '—' : String(g)) : t.pg_prorogato.replace('%s', fine);
-    return '<div class="ades" id="pilot-info"><span class="lbl">' + t.pg_titolo + '</span><p>' + testo + '</p><p class="hint">' + t.pg_nota + '</p></div>';
+    var h = '', nuova = Object.prototype.hasOwnProperty.call(a, 'percorso'), per = nuova ? a.percorso : null;
+    function box(k, titolo, testo, nota) { return '<div class="ades" data-percorso="' + k + '"><span class="lbl">' + titolo + '</span><p>' + testo + '</p>' + (nota ? '<p class="hint">' + nota + '</p>' : '') + '</div>'; }
+    if (per === 'nucleo_fondatore') h += box('nucleo_fondatore', t2.nf_titolo, t2.nf_testo, t2.nf_nota);
+    else if (per === 'primo_circolo') h += box('primo_circolo', t2.pc_titolo, t2.pc_testo, t2.pc_nota);
+    else if (per === 'ordinario') h += box('ordinario', t2.or_titolo, t2.or_testo, '');
+    else if (nuova) h += box('da_definire', t2.nd_titolo, t2.nd_testo, '');
+    if (a.pilot_fine) {
+      var fine = fmtD(String(a.proroga_fino_a || a.pilot_fine).slice(0, 10)), g = a.pilot_giorni_rimanenti;
+      if (per === 'nucleo_fondatore') h += box('pilot-precedente', t.pg_prec_titolo, t.pg_prec.replace('%s', fine), '');
+      else {
+        var testo = (g == null || Number(g) > 0) ? t.pg_in_corso.replace('%s', fine).replace('%s', g == null ? '—' : String(g)) : t.pg_prorogato.replace('%s', fine);
+        h += box('pilot', t.pg_titolo, testo, t.pg_nota);
+      }
+    }
+    if (!h) return '<div id="pilot-info" hidden></div>';
+    return '<div id="pilot-info">' + h + '</div>';
   }
   /* ---------------------------------------------------- il mio profilo */
   function profiloSheet() {
@@ -2267,20 +2289,23 @@
     }
     var attesa = (DESK.persone || []).filter(function (p) { return p.stato_account === 'in_attesa'; });
     var altre = (DESK.persone || []).filter(function (p) { return p.stato_account !== 'in_attesa'; });
+    /* 21.3 · i pulsanti non mostrano conteggi: il limite (4/20, consumo storico) lo decide solo il server, che risponde «percorso_pieno» */
+    function pulsantiPercorso(email) {
+      return ['nucleo_fondatore', 'primo_circolo', 'ordinario'].map(function (k) { return '<button type="button" class="btn sm" data-desk-act="percorso:' + k + '" data-email="' + escHtml(email) + '">' + ETIC_PERCORSO[k] + '</button>'; }).join('');
+    }
     function riga(p) {
       var ad = (DESK.adesioniPer || {})[p.id];
       var stato = { approvato: 'approvato', rifiutato: 'rifiutato', sospeso: 'sospeso', in_attesa: 'pending' }[p.stato_account] || p.stato_account;
       return '<tr><td><span class="tnm">' + escHtml(p.nome || '—') + '</span><br><span class="mono" style="font-family:var(--mono);font-size:10.5px;color:var(--t3)">' + escHtml(p.email) + (p.ruolo === 'desk' ? ' · desk' : '') + '</span></td>' +
-        '<td>' + stato + '</td><td>' + (p.fondatore ? '<b>Fondatore</b>' : 'Member') + (p.presentato_da ? '<br><span style="font-size:10.5px;color:var(--t3)">introduced by ' + escHtml(p.presentato_da) + '</span>' : '') + (p.paese || p.citta ? '<br><span style="font-size:10.5px;color:var(--t3)">' + escHtml([p.paese, p.citta].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
+        '<td>' + stato + '</td><td>' + (p.fondatore ? '<b>Fondatore</b>' : 'Member') + (ad && ad.percorso ? '<br><span class="dk-per">' + escHtml(ETIC_PERCORSO[ad.percorso] || ad.percorso) + '</span>' : '') + (p.presentato_da ? '<br><span style="font-size:10.5px;color:var(--t3)">introduced by ' + escHtml(p.presentato_da) + '</span>' : '') + (p.paese || p.citta ? '<br><span style="font-size:10.5px;color:var(--t3)">' + escHtml([p.paese, p.citta].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
         '<td>' + (p.pagato_fino_a ? fmtD(p.pagato_fino_a) : '—') + (ad && ad.pilot_fine ? '<br><span style="font-size:10.5px;color:var(--t3)">' + escHtml(({"pilot": "pilot", "nessuna": ""})[ad.stato] || ad.stato || '') + ' · ' + "pilot until %s".replace('%s', fmtD(String(ad.proroga_fino_a || ad.pilot_fine).slice(0, 10))) + (String(ad.proroga_fino_a || ad.pilot_fine).slice(0, 10) < new Date().toISOString().slice(0, 10) ? ' · ' + "extended" : '') + '</span>' : '') + '</td><td>' + fmtDT(p.ultimo_accesso) + '<br><span style="font-size:10.5px;color:var(--t3)">' + (p.accessi || 0) + ' logins</span></td>' +
         '<td>' + escHtml(p.nota_desk || '') + '</td>' +
         '<td class="dk-az">' +
         (p.stato_account !== 'approvato' ? '<button type="button" class="btn sm pri" data-desk-act="approva" data-email="' + escHtml(p.email) + '">Approva</button>' : '') +
         (p.stato_account === 'in_attesa' ? '<button type="button" class="btn sm" data-desk-act="rifiuta" data-email="' + escHtml(p.email) + '">Rifiuta</button>' : '') +
         (p.stato_account === 'approvato' && p.ruolo !== 'desk' ? '<button type="button" class="btn sm" data-desk-act="sospendi" data-email="' + escHtml(p.email) + '">Sospendi</button>' : '') +
-        (p.stato_account === 'approvato' ? (p.fondatore ? '<button type="button" class="btn sm" data-desk-act="nofondatore" data-email="' + escHtml(p.email) + '">Remove founder</button>' : '<button type="button" class="btn sm" data-desk-act="fondatore" data-email="' + escHtml(p.email) + '">Fondatore</button>') : '') +
-        '<button type="button" class="btn sm" data-desk-act="pagato" data-email="' + escHtml(p.email) + '">Paid · +12 months</button>' +
-        (p.stato_account === 'approvato' && p.ruolo !== 'desk' && !(ad && ad.pilot_inizio) ? '<button type="button" class="btn sm" data-desk-act="pilot" data-email="' + escHtml(p.email) + '">Pilot · 3 months free</button>' : '') +
+        (p.stato_account === 'approvato' && p.ruolo !== 'desk' && !(ad && ad.pilot_inizio) && !(ad && ad.percorso === 'nucleo_fondatore') ? '<button type="button" class="btn sm" data-desk-act="pilot" data-email="' + escHtml(p.email) + '">Pilot · 3 months free</button>' : '') +
+        (p.stato_account === 'approvato' && p.ruolo !== 'desk' && !(ad && ad.percorso) ? pulsantiPercorso(p.email) : '') +
         '</td></tr>';
     }
     var testaTab = '<thead><tr><th>Person</th><th>Account</th><th>Member</th><th>Paid until</th><th>Last access</th><th>Note</th><th>Actions</th></tr></thead>';
@@ -2301,12 +2326,12 @@
       '<section class="blk"><header class="blkh"><h3>Launch switches</h3><p>Change them here, without touching the code.</p></header><div class="dk-grid">' +
         sw('approvazione_richiesta', 'Account approval', 'Every new account waits until you approve it.') +
         sw('avvisa_accessi', 'Notice on every sign-in', 'A notice every time someone comes in.') +
-        sw('pagamento_richiesto', 'Paid basic plan', 'When active, only those with "Paid until" in the future may enter.') +
+        '<div class="dk-sw dk-bloccato"><div><b>Paid basic plan</b><small>Cannot be activated in this release: the Founding Circle exemption and the blocks for suspended accounts must be tested first. Current state: ' + (cfg.pagamento_richiesto === 'si' ? 'active' : 'off') + '.</small></div><button type="button" class="btn sm" disabled aria-disabled="true" data-cfg-bloccato="pagamento_richiesto">' + (cfg.pagamento_richiesto === 'si' ? 'Active' : 'Off') + '</button></div>' +
         '<div class="dk-sw"><div><b>Speakeasy</b><small>Open: everything. Paused: no new listings or proposals; contact details already shared and reports remain. Closed: the section disappears, My proposals remains.</small></div><button type="button" class="btn sm' + ((cfg.speakeasy_stato || 'aperto') === 'aperto' ? ' pri' : '') + '" data-sp-cfg="speakeasy_stato" data-val="' + ({ aperto: 'sospeso', sospeso: 'chiuso', chiuso: 'aperto' }[cfg.speakeasy_stato || 'aperto']) + '">' + ({ aperto: 'Open', sospeso: 'Paused', chiuso: 'Closed' }[cfg.speakeasy_stato || 'aperto']) + '</button></div>' +
         '<div class="dk-sw"><div><b>Speakeasy · retention (days)</b><small>How many days after a negotiation closes photos and contact details are deleted. Empty: no automatic deletion. To be decided before opening to members.</small></div><input type="number" min="1" step="1" class="dk-num" data-sp-cfg-num="speakeasy_ritenzione_giorni" value="' + escHtml(cfg.speakeasy_ritenzione_giorni || '') + '" placeholder="—"></div>' +
         '<div class="dk-sw"><div><b>Sign-ups</b><small>On a member’s introduction (the club), open to all, or only to the addresses on the invitation list.</small></div><button type="button" class="btn sm' + (cfg.registrazione === 'presentazione' ? ' pri' : '') + '" data-cfg="registrazione" data-val="' + ({ presentazione: 'aperta', aperta: 'invito', invito: 'presentazione' }[cfg.registrazione] || 'presentazione') + '">' + ({ presentazione: 'By introduction', aperta: 'Open', invito: 'Invitation only' }[cfg.registrazione] || 'Open') + '</button></div>' +
-        '<div class="dk-sw"><div><b>Basic plan fee · € a year</b><small>To be decided. Shown on the entrance page when payment is active.</small></div><input type="number" min="0" step="10" class="dk-num" data-cfg-num="quota_private" value="' + escHtml(cfg.quota_private || '0') + '"></div>' +
-        '<div class="dk-sw"><div><b>Speakeasy fee · € a year</b><small>Shown at the Speakeasy door.</small></div><input type="number" min="0" step="10" class="dk-num" data-cfg-num="quota_club" value="' + escHtml(cfg.quota_club || '900') + '"></div>' +
+        '<div class="dk-sw"><div><b>Basic plan fee</b><small>Historical value, not in force: not a price list and not shown to members. Not editable in this release.</small></div><span class="dk-ro">' + (cfg.quota_private ? escHtml(cfg.quota_private) + ' €' : '—') + '</span></div>' +
+        '<div class="dk-sw"><div><b>Speakeasy fee</b><small>Historical value, not in force: not shown to members. Not editable in this release.</small></div><span class="dk-ro">' + (cfg.quota_club ? escHtml(cfg.quota_club) + ' €' : '—') + '</span></div>' +
       '</div></section>' +
       '<section class="blk"><header class="blkh"><h3>Latest sign-ins</h3></header><div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>Device</th></tr></thead><tbody>' + (acc || '<tr><td colspan="3">No sign-ins.</td></tr>') + '</tbody></table></div></section>' +
       '<section class="blk"><header class="blkh"><h3>Notices</h3><p>Everything the Desk would have received by email.</p></header><div class="tw"><table><thead><tr><th>When</th><th>Type</th><th>Text</th><th>Email</th></tr></thead><tbody>' + (nots || '<tr><td colspan="4">No notices.</td></tr>') + '</tbody></table></div></section>' +
@@ -2314,6 +2339,17 @@
       '</div>';
   }
   function deskAzione(az, email) {
+    if (az.indexOf('percorso:') === 0) {
+      var per = az.slice(9), etP = ETIC_PERCORSO[per] || per, tp = T_DESK_PERCORSO;
+      var rif = prompt(tp.rif.replace('%s', etP).replace('%s', email));
+      if (rif == null) { DESK = null; render(); return; }
+      rif = String(rif).trim();
+      if (rif.length < 3) { toast(tp.rif_corto); DESK = null; render(); return; }
+      if (!confirm(tp.conferma.replace('%s', etP).replace('%s', email))) { DESK = null; render(); return; }
+      CELL.percorsoAssegna(email, per, rif).then(function (r) { toast(r && r.gia_assegnato ? tp.gia : tp.fatto.replace('%s', etP)); DESK = null; render(); })
+        .catch(function (e) { toast((e && e.message) || tp.non_riuscito); DESK = null; render(); });
+      return;
+    }
     if (az === 'pilot') {
       if (!confirm("Grant the three-month free pilot to %s? There are four places in all and this cannot be undone from here.".replace('%s', email))) return;
       CELL.pilotConcedi(email).then(function (r) { toast("Pilot granted until %s".replace('%s', fmtD(String((r && r.pilot_fine) || '').slice(0, 10)))); DESK = null; render(); }).catch(function (e) { toast((e && e.message) || 'Non riuscito'); });
@@ -2326,7 +2362,7 @@
       }).catch(function (e) { toast((e && e.message) || 'Failed'); });
       return;
     }
-    var p = { approva: { stato: 'approvato' }, rifiuta: { stato: 'rifiutato' }, sospendi: { stato: 'sospeso' }, club: { piano: 'club' }, private: { piano: 'private' }, pagato: { pagato: true } }[az];
+    var p = { approva: { stato: 'approvato' }, rifiuta: { stato: 'rifiutato' }, sospendi: { stato: 'sospeso' }, club: { piano: 'club' }, private: { piano: 'private' } }[az];
     if (!p) return;
     CELL.deskAccount(email, p).then(function () {
       var avv = az === 'approva' ? 'approvato' : az === 'rifiuta' ? 'rifiutato' : az === 'club' ? 'club' : null;
