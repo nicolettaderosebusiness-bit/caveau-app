@@ -90,6 +90,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 #porta input::placeholder{color:#BBAE9D;opacity:1}
 #porta a{color:#DDB784;text-underline-offset:3px}
 #porta button:focus-visible,#porta a:focus-visible,#porta input:focus-visible{outline:2px solid #DDB784;outline-offset:3px}
+@media (max-width:820px),(pointer:coarse){html body input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),html body select,html body textarea{font-size:16px!important}}
 </style>
 </head>
 <body>
@@ -159,7 +160,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.4"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.4"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.5"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.5"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
