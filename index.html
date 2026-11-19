@@ -63,7 +63,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
     border-radius:999px;padding:12px 18px;font-weight:600;font-size:14.5px;transition:opacity .15s}
   .vai:hover{background:var(--acc2);border-color:var(--acc2)}
   .vai:disabled{opacity:.45;cursor:default}
-  .lnk{display:block;margin:14px auto 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--t3);text-decoration:underline;text-underline-offset:3px}
+  .lnk{display:block;margin:14px auto 0;font-family:var(--sans);font-size:13px;letter-spacing:normal;color:var(--t2);text-decoration:underline;text-underline-offset:3px}
   .lnk:hover{color:var(--t1)}
   .nota{margin:16px 2px 0;font-size:12.5px;line-height:1.6;color:var(--t3)}
   #agg{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:400;max-width:min(560px,92vw);display:flex;gap:10px;align-items:center;background:#F1EBE0;color:#1C1815;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.45;box-shadow:0 20px 50px -20px #000}
@@ -72,17 +72,24 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   .esito{margin-top:16px;border-radius:12px;padding:13px 15px;font-size:13.5px;line-height:1.55;display:none}
   .esito.ok{display:block;background:rgba(201,160,106,.14);border:1px solid rgba(201,160,106,.4);color:var(--acc2)}
   .esito.ko{display:block;background:rgba(224,85,106,.12);border:1px solid rgba(224,85,106,.42);color:#F0A3AE}
-  .firma{margin-top:26px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9C8E80}
+  .firma{margin-top:26px;text-align:center;font-family:var(--sans);font-size:12px;letter-spacing:normal;color:var(--t2)}
   .firma a{color:inherit}
-  #attesa{min-height:100dvh;display:grid;place-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3)}
+  #attesa{min-height:100dvh;display:grid;place-items:center;font-family:var(--sans);font-size:14px;letter-spacing:normal;color:var(--t2)}
   #attesa[hidden]{display:none}
   form[hidden]{display:none}
   .attesa[hidden]{display:none}
-  .attesa .stato{font-size:14px;line-height:1.6;color:var(--t1);border-left:2px solid var(--acc);padding:10px 14px;background:var(--sunk);border-radius:0 10px 10px 0;margin:0}
+  .attesa .stato{font-size:14px;line-height:1.6;color:var(--t1);border:1px solid var(--ed2);padding:12px 14px;background:var(--sunk);border-radius:10px;margin:0}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 .lingua{display:flex;justify-content:flex-end;gap:4px;margin:0 0 12px}
 .lingua button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--t3);border:1px solid var(--ed);border-radius:999px;padding:3px 9px;background:transparent;cursor:pointer}
 .lingua button.on{color:var(--acc);border-color:var(--acc)}
+/* Accesso: leggibilità su superfici scure, senza cambiare le stanze dell’app. */
+#porta{--t3:#C0B19F}
+#porta .lbl{font-family:var(--sans);font-size:13px;line-height:1.45;letter-spacing:normal;text-transform:none;color:#C8BAA8}
+#porta .nota,#porta .chk{color:#C8BAA8}
+#porta input::placeholder{color:#BBAE9D;opacity:1}
+#porta a{color:#DDB784;text-underline-offset:3px}
+#porta button:focus-visible,#porta a:focus-visible,#porta input:focus-visible{outline:2px solid #DDB784;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -152,7 +159,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.1"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.1"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.2"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.2"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
