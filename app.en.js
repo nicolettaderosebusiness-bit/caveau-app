@@ -1840,7 +1840,7 @@
       (spAperto() ? '<button type="button" class="btn sm pri" data-sp-pubblica="">Put on the board</button>' : '') + '</div>';
     var corpo;
     if (!tutti.length) {
-      corpo = '<div class="ccard"><h4>The board is empty, for now.</h4><p>Only the bottles a member decides to share appear here: no inventories, no cellar values. Open one of your bottles and choose <strong>Put on the board</strong>, or start from here.</p>' +
+      corpo = '<div class="ccard"><h4>The first bottles will appear here.</h4><p>Only bottles deliberately shared by members appear here. You do not have to sell to belong: explore Members or speak with the Desk. Your full cellar stays private. Open one of your bottles and choose <strong>Put on the board</strong>, or start from here.</p>' +
         (spAperto() ? '<div><button type="button" class="btn pri" data-sp-pubblica="">Put on the board</button></div>' : '') + '</div>';
     } else if (!l.length) {
       corpo = '<p class="disc">No bottle matches these filters.</p>';
@@ -1943,7 +1943,7 @@
       (c.email ? '<dt>Email</dt><dd><a href="mailto:' + escHtml(c.email) + '">' + escHtml(c.email) + '</a></dd>' : '') +
       (c.telefono ? '<dt>Telefono</dt><dd>' + escHtml(c.telefono) + '</dd>' : '') +
       (c.altro ? '<dt>Other</dt><dd>' + escHtml(c.altro) + '</dd>' : '') +
-      '</dl><p class="hint">Contact details chosen by the other member. They stay here for as long as the club keeps them.</p></div>';
+      '</dl><p class="hint">Contact details shared by the other member. Closing the proposal does not automatically delete them. Contact the Desk with requests about your data.</p></div>';
   }
   function boxUscita(i) {
     var A = i.annuncio || {}, mio = i.sono_proprietario;
@@ -1957,7 +1957,7 @@
   }
   function formAzione(tipo, i) {
     var A = i.annuncio || {}, t = tipo.split(':')[0];
-    var testa = { accetta: 'You accept: you exchange the contact details you chose. No commitment beyond that.', contro: 'One counter-offer only: then the other member decides.', riconferma: 'You confirm your interest on the current terms.', esito: 'How did it go? It stays between you; the Desk sees it only if it did not conclude.', segnala: 'Report to the Desk. Only the Desk reads it.' }[t] || '';
+    var testa = { accetta: 'You accept: you exchange the contact details you chose. No commitment beyond that.', contro: 'One counter-offer only: then the other member decides.', riconferma: 'You confirm your interest on the current terms.', esito: 'Record whether the exchange was completed. To ask the Desk for help, use Report.', segnala: 'Report to the Desk. Only the Desk reads it.' }[t] || '';
     var h = '<div class="sp-form"><p class="hint">' + testa + '</p>';
     if (t === 'contro') h += A.tipo === 'vendo'
       ? '<label><span class="lbl">Your price for the lot (€)</span><input type="number" min="1" step="1" id="sp-az-prezzo" placeholder="' + escHtml(String(Math.round(A.prezzo_totale || 0))) + '"></label>'
@@ -1990,7 +1990,7 @@
       return '<tr class="r" data-sp-membro="' + escHtml(m.codice) + '" tabindex="0"><td><span class="tnm">' + escHtml(m.nome || '—') + '</span>' + (m.sei_tu ? ' <span class="sp-when">you</span>' : '') + '<button type="button" class="lnk sp-apri" data-sp-apri>Open profile →</button></td><td data-k="Country">' + escHtml(m.paese || '—') + (m.citta ? '<br><span class="sp-when">' + escHtml(m.citta) + '</span>' : '') + '</td><td data-k="Language">' + (m.lingua === 'en' ? 'English' : 'Italiano') + '</td><td data-k="Member since">' + (m.membro_dal ? fmtD(String(m.membro_dal).slice(0, 10)) : '—') + '</td></tr>';
     }).join('');
     return '<section class="blk"><header class="blkh"><h3>The members</h3><p>Who belongs to the club: name, country and since when. Open a name to see their interests and the bottles they have chosen to share.</p></header>' +
-      '<div class="tw"><table><thead><tr><th>Member</th><th>Country</th><th>Language</th><th>Member since</th></tr></thead><tbody>' + (righe || '<tr><td colspan="4">No one yet.</td></tr>') + '</tbody></table></div></section>';
+      '<div class="tw"><table><thead><tr><th>Member</th><th>Country</th><th>Language</th><th>Member since</th></tr></thead><tbody>' + (righe || '<tr><td colspan="4">There are no other profiles to show yet. Contact the Desk for a personal introduction.</td></tr>') + '</tbody></table></div></section>';
   }
   function profiloMembro() {
     var m = SP.membro;
@@ -2010,7 +2010,7 @@
      Solo informazione: lo stato viene dalla RPC mia_adesione (pilot concesso dal Desk). Nessun pagamento, nessun pulsante.
      Se la RPC manca, fallisce o non trova un pilot, il pannello non compare e il socio non vede alcun errore. */
   var T_GRATUITO = {"pg_titolo": "Complimentary period", "pg_in_corso": "Your complimentary period lasts until %s (%s days). No payment is required now.", "pg_prorogato": "The complimentary period of your invitation is extended: no payment is required and your cellar stays open.", "pg_nota": "No payment is active. Any future terms will be communicated to you personally, beforehand.", "pg_prec_titolo": "Earlier complimentary period", "pg_prec": "The complimentary period granted earlier (until %s) is not the end of your membership: the Founding Circle’s complimentary membership prevails, with no expiry."};
-  var T_ADESIONE = {"nf_titolo": "Your membership · Founding Circle", "nf_testo": "Your ordinary membership is complimentary for as long as Caveau operates. No card or paid renewal is required.", "nf_nota": "The recognition is personal and non-transferable. Experiences, purchases and separate services remain excluded.", "pc_titolo": "Your membership · Charter Members", "pc_testo": "You are eligible for half-price membership for your first two years. The amounts and start date will be confirmed before you join.", "pc_nota": "No payments are active. The two years will start only from the paid membership you accept.", "or_titolo": "Your membership", "or_testo": "Access approved by the Desk. Membership terms will be confirmed before any payment.", "nd_titolo": "Your membership", "nd_testo": "Membership terms to be defined with the Desk. No payment is active."};
+  var T_ADESIONE = {"nf_titolo": "Your membership · Founding Circle", "nf_testo": "Your ordinary membership is complimentary for as long as Caveau operates. No card or paid renewal is required.", "nf_nota": "The recognition is personal and non-transferable. Experiences, purchases and separate services remain excluded.", "pc_titolo": "Your membership · Charter Members", "pc_testo": "You are eligible for half-price membership for your first two years. The amounts and start date will be confirmed before you join.", "pc_nota": "No payments are active. The two years will start only from the paid membership you accept.", "or_titolo": "Your membership", "or_testo": "Access approved by the Desk. Membership terms will be confirmed before any payment.", "nd_titolo": "Your membership", "nd_testo": "The Desk has not yet confirmed your membership category in this profile. If you received a personal invitation, contact the Desk to check it. No payment is active."};
   var ETIC_PERCORSO = {"nucleo_fondatore": "Founding Circle", "primo_circolo": "Charter Members", "ordinario": "Ordinary"};
   var T_DESK_PERCORSO = {"rif": "Assign “%s” to %s.\nPaste the reference to Nicoletta’s decision (document and date). Without a reference the assignment is refused.", "rif_corto": "A reference of at least three characters is needed: nothing assigned.", "conferma": "Confirm “%s” for %s? The assignment is final: it cannot be changed or revoked from the Desk. No email is sent.", "fatto": "Path assigned: %s", "gia": "Path already assigned earlier: nothing changed.", "non_riuscito": "Failed"};
   var PILOT = null, pilotCarico = false;
@@ -2035,7 +2035,7 @@
     else if (per === 'primo_circolo') h += box('primo_circolo', t2.pc_titolo, t2.pc_testo, t2.pc_nota);
     else if (per === 'ordinario') h += box('ordinario', t2.or_titolo, t2.or_testo, '');
     else if (nuova) h += box('da_definire', t2.nd_titolo, t2.nd_testo, '');
-    if (a.pilot_fine) {
+    if (a.pilot_fine && per !== 'nucleo_fondatore') {
       var fine = fmtD(String(a.proroga_fino_a || a.pilot_fine).slice(0, 10)), g = a.pilot_giorni_rimanenti;
       if (per === 'nucleo_fondatore') h += box('pilot-precedente', t.pg_prec_titolo, t.pg_prec.replace('%s', fine), '');
       else {

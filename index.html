@@ -127,13 +127,13 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
         <input type="password" id="p-pw" autocomplete="new-password" minlength="10" required>
         <label class="lbl" for="p-garante">Chi ti presenta · il socio che ti ha parlato di Caveau</label>
         <input type="text" id="p-garante" placeholder="Nome e cognome del socio" maxlength="160" required>
-        <label class="lbl" for="p-citta">La tua città · facoltativa</label>
+        <label class="lbl" for="p-citta">La tua città · puoi completarla nel profilo</label>
         <input type="text" id="p-citta" placeholder="es. Milano" maxlength="80">
         <label class="lbl" for="p-nota">Una riga per il desk · facoltativa</label>
         <input type="text" id="p-nota" placeholder="Chi sei, chi ti presenta, cosa cerchi" maxlength="400">
         <label class="chk"><input type="checkbox" id="p-priv"> <span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener" id="p-link-priv">informativa sulla privacy</a>. I dati servono per l’accesso, per la mia cantina, per le risposte del Desk e per presentarmi agli altri membri; non vengono ceduti a terzi.</span></label>
         <button class="vai" id="p-vai" type="submit">Richiedi l’accesso</button>
-        <p class="nota">Si entra solo presentati da un socio: il Desk legge la richiesta e ti risponde per email, di norma entro 48 ore lavorative. Dentro trovi la tua cantina, lo Speakeasy e i soci: nome, Paese, lingua e interessi saranno visibili agli altri membri.</p>
+        <p class="nota">Si entra solo presentati da un socio: il Desk legge la richiesta e ti risponde per email, di norma entro 48 ore lavorative. Dentro trovi la tua cantina privata e lo Speakeasy. Nome, Paese, lingua e interessi saranno visibili ai soci. La città può essere completata nel profilo: è richiesta prima di pubblicare o inviare proposte e viene condivisa dopo il salvataggio esplicito.</p>
       </form>
 
       <div id="f-attesa" class="attesa" hidden>
@@ -159,7 +159,7 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
 <div id="root"></div>
 
 <script src="supabase.js"></script>
-<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.3"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.3"><\/script>');</script>
+<script>document.write('<script src="dati' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.4"><\/script><script src="app' + (LINGUA === 'en' ? '.en' : '') + '.js?v=21.4"><\/script>');</script>
 <script>
 (function () {
   var attesa = document.getElementById('attesa');
@@ -217,10 +217,10 @@ window.CAVEAU_LINGUA = LINGUA; document.documentElement.lang = LINGUA;
   "Per iscriverti devi accettare l’informativa.": "To sign up you must accept the notice.",
   "Chi ti presenta · il socio che ti ha parlato di Caveau": "Who introduces you · the member who told you about Caveau",
   "Nome e cognome del socio": "The member’s full name",
-  "La tua città · facoltativa": "Your city · optional",
+  "La tua città · puoi completarla nel profilo": "Your city · you can complete it in your profile",
   "es. Milano": "e.g. Milan",
   "Serve il nome del socio che ti presenta.": "The name of the member who introduces you is needed.",
-  "Si entra solo presentati da un socio: il Desk legge la richiesta e ti risponde per email, di norma entro 48 ore lavorative. Dentro trovi la tua cantina, lo Speakeasy e i soci: nome, Paese, lingua e interessi saranno visibili agli altri membri.": "You join only when introduced by a member: the Desk reads the request and replies by email, normally within 48 working hours. Inside you find your cellar, the Speakeasy and the members: your name, country, language and interests will be visible to other members.",
+  "Si entra solo presentati da un socio: il Desk legge la richiesta e ti risponde per email, di norma entro 48 ore lavorative. Dentro trovi la tua cantina privata e lo Speakeasy. Nome, Paese, lingua e interessi saranno visibili ai soci. La città può essere completata nel profilo: è richiesta prima di pubblicare o inviare proposte e viene condivisa dopo il salvataggio esplicito.": "You join only when introduced by a member: the Desk reads the request and replies by email, normally within 48 working hours. Inside you will find your private cellar and the Speakeasy. Your name, country, language and interests will be visible to members. You can complete your city in your profile: it is required before listing or sending proposals and is shared after you explicitly save the profile.",
   "Invio la richiesta…": "Sending your request…",
   "Ti abbiamo scritto: apri il messaggio e conferma l’indirizzo, poi entra da qui.": "We have written to you: open the message and confirm your address, then sign in here.",
   "Scegli la nuova password.": "Choose your new password.",
